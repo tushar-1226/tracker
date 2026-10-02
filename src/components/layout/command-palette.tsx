@@ -1,7 +1,7 @@
 "use client";
 
 import { Command } from "cmdk";
-import { LogOut, Plus, SunMoon } from "lucide-react";
+import { ArrowLeftRight, LogOut, Minus, Plus, SunMoon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState, useTransition } from "react";
 import { logout } from "@/server/actions/auth";
@@ -72,6 +72,18 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
             </Command.Group>
           ))}
           <Command.Group heading="Actions">
+            <PaletteItem value="Add expense" keywords={["spend", "transaction", "money"]} onSelect={() => run(() => router.push("/money?add=expense"))}>
+              <Minus />
+              <span>Add expense</span>
+            </PaletteItem>
+            <PaletteItem value="Add income" keywords={["salary", "transaction", "money"]} onSelect={() => run(() => router.push("/money?add=income"))}>
+              <Plus />
+              <span>Add income</span>
+            </PaletteItem>
+            <PaletteItem value="Transfer" keywords={["move money", "account"]} onSelect={() => run(() => router.push("/money?add=transfer"))}>
+              <ArrowLeftRight />
+              <span>Transfer between accounts</span>
+            </PaletteItem>
             <PaletteItem value="New habit" keywords={["add", "create"]} onSelect={() => run(() => router.push("/habits?new=1"))}>
               <Plus />
               <span>New habit</span>

@@ -70,6 +70,11 @@
   letter-spacing: -0.02em;
 }
 
+/* Over-budget state: 45° hatch in the foreground ink (paired with an "over" label). */
+.hatch {
+  background: repeating-linear-gradient(45deg, var(--foreground) 0 2px, transparent 2px 5px);
+}
+
 /* ---------- Custom cursor ---------- */
 html.custom-cursor,
 html.custom-cursor * {

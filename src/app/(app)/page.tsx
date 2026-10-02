@@ -13,13 +13,17 @@ import { computeStats, dayCompletion } from "@/lib/habits/stats";
 import { logMap } from "@/lib/habits/view";
 import { levelFromXp } from "@/lib/progress/levels";
 import { listHabits } from "@/server/queries/habits";
+import { spentOn } from "@/server/queries/money";
+import { formatMoney } from "@/lib/money/math";
 import { getToday } from "@/server/today";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
-  const [habits, today] = await Promise.all([listHabits(user.id), getToday()]);
+  const today = await getToday();
+  const [habits, spentToday] = await Promise.all([listHabits(user.id), spentOn(user.id, today)]);
+  const currency = user.settings.currency ?? "INR";
   const { level, current, needed, progress } = levelFromXp(user.xp);
   const weekStartsOn = user.settings.weekStartsOn ?? 1;
 
@@ -94,7 +98,14 @@ export default async function DashboardPage() {
           />
         </StaggerItem>
         <StaggerItem>
-          <StatCard href="/money" icon={Wallet} label="Spent today" value={0} prefix="₹" hint="No transactions yet" />
+          <StatCard
+            href={spentToday ? "/money/transactions" : "/money?add=expense"}
+            icon={Wallet}
+            label="Spent today"
+            value={spentToday / 100}
+            prefix={formatMoney(0, currency).replace(/[\d.,\s]/g, "")}
+            hint={spentToday ? formatMoney(spentToday, currency) : "Log an expense"}
+          />
         </StaggerItem>
         <StaggerItem>
           <StatCard href="/gym" icon={Dumbbell} label="Workouts" value={0} unit="this week" hint="Log your first session" />

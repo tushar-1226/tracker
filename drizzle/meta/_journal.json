@@ -15,6 +15,13 @@
       "when": 1790930071780,
       "tag": "0001_jittery_molecule_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1790931025275,
+      "tag": "0002_nappy_madame_masque",
+      "breakpoints": true
     }
   ]
 }

@@ -302,10 +302,11 @@ track/
 - Done: check / count / duration / quit types, daily · specific days · N× per week, 7-day backfill strip, drag reorder, archive, XP ledger (+10 per habit, +25 perfect day). Streak freezes deferred to Phase 5.
 - Dashboard v1 with today's habits and stats.
 
-### Phase 2 — Money & Budget (Day 6–9)
+### Phase 2 — Money & Budget (Day 6–9) ✅ done
 - Accounts, categories, transactions, recurring rules.
 - Budgets per category, safe-to-spend, savings goals.
 - Charts: income vs expense, net worth, category breakdown.
+- Done: amounts stored in paise; budgets are standing monthly limits per category; recurring rules materialise on page load (pausing skips missed dates); every chart has a table view. Money XP deferred to Phase 5.
 
 ### Phase 3 — Gym (Day 10–13)
 - Exercise library (seeded), workout logger with rest timer, templates.

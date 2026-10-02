@@ -1,0 +1,95 @@
+import {
+  Baby,
+  Banknote,
+  Book,
+  Briefcase,
+  Car,
+  CircleDashed,
+  Clapperboard,
+  Coffee,
+  CreditCard,
+  Dog,
+  Dumbbell,
+  Fuel,
+  Gift,
+  GraduationCap,
+  HandCoins,
+  HeartPulse,
+  Home,
+  Landmark,
+  Laptop,
+  type LucideIcon,
+  Music,
+  PiggyBank,
+  Plane,
+  Receipt,
+  Repeat,
+  Shirt,
+  ShoppingBag,
+  ShoppingCart,
+  Smartphone,
+  TrendingUp,
+  Utensils,
+  Wallet,
+  Wifi,
+  Wrench,
+  Zap,
+} from "lucide-react";
+import type { AccountType } from "@/lib/money/math";
+import { cn } from "@/lib/utils";
+
+export const CATEGORY_ICONS: Record<string, LucideIcon> = {
+  utensils: Utensils,
+  "shopping-cart": ShoppingCart,
+  car: Car,
+  fuel: Fuel,
+  "shopping-bag": ShoppingBag,
+  shirt: Shirt,
+  receipt: Receipt,
+  zap: Zap,
+  wifi: Wifi,
+  smartphone: Smartphone,
+  home: Home,
+  wrench: Wrench,
+  "heart-pulse": HeartPulse,
+  dumbbell: Dumbbell,
+  clapperboard: Clapperboard,
+  music: Music,
+  coffee: Coffee,
+  repeat: Repeat,
+  "graduation-cap": GraduationCap,
+  book: Book,
+  plane: Plane,
+  gift: Gift,
+  baby: Baby,
+  dog: Dog,
+  briefcase: Briefcase,
+  laptop: Laptop,
+  "trending-up": TrendingUp,
+  "piggy-bank": PiggyBank,
+  wallet: Wallet,
+  "circle-dashed": CircleDashed,
+};
+
+export const ACCOUNT_ICONS: Record<AccountType, LucideIcon> = {
+  cash: Banknote,
+  bank: Landmark,
+  card: CreditCard,
+  savings: PiggyBank,
+  investment: TrendingUp,
+  loan: HandCoins,
+};
+
+export const ACCOUNT_TYPE_LABEL: Record<AccountType, string> = {
+  cash: "Cash",
+  bank: "Bank",
+  card: "Credit card",
+  savings: "Savings",
+  investment: "Investment",
+  loan: "Loan",
+};
+
+export function CategoryIcon({ name, className }: { name: string | undefined; className?: string }) {
+  const Icon = (name && CATEGORY_ICONS[name]) || CircleDashed;
+  return <Icon className={cn("size-4", className)} />;
+}
