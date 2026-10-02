@@ -1,10 +1,11 @@
 "use client";
 
 import { Command } from "cmdk";
-import { ArrowLeftRight, LogOut, Minus, Plus, SunMoon } from "lucide-react";
+import { ArrowLeftRight, Dumbbell, LogOut, Minus, Plus, SunMoon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState, useTransition } from "react";
 import { logout } from "@/server/actions/auth";
+import { startWorkout } from "@/server/actions/gym";
 import { Kbd } from "@/components/ui/kbd";
 import { NAV_SECTIONS } from "./nav";
 import { useThemeSwitch } from "./theme-toggle";
@@ -83,6 +84,10 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
             <PaletteItem value="Transfer" keywords={["move money", "account"]} onSelect={() => run(() => router.push("/money?add=transfer"))}>
               <ArrowLeftRight />
               <span>Transfer between accounts</span>
+            </PaletteItem>
+            <PaletteItem value="Start workout" keywords={["gym", "train", "lift"]} onSelect={() => run(() => startTransition(() => startWorkout()))}>
+              <Dumbbell />
+              <span>Start workout</span>
             </PaletteItem>
             <PaletteItem value="New habit" keywords={["add", "create"]} onSelect={() => run(() => router.push("/habits?new=1"))}>
               <Plus />

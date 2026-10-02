@@ -308,9 +308,10 @@ track/
 - Charts: income vs expense, net worth, category breakdown.
 - Done: amounts stored in paise; budgets are standing monthly limits per category; recurring rules materialise on page load (pausing skips missed dates); every chart has a table view. Money XP deferred to Phase 5.
 
-### Phase 3 — Gym (Day 10–13)
+### Phase 3 — Gym (Day 10–13) ✅ done
 - Exercise library (seeded), workout logger with rest timer, templates.
 - PR detection, 1RM charts, volume per muscle, body metrics.
+- Done: 32-exercise library + Push/Pull/Legs templates, autosaving logger with rest timer and live PRs, PRs computed from history (never stale), XP +30 per workout / +20 with a PR. Progress photos and a settable weekly target (fixed at 3) deferred.
 
 ### Phase 4 — Learning, Books, Notes, Journal (Day 14–18)
 - Skills + study sessions + focus timer + TIL.

@@ -14,6 +14,8 @@ import { logMap } from "@/lib/habits/view";
 import { levelFromXp } from "@/lib/progress/levels";
 import { listHabits } from "@/server/queries/habits";
 import { spentOn } from "@/server/queries/money";
+import { listWorkouts } from "@/server/queries/gym";
+import { startOfWeek, addDays } from "@/lib/dates";
 import { formatMoney } from "@/lib/money/math";
 import { getToday } from "@/server/today";
 
@@ -22,10 +24,13 @@ export const metadata: Metadata = { title: "Dashboard" };
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   const today = await getToday();
-  const [habits, spentToday] = await Promise.all([listHabits(user.id), spentOn(user.id, today)]);
+  const [habits, spentToday, workouts] = await Promise.all([listHabits(user.id), spentOn(user.id, today), listWorkouts(user.id)]);
   const currency = user.settings.currency ?? "INR";
   const { level, current, needed, progress } = levelFromXp(user.xp);
   const weekStartsOn = user.settings.weekStartsOn ?? 1;
+  const weekStart = startOfWeek(today, weekStartsOn);
+  const workoutsThisWeek = workouts.filter((w) => w.finishedAt && w.date >= weekStart && w.date <= addDays(weekStart, 6)).length;
+  const trainedToday = workouts.some((w) => w.finishedAt && w.date === today);
 
   const items = habits.map((h) => ({ habit: h, logs: logMap(h) }));
   const tally = dayCompletion(items, today);
@@ -108,7 +113,14 @@ export default async function DashboardPage() {
           />
         </StaggerItem>
         <StaggerItem>
-          <StatCard href="/gym" icon={Dumbbell} label="Workouts" value={0} unit="this week" hint="Log your first session" />
+          <StatCard
+            href="/gym"
+            icon={Dumbbell}
+            label="Workouts"
+            value={workoutsThisWeek}
+            unit="this week"
+            hint={trainedToday ? "Trained today" : workouts.length ? "Not yet today" : "Log your first session"}
+          />
         </StaggerItem>
         <StaggerItem>
           <StatCard href="/learning" icon={GraduationCap} label="Learning" value={0} unit="min" hint="Today's study time" />

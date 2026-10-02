@@ -8,6 +8,8 @@ type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 export const XP = {
   habit: 10,
   habitDay: 25,
+  workout: 30,
+  workoutPr: 20,
 } as const;
 
 /** Grants XP once per (source, key); repeated calls are no-ops. */

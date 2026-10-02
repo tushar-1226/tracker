@@ -19,6 +19,7 @@ export function LineChart({
   formatAxis = format,
   height = 220,
   ariaLabel,
+  baseline = "zero",
 }: {
   labels: string[];
   titles?: string[];
@@ -27,13 +28,21 @@ export function LineChart({
   formatAxis?: (v: number) => string;
   height?: number;
   ariaLabel: string;
+  /** "zero" anchors the axis at 0; "fit" zooms to the data range (for levels like body weight). */
+  baseline?: "zero" | "fit";
 }) {
   const [ref, width] = useWidth<HTMLDivElement>();
   const [active, setActive] = useState<number | null>(null);
   const n = labels.length;
 
   const all = series.flatMap((s) => s.values.filter((v): v is number => v !== null));
-  const ticks = niceTicks(Math.min(0, ...all), Math.max(1, ...all));
+  const lo = Math.min(...all);
+  const hi = Math.max(...all);
+  const pad = Math.max((hi - lo) * 0.25, Math.abs(hi) * 0.02, 0.5);
+  const ticks =
+    baseline === "fit" && all.length
+      ? niceTicks(lo - pad, hi + pad, 3)
+      : niceTicks(Math.min(0, ...all), Math.max(1, ...all));
   const [yMin, yMax] = [ticks[0], ticks[ticks.length - 1]];
   const innerW = Math.max(0, width - PAD.left - PAD.right);
   const innerH = height - PAD.top - PAD.bottom;
