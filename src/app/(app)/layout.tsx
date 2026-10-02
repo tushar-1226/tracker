@@ -1,13 +1,16 @@
 import { CommandPaletteProvider } from "@/components/layout/command-palette";
 import { MobileHeader, MobileTabBar } from "@/components/layout/mobile-nav";
 import { Sidebar } from "@/components/layout/sidebar";
+import { TimezoneSync } from "@/components/layout/timezone-sync";
 import { getCurrentUser } from "@/lib/auth/dal";
+import { getTimeZone } from "@/server/today";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  const user = await getCurrentUser();
+  const [user, timeZone] = await Promise.all([getCurrentUser(), getTimeZone()]);
 
   return (
     <CommandPaletteProvider>
+      <TimezoneSync serverTimeZone={timeZone} />
       <Sidebar userName={user.name} />
       <MobileHeader />
       <main className="min-h-dvh pb-28 lg:pb-16 lg:pl-64">

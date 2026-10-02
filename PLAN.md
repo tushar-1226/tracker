@@ -297,8 +297,9 @@ track/
 - App shell: sidebar, mobile nav, command palette skeleton.
 - Drizzle + libSQL setup, session auth, `proxy.ts` + DAL protected `(app)` routes.
 
-### Phase 1 — Habits + Dashboard (Day 3–5)
+### Phase 1 — Habits + Dashboard (Day 3–5) ✅ done
 - Habit CRUD, daily check-in, heatmap, streak logic (+ unit tests).
+- Done: check / count / duration / quit types, daily · specific days · N× per week, 7-day backfill strip, drag reorder, archive, XP ledger (+10 per habit, +25 perfect day). Streak freezes deferred to Phase 5.
 - Dashboard v1 with today's habits and stats.
 
 ### Phase 2 — Money & Budget (Day 6–9)

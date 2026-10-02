@@ -1,7 +1,7 @@
 "use client";
 
 import { Command } from "cmdk";
-import { LogOut, SunMoon } from "lucide-react";
+import { LogOut, Plus, SunMoon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState, useTransition } from "react";
 import { logout } from "@/server/actions/auth";
@@ -72,6 +72,10 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
             </Command.Group>
           ))}
           <Command.Group heading="Actions">
+            <PaletteItem value="New habit" keywords={["add", "create"]} onSelect={() => run(() => router.push("/habits?new=1"))}>
+              <Plus />
+              <span>New habit</span>
+            </PaletteItem>
             <PaletteItem value="Toggle theme" keywords={["dark", "light"]} onSelect={() => run(() => toggleTheme())}>
               <SunMoon />
               <span>Toggle theme</span>

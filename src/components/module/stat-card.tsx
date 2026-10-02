@@ -2,6 +2,7 @@ import { ArrowUpRight, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import { NumberTicker } from "@/components/motion/number-ticker";
 import { CardLabel } from "@/components/ui/card";
+import { unitLabel } from "@/lib/habits/view";
 
 export function StatCard({
   href,
@@ -36,7 +37,7 @@ export function StatCard({
       <div>
         <p className="flex items-baseline gap-1.5">
           <NumberTicker value={value} prefix={prefix} className="tabular text-4xl font-medium" />
-          {unit && <span className="text-sm text-muted">{unit}</span>}
+          {unit && <span className="text-sm text-muted">{unitLabel(value, unit)}</span>}
         </p>
         <p className="mt-1 text-sm text-muted">{hint}</p>
       </div>

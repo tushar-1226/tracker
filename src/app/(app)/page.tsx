@@ -1,6 +1,7 @@
-import { BookOpen, Dumbbell, Flame, GraduationCap, ListChecks, Wallet } from "lucide-react";
+import { BookOpen, Dumbbell, Flame, GraduationCap, Wallet } from "lucide-react";
 import type { Metadata } from "next";
 import { Ring } from "@/components/charts/ring";
+import { TodayHabits } from "@/components/habits/today-habits";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { NumberTicker } from "@/components/motion/number-ticker";
 import { Greeting } from "@/components/module/greeting";
@@ -8,15 +9,28 @@ import { StatCard } from "@/components/module/stat-card";
 import { XpBar } from "@/components/module/xp-bar";
 import { Card, CardLabel } from "@/components/ui/card";
 import { getCurrentUser } from "@/lib/auth/dal";
+import { computeStats, dayCompletion } from "@/lib/habits/stats";
+import { logMap } from "@/lib/habits/view";
 import { levelFromXp } from "@/lib/progress/levels";
+import { listHabits } from "@/server/queries/habits";
+import { getToday } from "@/server/today";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
 export default async function DashboardPage() {
   const user = await getCurrentUser();
+  const [habits, today] = await Promise.all([listHabits(user.id), getToday()]);
   const { level, current, needed, progress } = levelFromXp(user.xp);
-  // Real values arrive with each module (Phase 1+).
-  const lifeScore = 0;
+  const weekStartsOn = user.settings.weekStartsOn ?? 1;
+
+  const items = habits.map((h) => ({ habit: h, logs: logMap(h) }));
+  const tally = dayCompletion(items, today);
+  const best = items
+    .map((i) => ({ name: i.habit.name, ...computeStats(i.habit, i.logs, today, weekStartsOn) }))
+    .sort((a, b) => b.current - a.current)[0];
+
+  // Life score grows as more modules come online; for now it is today's habit completion.
+  const lifeScore = Math.round((tally.ratio ?? 0) * 100);
 
   return (
     <>
@@ -31,7 +45,12 @@ export default async function DashboardPage() {
               <NumberTicker value={lifeScore} className="tabular text-5xl font-medium" />
               <span className="text-xs text-muted">/ 100</span>
             </Ring>
-            <CardLabel>Life score today</CardLabel>
+            <div className="text-center">
+              <CardLabel>Life score today</CardLabel>
+              <p className="mt-1 text-xs text-muted">
+                {tally.due ? `${tally.done} of ${tally.due} habits done` : "Add habits to start scoring"}
+              </p>
+            </div>
           </Card>
         </StaggerItem>
 
@@ -61,14 +80,21 @@ export default async function DashboardPage() {
           </Card>
         </StaggerItem>
 
+        <StaggerItem className="md:col-span-2 md:row-span-2">
+          <TodayHabits habits={habits} today={today} />
+        </StaggerItem>
         <StaggerItem>
-          <StatCard href="/habits" icon={ListChecks} label="Habits" value={0} unit="of 0 done" hint="Add your first habit" />
+          <StatCard
+            href={best ? "/habits" : "/habits?new=1"}
+            icon={Flame}
+            label="Top streak"
+            value={best?.current ?? 0}
+            unit={best?.unit ?? "days"}
+            hint={best ? best.name : "Start one today"}
+          />
         </StaggerItem>
         <StaggerItem>
           <StatCard href="/money" icon={Wallet} label="Spent today" value={0} prefix="₹" hint="No transactions yet" />
-        </StaggerItem>
-        <StaggerItem>
-          <StatCard href="/habits" icon={Flame} label="Best streak" value={0} unit="days" hint="Start one today" />
         </StaggerItem>
         <StaggerItem>
           <StatCard href="/gym" icon={Dumbbell} label="Workouts" value={0} unit="this week" hint="Log your first session" />
