@@ -15,6 +15,8 @@ import { levelFromXp } from "@/lib/progress/levels";
 import { listHabits } from "@/server/queries/habits";
 import { spentOn } from "@/server/queries/money";
 import { listWorkouts } from "@/server/queries/gym";
+import { listSessions } from "@/server/queries/learning";
+import { listBooks } from "@/server/queries/books";
 import { startOfWeek, addDays } from "@/lib/dates";
 import { formatMoney } from "@/lib/money/math";
 import { getToday } from "@/server/today";
@@ -24,7 +26,16 @@ export const metadata: Metadata = { title: "Dashboard" };
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   const today = await getToday();
-  const [habits, spentToday, workouts] = await Promise.all([listHabits(user.id), spentOn(user.id, today), listWorkouts(user.id)]);
+  const [habits, spentToday, workouts, sessions, library] = await Promise.all([
+    listHabits(user.id),
+    spentOn(user.id, today),
+    listWorkouts(user.id),
+    listSessions(user.id),
+    listBooks(user.id),
+  ]);
+  const studyToday = sessions.filter((s) => s.date === today).reduce((sum, s) => sum + s.minutes, 0);
+  const pagesToday = library.logs.filter((l) => l.date === today).reduce((sum, l) => sum + l.pages, 0);
+  const readingNow = library.books.find((b) => b.status === "reading");
   const currency = user.settings.currency ?? "INR";
   const { level, current, needed, progress } = levelFromXp(user.xp);
   const weekStartsOn = user.settings.weekStartsOn ?? 1;
@@ -123,10 +134,17 @@ export default async function DashboardPage() {
           />
         </StaggerItem>
         <StaggerItem>
-          <StatCard href="/learning" icon={GraduationCap} label="Learning" value={0} unit="min" hint="Today's study time" />
+          <StatCard href="/learning" icon={GraduationCap} label="Learning" value={studyToday} unit="min" hint={studyToday ? "Studied today" : "Start a focus session"} />
         </StaggerItem>
         <StaggerItem>
-          <StatCard href="/books" icon={BookOpen} label="Reading" value={0} unit="pages" hint="Pages read today" />
+          <StatCard
+            href={readingNow ? `/books/${readingNow.id}` : "/books?add=1"}
+            icon={BookOpen}
+            label="Reading"
+            value={pagesToday}
+            unit="pages"
+            hint={readingNow ? readingNow.title : "Pick a book to read"}
+          />
         </StaggerItem>
       </Stagger>
     </>

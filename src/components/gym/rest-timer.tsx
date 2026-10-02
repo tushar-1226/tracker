@@ -17,7 +17,7 @@ export function RestTimer({ rest, onChange }: { rest: Rest; onChange: (rest: Res
       const t = Date.now();
       setNow(t);
       if (t >= rest.endsAt) {
-        navigator.vibrate?.([120, 80, 120]);
+        if (navigator.userActivation?.hasBeenActive) navigator.vibrate?.([120, 80, 120]);
         clearInterval(id);
         setTimeout(() => onChange(null), 1500);
       }

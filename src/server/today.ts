@@ -10,6 +10,9 @@ export async function getTimeZone() {
   return tz && isValidTimeZone(tz) ? tz : "UTC";
 }
 
+/** Request-time clock for relative labels ("5 min ago"). */
+export const requestTime = () => Date.now();
+
 export async function getToday(): Promise<Day> {
   return todayIn(await getTimeZone());
 }

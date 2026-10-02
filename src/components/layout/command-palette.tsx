@@ -1,11 +1,12 @@
 "use client";
 
 import { Command } from "cmdk";
-import { ArrowLeftRight, Dumbbell, LogOut, Minus, Plus, SunMoon } from "lucide-react";
+import { ArrowLeftRight, BookPlus, Dumbbell, GraduationCap, LogOut, Minus, NotebookPen, Plus, StickyNote, SunMoon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState, useTransition } from "react";
 import { logout } from "@/server/actions/auth";
 import { startWorkout } from "@/server/actions/gym";
+import { createNote } from "@/server/actions/notes";
 import { Kbd } from "@/components/ui/kbd";
 import { NAV_SECTIONS } from "./nav";
 import { useThemeSwitch } from "./theme-toggle";
@@ -88,6 +89,22 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
             <PaletteItem value="Start workout" keywords={["gym", "train", "lift"]} onSelect={() => run(() => startTransition(() => startWorkout()))}>
               <Dumbbell />
               <span>Start workout</span>
+            </PaletteItem>
+            <PaletteItem value="Log study session" keywords={["learn", "learning", "study"]} onSelect={() => run(() => router.push("/learning?log=1"))}>
+              <GraduationCap />
+              <span>Log study session</span>
+            </PaletteItem>
+            <PaletteItem value="New note" keywords={["write", "idea"]} onSelect={() => run(() => startTransition(() => createNote()))}>
+              <StickyNote />
+              <span>New note</span>
+            </PaletteItem>
+            <PaletteItem value="Add book" keywords={["read", "reading", "library"]} onSelect={() => run(() => router.push("/books?add=1"))}>
+              <BookPlus />
+              <span>Add book</span>
+            </PaletteItem>
+            <PaletteItem value="Write journal" keywords={["mood", "diary", "today"]} onSelect={() => run(() => router.push("/journal"))}>
+              <NotebookPen />
+              <span>Write today’s journal</span>
             </PaletteItem>
             <PaletteItem value="New habit" keywords={["add", "create"]} onSelect={() => run(() => router.push("/habits?new=1"))}>
               <Plus />

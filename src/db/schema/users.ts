@@ -6,6 +6,10 @@ export type UserSettings = {
   weekStartsOn?: 0 | 1;
   units?: "kg" | "lb";
   cursor?: boolean;
+  /** Books to finish per year. */
+  readingGoal?: number;
+  /** Minutes of learning per day that count as a full day. */
+  learningTarget?: number;
 };
 
 export const users = sqliteTable("users", {

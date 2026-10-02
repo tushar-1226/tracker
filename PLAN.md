@@ -313,11 +313,12 @@ track/
 - PR detection, 1RM charts, volume per muscle, body metrics.
 - Done: 32-exercise library + Push/Pull/Legs templates, autosaving logger with rest timer and live PRs, PRs computed from history (never stale), XP +30 per workout / +20 with a PR. Progress photos and a settable weekly target (fixed at 3) deferred.
 
-### Phase 4 — Learning, Books, Notes, Journal (Day 14–18)
+### Phase 4 — Learning, Books, Notes, Journal (Day 14–18) ✅ done
 - Skills + study sessions + focus timer + TIL.
 - Books with Open Library search, reading logs, yearly goal.
 - Notes with Tiptap, tags, search, linking.
 - Journal with mood/sleep tracking.
+- Done: focus timer survives reloads; Open Library search with manual fallback; books auto-finish at the last page; Tiptap notes with autosave, tags, pin, search; journal insights compare mood/sleep across gym, habit and study days. XP: study 15 per 25 min, book 100, journal 10. Linking notes to books/skills deferred.
 
 ### Phase 5 — Progress Engine (Day 19–22)
 - XP events, levels, per-module levels, Life Score.
