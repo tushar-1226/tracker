@@ -1,26 +1,117 @@
 @import "tailwindcss";
+@import "lenis/dist/lenis.css";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------- Tokens: strictly grayscale ---------- */
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --surface: #f7f7f7;
+  --subtle: #efefef;
+  --border: #e6e6e6;
+  --muted: #8a8a8a;
+  --foreground: #0a0a0a;
+  --inverse: #ffffff;
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  color-scheme: light;
+}
+
+.dark {
+  --background: #0a0a0a;
+  --surface: #121212;
+  --subtle: #1a1a1a;
+  --border: #242424;
+  --muted: #7a7a7a;
+  --foreground: #fafafa;
+  --inverse: #0a0a0a;
+  color-scheme: dark;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-subtle: var(--subtle);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
   --color-foreground: var(--foreground);
+  --color-inverse: var(--inverse);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --ease-out-expo: var(--ease-out-expo);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+  }
+  ::selection {
+    background: var(--foreground);
+    color: var(--background);
+  }
+  :focus-visible {
+    outline: 1.5px solid var(--foreground);
+    outline-offset: 2px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Tabular numbers for stats */
+@utility tabular {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- Custom cursor ---------- */
+html.custom-cursor,
+html.custom-cursor * {
+  cursor: none !important;
+}
+html.custom-cursor :is(input, textarea, [contenteditable="true"]) {
+  cursor: text !important;
+}
+
+/* ---------- Theme switch: circular reveal (View Transitions API) ---------- */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-new(root) {
+  z-index: 2;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes palette-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+  }
+}
+
+/* Thin, quiet scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
