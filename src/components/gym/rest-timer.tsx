@@ -37,11 +37,11 @@ export function RestTimer({ rest, onChange }: { rest: Rest; onChange: (rest: Res
           animate={{ y: 0, opacity: 1, scale: 1 }}
           exit={{ y: 40, opacity: 0, scale: 0.95 }}
           transition={{ type: "spring", stiffness: 400, damping: 32 }}
-          className="fixed bottom-24 left-1/2 z-40 -translate-x-1/2 lg:bottom-8 lg:left-[calc(50%+8rem)]"
+          className="fixed bottom-[calc(6rem+env(safe-area-inset-bottom))] left-1/2 z-40 -translate-x-1/2 md:bottom-8 md:left-[calc(50%+2.5rem)] lg:left-[calc(50%+8rem)]"
           role="timer"
           aria-live="polite"
         >
-          <div className="relative flex items-center gap-1 overflow-hidden rounded-full bg-foreground py-1.5 pr-1.5 pl-5 text-background shadow-2xl shadow-black/20">
+          <div className="relative flex items-center gap-1 overflow-hidden rounded-none bg-foreground py-1.5 pr-1.5 pl-5 text-background shadow-2xl shadow-black/20">
             <motion.span
               className="absolute inset-y-0 left-0 bg-background/15"
               animate={{ width: `${progress * 100}%` }}
@@ -59,7 +59,7 @@ export function RestTimer({ rest, onChange }: { rest: Rest; onChange: (rest: Res
                 type="button"
                 aria-label={label}
                 onClick={fn}
-                className="relative inline-flex size-9 items-center justify-center rounded-full transition-colors hover:bg-background/15"
+                className="relative inline-flex size-9 items-center justify-center rounded-none transition-colors hover:bg-background/15"
               >
                 <Icon className="size-4" />
               </button>

@@ -57,7 +57,7 @@ export function RecurringList({ rules }: { rules: Rule[] }) {
                     aria-label={r.active ? "Pause" : "Resume"}
                     disabled={pending}
                     onClick={() => startTransition(() => setRecurringActive(r.id, !r.active))}
-                    className="inline-flex size-8 items-center justify-center rounded-full text-muted hover:bg-subtle hover:text-foreground"
+                    className="inline-flex size-8 items-center justify-center rounded-none text-muted hover:bg-subtle hover:text-foreground"
                   >
                     {r.active ? <Pause className="size-3.5" /> : <Play className="size-3.5" />}
                   </button>
@@ -66,7 +66,7 @@ export function RecurringList({ rules }: { rules: Rule[] }) {
                     aria-label="Stop repeating"
                     disabled={pending}
                     onClick={() => startTransition(() => deleteRecurring(r.id))}
-                    className="inline-flex size-8 items-center justify-center rounded-full text-muted hover:bg-subtle hover:text-foreground"
+                    className="inline-flex size-8 items-center justify-center rounded-none text-muted hover:bg-subtle hover:text-foreground"
                   >
                     <Trash2 className="size-3.5" />
                   </button>

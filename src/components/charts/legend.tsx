@@ -7,7 +7,7 @@ export function Legend({ items, mark }: { items: { name: string; tone: Tone }[];
       {items.map((i) => (
         <span key={i.name} className="flex items-center gap-1.5">
           <span
-            className={mark === "rect" ? "size-2.5 rounded-[3px]" : "h-0.5 w-3.5 rounded-full"}
+            className={mark === "rect" ? "size-2.5 rounded-[3px]" : "h-0.5 w-3.5 rounded-none"}
             style={{ background: TONE[i.tone] }}
           />
           {i.name}

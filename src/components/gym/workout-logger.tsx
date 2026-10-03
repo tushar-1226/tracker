@@ -253,7 +253,7 @@ export function WorkoutLogger({
               />
             ) : (
               <span className="inline-flex items-center gap-1.5">
-                <span className="size-1.5 animate-pulse rounded-full bg-foreground" /> <Elapsed since={workout.startedAt} />
+                <span className="size-1.5 animate-pulse rounded-none bg-foreground" /> <Elapsed since={workout.startedAt} />
               </span>
             )}
             {finished && workout.durationMin && <span>{workout.durationMin} min</span>}
@@ -345,7 +345,7 @@ export function WorkoutLogger({
                   <button
                     type="button"
                     onClick={() => addSet(item)}
-                    className="mt-3 flex h-9 w-full max-w-xl items-center justify-center gap-1.5 rounded-xl border border-dashed text-xs text-muted transition-colors hover:border-foreground hover:text-foreground"
+                    className="mt-3 flex h-9 w-full max-w-xl items-center justify-center gap-1.5 rounded-xl border border-dashed text-xs text-muted transition-colors hover:bg-subtle hover:text-foreground"
                   >
                     <Plus className="size-3.5" /> Add set
                   </button>
@@ -359,7 +359,7 @@ export function WorkoutLogger({
           <DialogTrigger asChild>
             <button
               type="button"
-              className="flex h-16 w-full items-center justify-center gap-2 rounded-3xl border border-dashed text-sm text-muted transition-colors hover:border-foreground hover:text-foreground"
+              className="flex h-16 w-full items-center justify-center gap-2 rounded-3xl border border-dashed text-sm text-muted transition-colors hover:bg-subtle hover:text-foreground"
             >
               <Plus className="size-4" /> Add exercise
             </button>
@@ -495,7 +495,7 @@ function SetRow({
         type="button"
         onClick={onRemove}
         aria-label={`Remove set ${index + 1}`}
-        className="flex size-6 items-center justify-center rounded-full text-muted opacity-50 transition-opacity hover:opacity-100"
+        className="flex size-6 items-center justify-center rounded-none text-muted opacity-50 transition-opacity hover:opacity-100"
       >
         <X className="size-3.5" />
       </button>
@@ -510,7 +510,7 @@ function IconBtn({ label, icon: Icon, onClick, disabled }: { label: string; icon
       aria-label={label}
       onClick={onClick}
       disabled={disabled}
-      className="inline-flex size-8 items-center justify-center rounded-full text-muted transition-colors hover:bg-subtle hover:text-foreground disabled:opacity-25"
+      className="inline-flex size-8 items-center justify-center rounded-none text-muted transition-colors hover:bg-subtle hover:text-foreground disabled:opacity-25"
     >
       <Icon className="size-3.5" />
     </button>

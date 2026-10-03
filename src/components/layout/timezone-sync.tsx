@@ -2,10 +2,16 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { saveTimeZone } from "@/server/actions/notifications";
 
 /** Keeps the `tz` cookie in sync with the browser so the server knows the viewer's "today". */
-export function TimezoneSync({ serverTimeZone }: { serverTimeZone: string }) {
+export function TimezoneSync({ serverTimeZone, storedTimeZone }: { serverTimeZone: string; storedTimeZone?: string }) {
   const router = useRouter();
+  useEffect(() => {
+    const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (zone && zone !== storedTimeZone) void saveTimeZone(zone);
+  }, [storedTimeZone]);
+
   useEffect(() => {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     if (!tz || tz === serverTimeZone || !/^[\w+\-/]+$/.test(tz)) return;

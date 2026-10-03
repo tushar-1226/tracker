@@ -9,7 +9,7 @@ import { StatCard } from "@/components/module/stat-card";
 import { XpBar } from "@/components/module/xp-bar";
 import { Card, CardLabel } from "@/components/ui/card";
 import { getCurrentUser } from "@/lib/auth/dal";
-import { computeStats, dayCompletion } from "@/lib/habits/stats";
+import { computeStats } from "@/lib/habits/stats";
 import { logMap } from "@/lib/habits/view";
 import { levelFromXp } from "@/lib/progress/levels";
 import { listHabits } from "@/server/queries/habits";
@@ -20,6 +20,9 @@ import { listBooks } from "@/server/queries/books";
 import { startOfWeek, addDays } from "@/lib/dates";
 import { formatMoney } from "@/lib/money/math";
 import { getToday } from "@/server/today";
+import { getProgress, listUnlocked } from "@/server/progress";
+import { LifeBreakdown } from "@/components/progress/life-breakdown";
+import { RecentAchievements } from "@/components/progress/recent-achievements";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
@@ -44,13 +47,13 @@ export default async function DashboardPage() {
   const trainedToday = workouts.some((w) => w.finishedAt && w.date === today);
 
   const items = habits.map((h) => ({ habit: h, logs: logMap(h) }));
-  const tally = dayCompletion(items, today);
   const best = items
     .map((i) => ({ name: i.habit.name, ...computeStats(i.habit, i.logs, today, weekStartsOn) }))
     .sort((a, b) => b.current - a.current)[0];
 
-  // Life score grows as more modules come online; for now it is today's habit completion.
-  const lifeScore = Math.round((tally.ratio ?? 0) * 100);
+  const snapshot = await getProgress();
+  const lifeScore = snapshot.life.today ?? 0;
+  const unlocked = (await listUnlocked(user.id)).sort((a, b) => b.unlockedAt.getTime() - a.unlockedAt.getTime()).slice(0, 3);
 
   return (
     <>
@@ -67,9 +70,7 @@ export default async function DashboardPage() {
             </Ring>
             <div className="text-center">
               <CardLabel>Life score today</CardLabel>
-              <p className="mt-1 text-xs text-muted">
-                {tally.due ? `${tally.done} of ${tally.due} habits done` : "Add habits to start scoring"}
-              </p>
+              <LifeBreakdown parts={snapshot.life.parts} />
             </div>
           </Card>
         </StaggerItem>
@@ -86,6 +87,7 @@ export default async function DashboardPage() {
               <div className="text-right">
                 <CardLabel>Total XP</CardLabel>
                 <NumberTicker value={user.xp} className="tabular mt-2 block text-2xl" />
+                <RecentAchievements items={unlocked.map(({ key, tier }) => ({ key, tier }))} />
               </div>
             </div>
             <div className="space-y-2">

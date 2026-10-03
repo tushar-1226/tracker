@@ -18,8 +18,8 @@ const TABS = [
 
 export function MobileHeader() {
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b bg-background/80 px-4 backdrop-blur-md lg:hidden">
-      <Link href="/" className="text-lg font-semibold tracking-tight">
+    <header className="sticky top-0 z-30 flex h-[calc(3.5rem+env(safe-area-inset-top))] items-center justify-between border-b bg-background/85 px-4 pt-[env(safe-area-inset-top)] backdrop-blur-md md:hidden">
+      <Link href="/" className="text-xl font-bold tracking-[-0.05em] uppercase">
         track<span className="text-muted">.</span>
       </Link>
       <ThemeToggle />
@@ -32,7 +32,7 @@ export function MobileTabBar() {
   const palette = useCommandPalette();
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 border-t bg-background/80 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-30 border-t bg-background/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:hidden">
       <ul className="grid grid-cols-5">
         {TABS.map((tab) => {
           const active = isActive(pathname, tab.href);
@@ -48,7 +48,7 @@ export function MobileTabBar() {
                 {active && (
                   <motion.span
                     layoutId="tab-active"
-                    className="absolute top-0 h-0.5 w-8 rounded-full bg-foreground"
+                    className="absolute top-0 h-0.5 w-8 rounded-none bg-foreground"
                     transition={{ type: "spring", stiffness: 500, damping: 40 }}
                   />
                 )}

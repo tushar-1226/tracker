@@ -25,7 +25,7 @@ export function StatCard({
     <Link
       href={href}
       data-cursor-label="Open"
-      className="group flex h-full flex-col justify-between gap-8 rounded-3xl border bg-surface p-6 transition-colors duration-300 hover:border-foreground"
+      className="group flex h-full flex-col justify-between gap-8 rounded-3xl border bg-surface p-6 transition-colors duration-300 hover:bg-subtle"
     >
       <div className="flex items-center justify-between">
         <span className="flex items-center gap-2">

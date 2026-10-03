@@ -80,7 +80,7 @@ export function BooksView({
       </Stagger>
 
       <Reveal className="mt-10 mb-4">
-        <h2 className="text-lg font-semibold tracking-tight">Currently reading</h2>
+        <h2 className="border-t-2 border-foreground pt-3 text-2xl font-bold tracking-[-0.03em] uppercase">Currently reading</h2>
       </Reveal>
       {reading.length ? (
         <div className="grid gap-4 md:grid-cols-2">
@@ -92,14 +92,14 @@ export function BooksView({
         <button
           type="button"
           onClick={() => setAdd((a) => ({ open: true, key: a.key + 1 }))}
-          className="flex h-32 w-full flex-col items-center justify-center gap-2 rounded-3xl border border-dashed text-sm text-muted transition-colors hover:border-foreground hover:text-foreground"
+          className="flex h-32 w-full flex-col items-center justify-center gap-2 rounded-3xl border border-dashed text-sm text-muted transition-colors hover:bg-subtle hover:text-foreground"
         >
           <Plus className="size-5" /> Start a book
         </button>
       )}
 
       <Reveal className="mt-10 mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold tracking-tight">Library</h2>
+        <h2 className="border-t-2 border-foreground pt-3 text-2xl font-bold tracking-[-0.03em] uppercase">Library</h2>
         <Segmented
           value={shelf}
           onChange={setShelf}
@@ -221,9 +221,9 @@ function ReadingCard({ book, index, logs, today }: { book: BookCard; index: numb
             </span>
             <span>{progress !== null && `${Math.round(progress * 100)}%`}</span>
           </div>
-          <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-border">
+          <div className="mt-1.5 h-1.5 overflow-hidden rounded-none bg-hairline">
             <motion.div
-              className="h-full rounded-full bg-foreground"
+              className="h-full rounded-none bg-foreground"
               initial={{ width: 0 }}
               animate={{ width: `${(progress ?? 0) * 100}%` }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
@@ -245,7 +245,7 @@ function ReadingCard({ book, index, logs, today }: { book: BookCard; index: numb
             <button
               type="button"
               onClick={() => setMode(mode === "add" ? "page" : "add")}
-              className={cn("h-9 shrink-0 rounded-full border px-3 text-[11px] font-medium text-muted transition-colors hover:text-foreground")}
+              className={cn("h-9 shrink-0 rounded-none border px-3 text-[11px] font-medium text-muted transition-colors hover:text-foreground")}
               title="Switch between pages read and current page"
             >
               {mode === "add" ? "+ pages" : "at page"}

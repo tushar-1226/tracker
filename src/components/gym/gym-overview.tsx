@@ -98,7 +98,7 @@ export function GymOverview({
             href={`/gym/workout/${active.id}`}
             className="flex items-center gap-3 rounded-3xl bg-foreground px-5 py-4 text-background transition-opacity hover:opacity-90"
           >
-            <span className="size-2 animate-pulse rounded-full bg-background" />
+            <span className="size-2 animate-pulse rounded-none bg-background" />
             <span className="flex-1 text-sm font-medium">{active.name} is in progress</span>
             <ArrowUpRight className="size-4" />
           </Link>
@@ -113,7 +113,7 @@ export function GymOverview({
       </Stagger>
 
       <Reveal className="mt-10 mb-4">
-        <h2 className="text-lg font-semibold tracking-tight">Templates</h2>
+        <h2 className="border-t-2 border-foreground pt-3 text-2xl font-bold tracking-[-0.03em] uppercase">Templates</h2>
       </Reveal>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
         {templates.map((t, i) => (
@@ -129,7 +129,7 @@ export function GymOverview({
               disabled={pending || !!active}
               onClick={() => start(t.id)}
               data-cursor-label="Start"
-              className="flex h-full w-full flex-col gap-3 rounded-3xl border bg-surface p-5 text-left transition-colors hover:border-foreground disabled:opacity-50"
+              className="flex h-full w-full flex-col gap-3 rounded-3xl border bg-surface p-5 text-left transition-colors hover:bg-subtle disabled:opacity-50"
             >
               <span className="flex items-center gap-2 font-medium">
                 <Dumbbell className="size-4 text-muted" /> {t.name}
@@ -140,7 +140,7 @@ export function GymOverview({
               type="button"
               aria-label={`Delete template ${t.name}`}
               onClick={() => startTransition(() => deleteTemplate(t.id))}
-              className="absolute top-3 right-3 inline-flex size-7 items-center justify-center rounded-full text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:bg-subtle hover:text-foreground focus:opacity-100"
+              className="absolute top-3 right-3 inline-flex size-7 items-center justify-center rounded-none text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:bg-subtle hover:text-foreground focus:opacity-100"
             >
               <X className="size-3.5" />
             </button>
@@ -191,7 +191,7 @@ export function GymOverview({
                         <span className="flex items-center gap-1.5 text-sm font-medium">
                           {w.name}
                           {w.prs > 0 && (
-                            <span className="inline-flex items-center gap-0.5 rounded-full bg-foreground px-1.5 py-0.5 text-[10px] text-background">
+                            <span className="inline-flex items-center gap-0.5 rounded-none bg-foreground px-1.5 py-0.5 text-[10px] text-background">
                               <Trophy className="size-2.5" /> {w.prs}
                             </span>
                           )}
@@ -228,7 +228,7 @@ export function GymOverview({
       </div>
 
       <Reveal className="mt-10 mb-4 flex items-end justify-between">
-        <h2 className="text-lg font-semibold tracking-tight">Personal records</h2>
+        <h2 className="border-t-2 border-foreground pt-3 text-2xl font-bold tracking-[-0.03em] uppercase">Personal records</h2>
         <Link href="/gym/exercises" className="text-xs text-muted transition-colors hover:text-foreground">
           All exercises →
         </Link>
@@ -240,7 +240,7 @@ export function GymOverview({
               key={r.exerciseId}
               href={`/gym/exercises/${r.exerciseId}`}
               data-cursor-label="Open"
-              className="rounded-3xl border bg-surface p-5 transition-colors hover:border-foreground"
+              className="rounded-3xl border bg-surface p-5 transition-colors hover:bg-subtle"
             >
               <p className="truncate text-sm text-muted">{r.name}</p>
               <p className="mt-3 truncate text-xl font-semibold tracking-tight">{r.best}</p>

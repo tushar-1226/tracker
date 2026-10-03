@@ -117,9 +117,9 @@ export function MoneyOverview({
                 <span>Savings rate</span>
                 <span className="text-foreground tabular-nums">{rate === null ? "—" : `${Math.round(rate * 100)}%`}</span>
               </div>
-              <div className="h-2 overflow-hidden rounded-full bg-border">
+              <div className="h-2 overflow-hidden rounded-none bg-hairline">
                 <div
-                  className="h-full rounded-full bg-foreground transition-[width] duration-1000 ease-out-expo"
+                  className="h-full rounded-none bg-foreground transition-[width] duration-1000 ease-out-expo"
                   style={{ width: `${Math.max(0, Math.min(1, rate ?? 0)) * 100}%` }}
                 />
               </div>
@@ -129,7 +129,7 @@ export function MoneyOverview({
       </Stagger>
 
       <Reveal className="mt-10 mb-4 flex items-baseline justify-between">
-        <h2 className="text-lg font-semibold tracking-tight">Accounts</h2>
+        <h2 className="border-t-2 border-foreground pt-3 text-2xl font-bold tracking-[-0.03em] uppercase">Accounts</h2>
       </Reveal>
       <AccountsGrid />
 
@@ -204,7 +204,7 @@ export function MoneyOverview({
                   <button
                     type="button"
                     onClick={() => openTransaction()}
-                    className="mx-2 flex h-32 w-[calc(100%-1rem)] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed text-sm text-muted transition-colors hover:border-foreground hover:text-foreground"
+                    className="mx-2 flex h-32 w-[calc(100%-1rem)] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed text-sm text-muted transition-colors hover:bg-subtle hover:text-foreground"
                   >
                     <Plus className="size-5" />
                     Log your first transaction

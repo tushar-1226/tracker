@@ -23,7 +23,7 @@ export function AccountsGrid() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
-            className="flex flex-col justify-between gap-6 rounded-3xl border bg-surface p-5 text-left transition-colors hover:border-foreground"
+            className="flex flex-col justify-between gap-6 rounded-3xl border bg-surface p-5 text-left transition-colors hover:bg-subtle"
           >
             <span className="flex items-center justify-between">
               <CardLabel className="truncate normal-case tracking-normal">{a.name}</CardLabel>
@@ -45,7 +45,7 @@ export function AccountsGrid() {
       <button
         type="button"
         onClick={() => openAccount()}
-        className="flex min-h-32 flex-col items-center justify-center gap-2 rounded-3xl border border-dashed text-sm text-muted transition-colors hover:border-foreground hover:text-foreground"
+        className="flex min-h-32 flex-col items-center justify-center gap-2 rounded-3xl border border-dashed text-sm text-muted transition-colors hover:bg-subtle hover:text-foreground"
       >
         <Plus className="size-5" />
         Add account

@@ -10,6 +10,8 @@ export type UserSettings = {
   readingGoal?: number;
   /** Minutes of learning per day that count as a full day. */
   learningTarget?: number;
+  /** IANA zone, saved from the browser so reminders fire at local times. */
+  timeZone?: string;
 };
 
 export const users = sqliteTable("users", {

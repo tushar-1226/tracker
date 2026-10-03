@@ -26,7 +26,7 @@ export function ChartTooltip({
       <p className="mb-1.5 text-muted">{title}</p>
       {rows.map((r) => (
         <p key={r.name} className="flex items-center gap-2">
-          <span className="h-0.5 w-3 rounded-full" style={{ background: TONE[r.tone] }} />
+          <span className="h-0.5 w-3 rounded-none" style={{ background: TONE[r.tone] }} />
           <span className="font-medium">{r.value}</span>
           <span className="text-muted">{r.name}</span>
         </p>

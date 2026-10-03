@@ -37,7 +37,7 @@ export function ExerciseDetail({
         </Link>
       </Reveal>
       <Reveal className="mb-10">
-        <h1 className="text-3xl font-semibold tracking-tight md:text-5xl">{name}</h1>
+        <h1 className="text-4xl leading-[0.9] font-bold tracking-[-0.045em] md:text-7xl">{name}</h1>
         <p className="mt-2 text-sm text-muted">{muscle}</p>
       </Reveal>
 
@@ -92,7 +92,7 @@ export function ExerciseDetail({
                     <span className="w-28 shrink-0 text-xs text-muted">{long(s.date)}</span>
                     <span className="flex-1 truncate">{s.summary}</span>
                     {s.pr && (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-foreground px-2 py-0.5 text-[10px] text-background">
+                      <span className="inline-flex items-center gap-1 rounded-none bg-foreground px-2 py-0.5 text-[10px] text-background">
                         <Trophy className="size-3" /> PR
                       </span>
                     )}

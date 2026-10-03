@@ -115,7 +115,7 @@ export function BudgetView({
       </Stagger>
 
       <Reveal className="mt-10 mb-4">
-        <h2 className="text-lg font-semibold tracking-tight">Categories</h2>
+        <h2 className="border-t-2 border-foreground pt-3 text-2xl font-bold tracking-[-0.03em] uppercase">Categories</h2>
         <p className="text-sm text-muted">Limits repeat every month. Tap an amount to change it.</p>
       </Reveal>
       <Card className="p-2 md:p-3">
@@ -294,9 +294,9 @@ function BudgetRow({
       </div>
       {limit !== null && (
         <div className="mt-2.5 ml-12 flex items-center gap-3">
-          <div className="relative h-2 flex-1 overflow-hidden rounded-full border">
+          <div className="relative h-2 flex-1 overflow-hidden rounded-none border">
             <motion.div
-              className={cn("absolute inset-y-0 left-0 rounded-full", over ? "hatch" : "bg-foreground")}
+              className={cn("absolute inset-y-0 left-0 rounded-none", over ? "hatch" : "bg-foreground")}
               initial={{ width: 0 }}
               whileInView={{ width: `${Math.min(1, ratio) * 100}%` }}
               viewport={{ once: true }}
@@ -353,7 +353,7 @@ function Goals({ goals }: { goals: Goal[] }) {
     <>
       <Reveal className="mt-10 mb-4 flex items-end justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold tracking-tight">Savings goals</h2>
+          <h2 className="border-t-2 border-foreground pt-3 text-2xl font-bold tracking-[-0.03em] uppercase">Savings goals</h2>
           <p className="text-sm text-muted">ETAs use your saving pace over the last 90 days.</p>
         </div>
         <Button variant="outline" size="sm" onClick={() => setForm((f) => ({ open: true, key: f.key + 1 }))}>
@@ -364,7 +364,7 @@ function Goals({ goals }: { goals: Goal[] }) {
         <button
           type="button"
           onClick={() => setForm((f) => ({ open: true, key: f.key + 1 }))}
-          className="flex h-36 w-full flex-col items-center justify-center gap-2 rounded-3xl border border-dashed text-sm text-muted transition-colors hover:border-foreground hover:text-foreground"
+          className="flex h-36 w-full flex-col items-center justify-center gap-2 rounded-3xl border border-dashed text-sm text-muted transition-colors hover:bg-subtle hover:text-foreground"
         >
           <Plus className="size-5" />
           Save for something — a laptop, a trip, an emergency fund
@@ -406,7 +406,7 @@ function GoalCard({ goal, onEdit }: { goal: Goal; onEdit: () => void }) {
           <p className="truncate font-medium">{goal.name}</p>
           <p className="mt-0.5 text-xs text-muted">{note}</p>
         </div>
-        <button type="button" onClick={onEdit} aria-label="Edit goal" className="-mt-1 -mr-2 inline-flex size-8 items-center justify-center rounded-full text-muted hover:bg-subtle hover:text-foreground">
+        <button type="button" onClick={onEdit} aria-label="Edit goal" className="-mt-1 -mr-2 inline-flex size-8 items-center justify-center rounded-none text-muted hover:bg-subtle hover:text-foreground">
           <Pencil className="size-3.5" />
         </button>
       </div>
@@ -557,7 +557,7 @@ function CategoryManager() {
                   aria-label={`Remove ${c.name}`}
                   disabled={archiving}
                   onClick={() => startArchive(() => archiveCategory(c.id))}
-                  className="inline-flex size-7 items-center justify-center rounded-full text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground focus:opacity-100"
+                  className="inline-flex size-7 items-center justify-center rounded-none text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground focus:opacity-100"
                 >
                   <X className="size-3.5" />
                 </button>

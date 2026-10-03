@@ -1,6 +1,6 @@
 "use client";
 
-import { ArchiveRestore, ChevronDown, Flame, GripVertical, Plus } from "lucide-react";
+import { ArchiveRestore, ChevronDown, Flame, GripVertical, Plus, Snowflake } from "lucide-react";
 import { AnimatePresence, Reorder, motion, useDragControls } from "motion/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -187,6 +187,12 @@ function HabitRow({
           <span className="tabular text-foreground">{stats.current}</span>
           {unitLabel(stats.current, stats.unit)}
           {habit.type === "quit" && " clean"}
+          {stats.freezes > 0 && (
+            <span className="inline-flex items-center gap-0.5" title={`${stats.freezes} streak freeze${stats.freezes === 1 ? "" : "s"} banked`}>
+              <Snowflake className="size-3" />
+              {stats.freezes}
+            </span>
+          )}
           <span aria-hidden>·</span>
           {offDay ? "Off day" : frequencyLabel(habit.frequency)}
           {target && (
@@ -209,8 +215,8 @@ function HabitRow({
               key={d}
               title={d}
               className={cn(
-                "size-2 rounded-full transition-colors",
-                ok ? "bg-foreground" : due ? "border border-foreground/30" : "bg-border",
+                "size-2 rounded-none transition-colors",
+                ok ? "bg-foreground" : due ? "border border-foreground/30" : "bg-hairline",
                 d === day && "ring-1 ring-foreground ring-offset-2 ring-offset-surface",
               )}
             />
@@ -282,7 +288,7 @@ function EmptyState({ onPick }: { onPick: (draft?: HabitDraft) => void }) {
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.96 }}
             onClick={() => onPick(t)}
-            className="inline-flex h-10 items-center gap-2 rounded-full border bg-background px-4 text-sm transition-colors hover:border-foreground"
+            className="inline-flex h-10 items-center gap-2 rounded-none border bg-background px-4 text-sm transition-colors hover:bg-subtle"
           >
             <HabitIcon name={t.icon!} />
             {t.name}

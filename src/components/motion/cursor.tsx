@@ -90,7 +90,7 @@ export function Cursor() {
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 z-[9999] mix-blend-difference">
       <motion.div
-        className="absolute top-0 left-0 rounded-full bg-white"
+        className="absolute top-0 left-0 rounded-none bg-white"
         style={{ x, y, translateX: "-50%", translateY: "-50%" }}
         animate={{
           width: state === "hover" ? 0 : 6,
@@ -100,7 +100,7 @@ export function Cursor() {
         transition={{ duration: 0.15 }}
       />
       <motion.div
-        className="absolute top-0 left-0 flex items-center justify-center rounded-full border border-white"
+        className="absolute top-0 left-0 flex items-center justify-center rounded-none border border-white"
         style={{ x: ringX, y: ringY, translateX: "-50%", translateY: "-50%" }}
         animate={{
           width: ringSize,

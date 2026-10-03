@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 /** ← October 2026 → ; never navigates past `max`. */
 export function MonthNav({ month, max, href }: { month: MonthKey; max: MonthKey; href: (m: MonthKey) => string }) {
   const next = addMonths(month, 1);
-  const btn = "inline-flex size-9 items-center justify-center rounded-full border transition-colors hover:bg-subtle";
+  const btn = "inline-flex size-9 items-center justify-center rounded-none border transition-colors hover:bg-subtle";
   return (
     <div className="flex items-center gap-2">
       <Link href={href(addMonths(month, -1))} scroll={false} aria-label="Previous month" className={btn}>

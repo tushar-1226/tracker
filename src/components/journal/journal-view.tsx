@@ -60,20 +60,20 @@ export function JournalView({
     <>
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4 md:mb-10">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight md:text-5xl">Journal</h1>
+          <h1 className="text-4xl leading-[0.9] font-bold tracking-[-0.045em] md:text-7xl">Journal</h1>
           <p className="mt-2 text-sm text-muted md:text-base">{date === today ? "Today, " : ""}{long(date)}</p>
         </div>
         <div className="flex items-center gap-2">
-          <Link href={`/journal?date=${addDays(date, -1)}`} scroll={false} aria-label="Previous day" className="inline-flex size-9 items-center justify-center rounded-full border transition-colors hover:bg-subtle">
+          <Link href={`/journal?date=${addDays(date, -1)}`} scroll={false} aria-label="Previous day" className="inline-flex size-9 items-center justify-center rounded-none border transition-colors hover:bg-subtle">
             <ChevronLeft className="size-4" />
           </Link>
           {date !== today && (
-            <Link href="/journal" scroll={false} className="h-9 rounded-full border px-4 text-sm leading-9 transition-colors hover:bg-subtle">
+            <Link href="/journal" scroll={false} className="h-9 rounded-none border px-4 text-sm leading-9 transition-colors hover:bg-subtle">
               Today
             </Link>
           )}
           {date < today && (
-            <Link href={`/journal?date=${addDays(date, 1)}`} scroll={false} aria-label="Next day" className="inline-flex size-9 items-center justify-center rounded-full border transition-colors hover:bg-subtle">
+            <Link href={`/journal?date=${addDays(date, 1)}`} scroll={false} aria-label="Next day" className="inline-flex size-9 items-center justify-center rounded-none border transition-colors hover:bg-subtle">
               <ChevronRight className="size-4" />
             </Link>
           )}
@@ -266,7 +266,7 @@ function EntryEditor({ date, entry }: { date: Day; entry?: Entry }) {
                 aria-checked={state.energy === n}
                 aria-label={`Energy ${n} of 5`}
                 onClick={() => update({ energy: state.energy === n ? null : n }, 200)}
-                className={cn("flex-1 rounded-md transition-colors", (state.energy ?? 0) >= n ? "bg-foreground" : "bg-border hover:bg-muted/40")}
+                className={cn("flex-1 rounded-md transition-colors", (state.energy ?? 0) >= n ? "bg-foreground" : "bg-hairline hover:bg-muted/40")}
                 style={{ height: `${30 + n * 14}%` }}
               />
             ))}
@@ -275,11 +275,11 @@ function EntryEditor({ date, entry }: { date: Day; entry?: Entry }) {
         <div>
           <p className="mb-2 text-xs text-muted">Sleep</p>
           <div className="flex h-10 items-center gap-2">
-            <button type="button" aria-label="Less sleep" onClick={() => update({ sleepHours: Math.max(0, (state.sleepHours ?? 7.5) - 0.5) }, 400)} className="inline-flex size-9 items-center justify-center rounded-full border hover:bg-subtle">
+            <button type="button" aria-label="Less sleep" onClick={() => update({ sleepHours: Math.max(0, (state.sleepHours ?? 7.5) - 0.5) }, 400)} className="inline-flex size-9 items-center justify-center rounded-none border hover:bg-subtle">
               <Minus className="size-4" />
             </button>
             <span className="min-w-20 text-center text-xl font-semibold tracking-tight">{state.sleepHours === null ? "—" : `${state.sleepHours} h`}</span>
-            <button type="button" aria-label="More sleep" onClick={() => update({ sleepHours: Math.min(24, (state.sleepHours ?? 7) + 0.5) }, 400)} className="inline-flex size-9 items-center justify-center rounded-full border hover:bg-subtle">
+            <button type="button" aria-label="More sleep" onClick={() => update({ sleepHours: Math.min(24, (state.sleepHours ?? 7) + 0.5) }, 400)} className="inline-flex size-9 items-center justify-center rounded-none border hover:bg-subtle">
               <Plus className="size-4" />
             </button>
           </div>

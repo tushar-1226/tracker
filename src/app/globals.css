@@ -6,10 +6,12 @@
 /* ---------- Tokens: strictly grayscale ---------- */
 :root {
   --background: #ffffff;
-  --surface: #f7f7f7;
-  --subtle: #efefef;
-  --border: #e6e6e6;
-  --muted: #8a8a8a;
+  --surface: #ffffff;
+  --subtle: #f1f1f1;
+  /* Editorial rules: strong lines; `hairline` for gridlines, tracks, empty cells. */
+  --border: #0a0a0a;
+  --hairline: #e4e4e4;
+  --muted: #737373;
   --foreground: #0a0a0a;
   --inverse: #ffffff;
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
@@ -18,10 +20,11 @@
 
 .dark {
   --background: #0a0a0a;
-  --surface: #121212;
+  --surface: #0a0a0a;
   --subtle: #1a1a1a;
-  --border: #242424;
-  --muted: #7a7a7a;
+  --border: #ededed;
+  --hairline: #2a2a2a;
+  --muted: #8f8f8f;
   --foreground: #fafafa;
   --inverse: #0a0a0a;
   color-scheme: dark;
@@ -32,12 +35,21 @@
   --color-surface: var(--surface);
   --color-subtle: var(--subtle);
   --color-border: var(--border);
+  --color-hairline: var(--hairline);
   --color-muted: var(--muted);
   --color-foreground: var(--foreground);
   --color-inverse: var(--inverse);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --ease-out-expo: var(--ease-out-expo);
+  /* Square corners everywhere. */
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
 }
 
 @layer base {
@@ -134,7 +146,7 @@
   padding: 0;
 }
 .prose-note hr {
-  border-color: var(--border);
+  border-color: var(--hairline);
   margin: 2em 0;
 }
 .prose-note a {
@@ -207,7 +219,7 @@ html.custom-cursor :is(input, textarea, [contenteditable="true"]) {
 /* Thin, quiet scrollbars */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
+  scrollbar-color: var(--hairline) transparent;
 }
 
 @media (prefers-reduced-motion: reduce) {

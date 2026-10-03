@@ -18,6 +18,8 @@ import { deleteHabit, setHabitArchived } from "@/server/actions/habits";
 import { HabitControl } from "./habit-control";
 import { HabitForm } from "./habit-form";
 import { HabitIcon } from "./icons";
+import { HabitReminder } from "./habit-reminder";
+import type { ReminderView } from "@/components/settings/reminders-card";
 import { useHabitLogs } from "./use-habit-logs";
 
 export function HabitDetail({
@@ -25,11 +27,13 @@ export function HabitDetail({
   archived,
   today,
   weekStartsOn,
+  reminder,
 }: {
   habit: HabitView;
   archived: boolean;
   today: Day;
   weekStartsOn: 0 | 1;
+  reminder: ReminderView | null;
 }) {
   const { habits, setValue } = useHabitLogs([serverHabit]);
   const habit = habits[0];
@@ -67,7 +71,7 @@ export function HabitDetail({
             <HabitIcon name={habit.icon} className="size-6" />
           </div>
           <div>
-            <h1 className="text-3xl font-semibold tracking-tight md:text-5xl">{habit.name}</h1>
+            <h1 className="text-4xl leading-[0.9] font-bold tracking-[-0.045em] md:text-7xl">{habit.name}</h1>
             <p className="mt-1.5 text-sm text-muted">
               {HABIT_TYPE_LABEL[habit.type]} · {frequencyLabel(habit.frequency)}
               {target && ` · ${target}`}
@@ -120,7 +124,28 @@ export function HabitDetail({
         <Stat label="Best streak" value={stats.best} unit={stats.unit} />
         <Stat label="Last 30 days" value={Math.round(stats.rate30 * 100)} unit="%" />
         <Stat label={isQuit ? "Clean days total" : "Times done"} value={stats.totalDone} unit="total" />
-        <StaggerItem className="col-span-2">
+        {!isQuit && habit.frequency.kind !== "weekly" && (
+          <StaggerItem className="col-span-2 md:col-span-1">
+            <Card className="flex h-full flex-col justify-between gap-4">
+              <CardLabel>Streak freezes</CardLabel>
+              <p className="flex items-baseline gap-1.5">
+                <span className="tabular text-4xl font-medium">{stats.freezes}</span>
+                <span className="text-sm text-muted">of 2 banked</span>
+              </p>
+              <p className="text-xs text-muted">
+                {stats.frozenDays.length
+                  ? `Saved your streak on ${stats.frozenDays.slice(-2).map((d) => toDate(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", timeZone: "UTC" })).join(", ")}`
+                  : "Earn one every 7 days in a row. A missed day spends it instead of breaking the streak."}
+              </p>
+            </Card>
+          </StaggerItem>
+        )}
+        {!isQuit && (
+          <StaggerItem className="col-span-2 md:col-span-1">
+            <HabitReminder habit={{ id: habit.id, name: habit.name }} reminder={reminder} />
+          </StaggerItem>
+        )}
+        <StaggerItem className="col-span-2 md:col-span-4">
           <MonthlyBars habit={habit} today={today} />
         </StaggerItem>
       </Stagger>
@@ -203,7 +228,7 @@ function MonthlyBars({ habit, today }: { habit: HabitView; today: Day }) {
             <div
               className={cn(
                 "relative w-full flex-1 overflow-hidden rounded-lg",
-                m.ratio === null ? "border border-dashed" : "bg-border",
+                m.ratio === null ? "border border-dashed" : "bg-hairline",
               )}
             >
               <motion.div

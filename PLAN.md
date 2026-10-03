@@ -43,6 +43,10 @@ engine (streaks, XP, levels, achievements) that shows *real* progress over time.
 
 ## 3. Design System (B&W Minimal)
 
+### Style — bold editorial (updated)
+- Square corners, strong 1px rules (hairlines for chart grids/tracks), flat surfaces.
+- Giant uppercase page titles with a numbered meta line; letter-spaced uppercase labels and buttons that invert on hover.
+
 ### Colors — only grayscale
 ```css
 :root {            /* light */
@@ -320,10 +324,11 @@ track/
 - Journal with mood/sleep tracking.
 - Done: focus timer survives reloads; Open Library search with manual fallback; books auto-finish at the last page; Tiptap notes with autosave, tags, pin, search; journal insights compare mood/sleep across gym, habit and study days. XP: study 15 per 25 min, book 100, journal 10. Linking notes to books/skills deferred.
 
-### Phase 5 — Progress Engine (Day 19–22)
+### Phase 5 — Progress Engine (Day 19–22) ✅ done
 - XP events, levels, per-module levels, Life Score.
 - Achievement definitions + unlock evaluation + unlock animation.
 - Goals linked to metrics. Trophy case page.
+- Done: per-request progress snapshot (life score across modules, module levels, 17 tiered achievements, goal values) synced in the app layout after every mutation; streak freezes (1 per 7 days, max 2); budget XP; local SQLite access serialised to avoid SQLITE_BUSY.
 
 ### Phase 6 — Insights & Polish (Day 23–26)
 - Weekly summary, correlations, Year in Review.
@@ -334,6 +339,12 @@ track/
 - Playwright flows, Lighthouse pass, deploy to Vercel + Turso.
 
 ---
+
+## 8b. Mobile, PWA & notifications ✅ done (added on request)
+- Installable PWA (manifest, generated icons, iOS meta), tablet icon-rail layout, safe-area insets.
+- Web Push via VAPID: per-device subscriptions, service worker with deep links and a "Mark done" action.
+- Reminders (habit, journal, workout, study, reading, spending, custom) at local time, skipped when already done;
+  in-process scheduler plus `/api/cron/reminders` for serverless.
 
 ## 9. Quality Checklist
 - [ ] Streak / XP / budget math covered by unit tests (timezones, week boundaries, month rollover).

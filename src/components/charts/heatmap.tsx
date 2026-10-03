@@ -65,7 +65,7 @@ export function Heatmap({
                     title={outside ? undefined : (describe?.(day, level) ?? day)}
                     className={cn(
                       "size-[11px] rounded-[3px] animate-[cell-in_500ms_var(--ease-out-expo)_both]",
-                      future ? "bg-transparent" : level && !beforeStart ? "bg-foreground" : "bg-border",
+                      future ? "bg-transparent" : level && !beforeStart ? "bg-foreground" : "bg-hairline",
                       day === end && "ring-1 ring-foreground ring-offset-1 ring-offset-background",
                     )}
                     style={{
@@ -90,7 +90,7 @@ export function HeatmapLegend() {
       {OPACITY.map((o, i) => (
         <span
           key={i}
-          className={cn("size-[11px] rounded-[3px]", i ? "bg-foreground" : "bg-border")}
+          className={cn("size-[11px] rounded-[3px]", i ? "bg-foreground" : "bg-hairline")}
           style={{ opacity: i ? o : 1 }}
         />
       ))}

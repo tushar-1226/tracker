@@ -20,7 +20,7 @@ export function Segmented<T extends string>({
 }) {
   const id = useId();
   return (
-    <div role="radiogroup" className={cn("flex rounded-full border p-1", className)}>
+    <div role="radiogroup" className={cn("flex border p-0.5", className)}>
       {name && <input type="hidden" name={name} value={value} />}
       {options.map((o) => {
         const active = o.value === value;
@@ -32,14 +32,14 @@ export function Segmented<T extends string>({
             aria-checked={active}
             onClick={() => onChange(o.value)}
             className={cn(
-              "relative h-8 flex-1 rounded-full px-3 text-xs font-medium whitespace-nowrap transition-colors",
+              "relative h-8 flex-1 px-3 text-[10px] font-semibold tracking-[0.12em] whitespace-nowrap uppercase transition-colors",
               active ? "text-background" : "text-muted hover:text-foreground",
             )}
           >
             {active && (
               <motion.span
                 layoutId={`seg-${id}`}
-                className="absolute inset-0 rounded-full bg-foreground"
+                className="absolute inset-0 rounded-none bg-foreground"
                 transition={{ type: "spring", stiffness: 500, damping: 38 }}
               />
             )}

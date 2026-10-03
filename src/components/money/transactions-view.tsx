@@ -15,7 +15,7 @@ import { useMoney } from "./money-context";
 import { TransactionList, type TxnRow } from "./transaction-list";
 
 const selectClass =
-  "h-9 rounded-full border bg-transparent px-3 text-xs text-foreground outline-none transition-colors hover:bg-subtle focus:border-foreground";
+  "h-9 rounded-none border bg-transparent px-3 text-xs text-foreground outline-none transition-colors hover:bg-subtle focus:border-foreground";
 
 export function TransactionsView({ month, txns }: { month: MonthKey; txns: TxnRow[] }) {
   const { accounts, categories, money, today, openTransaction } = useMoney();
@@ -49,7 +49,7 @@ export function TransactionsView({ month, txns }: { month: MonthKey; txns: TxnRo
         </Link>
       </Reveal>
       <Reveal className="mb-8 flex flex-wrap items-end justify-between gap-4">
-        <h1 className="text-3xl font-semibold tracking-tight md:text-5xl">Transactions</h1>
+        <h1 className="text-4xl leading-[0.9] font-bold tracking-[-0.045em] md:text-7xl">Transactions</h1>
         <Button onClick={() => openTransaction()}>
           <Plus /> Add
         </Button>

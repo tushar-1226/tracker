@@ -98,7 +98,7 @@ export function ExercisePicker({
                 type="button"
                 onClick={() => setMuscle(m)}
                 className={cn(
-                  "h-8 shrink-0 rounded-full border px-3 text-xs font-medium transition-colors",
+                  "h-8 shrink-0 rounded-none border px-3 text-xs font-medium transition-colors",
                   muscle === m ? "border-foreground bg-foreground text-background" : "text-muted hover:text-foreground",
                 )}
               >

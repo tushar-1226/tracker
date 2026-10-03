@@ -36,7 +36,7 @@ export function TodayHabits({ habits: serverHabits, today }: { habits: HabitView
       {habits.length === 0 ? (
         <Link
           href="/habits?new=1"
-          className="flex h-32 flex-col items-center justify-center gap-2 rounded-2xl border border-dashed text-sm text-muted transition-colors hover:border-foreground hover:text-foreground"
+          className="flex h-32 flex-col items-center justify-center gap-2 rounded-2xl border border-dashed text-sm text-muted transition-colors hover:bg-subtle hover:text-foreground"
         >
           <Plus className="size-5" />
           Add your first habit

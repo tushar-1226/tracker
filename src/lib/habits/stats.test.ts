@@ -66,6 +66,27 @@ describe("daily streaks", () => {
   });
 });
 
+describe("streak freezes", () => {
+  it("earns a freeze after 7 days and spends it on the next miss", () => {
+    // 9 days ago … 3 days ago done (7 in a row), 2 days ago missed, yesterday + today done
+    const logs = logsAt([-9, -8, -7, -6, -5, -4, -3, -1, 0]);
+    const s = computeStats(habit(), logs, TODAY);
+    expect(s.current).toBe(9);
+    expect(s.frozenDays).toEqual([addDays(TODAY, -2)]);
+    expect(s.freezes).toBe(0);
+  });
+
+  it("still breaks without a banked freeze", () => {
+    const logs = logsAt([-8, -7, -6, -5, -4, -3, -1, 0]); // only 6 before the miss
+    expect(computeStats(habit(), logs, TODAY).current).toBe(2);
+  });
+
+  it("banks at most two", () => {
+    const logs = logsAt(Array.from({ length: 28 }, (_, i) => -i));
+    expect(computeStats(habit(), logs, TODAY).freezes).toBe(2);
+  });
+});
+
 describe("weekday habits", () => {
   // Mon / Wed / Fri
   const h = habit({ frequency: { kind: "weekdays", days: [1, 3, 5] } });

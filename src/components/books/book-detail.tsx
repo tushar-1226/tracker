@@ -64,7 +64,7 @@ export function BookDetail({
       <Reveal className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end">
         <BookCover src={book.coverUrl} title={book.title} className="w-36 shrink-0 shadow-xl shadow-black/10" />
         <div className="min-w-0 flex-1">
-          <h1 className="text-3xl font-semibold tracking-tight md:text-5xl">{book.title}</h1>
+          <h1 className="text-4xl leading-[0.9] font-bold tracking-[-0.045em] md:text-7xl">{book.title}</h1>
           <p className="mt-2 text-muted">{book.author}</p>
           <p className="mt-1 text-xs text-muted">
             {[book.startedAt && `Started ${fmt(book.startedAt)}`, book.finishedAt && `Finished ${fmt(book.finishedAt)}`].filter(Boolean).join(" · ")}
@@ -90,8 +90,8 @@ export function BookDetail({
           <Card className="flex h-full flex-col gap-4">
             <CardLabel>Progress</CardLabel>
             <p className="text-4xl font-semibold tracking-tight">{progress === null ? pagesRead : `${Math.round(progress * 100)}%`}</p>
-            <div className="h-2 overflow-hidden rounded-full bg-border">
-              <div className="h-full rounded-full bg-foreground transition-[width] duration-700 ease-out-expo" style={{ width: `${(progress ?? 0) * 100}%` }} />
+            <div className="h-2 overflow-hidden rounded-none bg-hairline">
+              <div className="h-full rounded-none bg-foreground transition-[width] duration-700 ease-out-expo" style={{ width: `${(progress ?? 0) * 100}%` }} />
             </div>
             <p className="text-xs text-muted">
               {pagesRead} of {book.totalPages ?? "?"} pages
@@ -212,7 +212,7 @@ function Highlights({ bookId, items }: { bookId: string; items: { id: string; te
               <span className="block text-sm leading-relaxed">{h.text}</span>
               {h.page && <span className="text-xs text-muted">p. {h.page}</span>}
             </span>
-            <button type="button" aria-label="Delete highlight" onClick={() => startTransition(() => deleteHighlight(h.id))} className="inline-flex size-7 items-center justify-center rounded-full text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground focus:opacity-100">
+            <button type="button" aria-label="Delete highlight" onClick={() => startTransition(() => deleteHighlight(h.id))} className="inline-flex size-7 items-center justify-center rounded-none text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground focus:opacity-100">
               <X className="size-3.5" />
             </button>
           </li>

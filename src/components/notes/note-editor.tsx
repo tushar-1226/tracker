@@ -129,7 +129,7 @@ export function NoteEditor({
 
       <div className="mt-4 flex flex-wrap items-center gap-1.5">
         {tags.map((t) => (
-          <span key={t} className="inline-flex h-7 items-center gap-1 rounded-full border pr-1 pl-2.5 text-xs">
+          <span key={t} className="inline-flex h-7 items-center gap-1 rounded-none border pr-1 pl-2.5 text-xs">
             #{t}
             <button
               type="button"
@@ -139,7 +139,7 @@ export function NoteEditor({
                 setTags(next);
                 schedule({ tags: next });
               }}
-              className="inline-flex size-5 items-center justify-center rounded-full text-muted hover:text-foreground"
+              className="inline-flex size-5 items-center justify-center rounded-none text-muted hover:text-foreground"
             >
               <X className="size-3" />
             </button>
@@ -192,7 +192,7 @@ function Toolbar({ editor }: { editor: NonNullable<ReturnType<typeof useEditor>>
     { key: "code", label: "Code block", icon: Code, run: () => editor.chain().focus().toggleCodeBlock().run() },
   ] as const;
   return (
-    <div className="sticky top-14 z-10 mt-6 -mx-2 flex gap-0.5 border-b bg-background/80 px-2 py-1.5 backdrop-blur-md lg:top-0" role="toolbar" aria-label="Formatting">
+    <div className="sticky top-[calc(3.5rem+env(safe-area-inset-top))] z-10 mt-6 -mx-2 flex gap-0.5 border-b bg-background/80 px-2 py-1.5 backdrop-blur-md md:top-0" role="toolbar" aria-label="Formatting">
       {items.map(({ key, label, icon: Icon, run }) => (
         <button
           key={key}

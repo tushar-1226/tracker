@@ -70,7 +70,7 @@ export function NotesView({ notes, tags, now }: { notes: NoteCard[]; tags: strin
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search notes"
             aria-label="Search notes"
-            className="h-10 w-full rounded-full border bg-transparent pr-4 pl-10 text-sm outline-none transition-colors focus:border-foreground"
+            className="h-10 w-full rounded-none border bg-transparent pr-4 pl-10 text-sm outline-none transition-colors focus:border-foreground"
           />
         </form>
         {tags.map((t) => (
@@ -79,7 +79,7 @@ export function NotesView({ notes, tags, now }: { notes: NoteCard[]; tags: strin
             type="button"
             onClick={() => go({ tag: activeTag === t ? null : t })}
             className={cn(
-              "h-8 rounded-full border px-3 text-xs transition-colors",
+              "h-8 rounded-none border px-3 text-xs transition-colors",
               activeTag === t ? "border-foreground bg-foreground text-background" : "text-muted hover:text-foreground",
             )}
           >
@@ -98,7 +98,7 @@ export function NotesView({ notes, tags, now }: { notes: NoteCard[]; tags: strin
               transition={{ delay: Math.min(i, 12) * 0.03, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
               className="mb-4 break-inside-avoid"
             >
-              <Link href={`/notes/${n.id}`} data-cursor-label="Open" className="block rounded-3xl border bg-surface p-5 transition-colors hover:border-foreground">
+              <Link href={`/notes/${n.id}`} data-cursor-label="Open" className="block rounded-3xl border bg-surface p-5 transition-colors hover:bg-subtle">
                 <div className="flex items-start justify-between gap-2">
                   <p className={cn("font-medium", !n.title && "text-muted")}>{n.title || "Untitled"}</p>
                   {n.pinned && <Pin className="size-3.5 shrink-0 fill-foreground" aria-label="Pinned" />}

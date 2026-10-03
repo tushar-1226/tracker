@@ -17,5 +17,7 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|svg|ico|webp)$).*)"],
+  // Public: API routes (self-authenticating), static assets, and PWA files the browser
+  // fetches without a session (service worker, manifest, icons).
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|sw.js|manifest.webmanifest|icons/|apple-icon|.*\\.(?:png|jpg|svg|ico|webp)$).*)"],
 };

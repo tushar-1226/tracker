@@ -128,7 +128,7 @@ export function LearningView({
       </div>
 
       <Reveal className="mt-10 mb-4">
-        <h2 className="text-lg font-semibold tracking-tight">Skills</h2>
+        <h2 className="border-t-2 border-foreground pt-3 text-2xl font-bold tracking-[-0.03em] uppercase">Skills</h2>
       </Reveal>
       <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
         {skills.map((s, i) => {
@@ -157,7 +157,7 @@ export function LearningView({
                   type="button"
                   aria-label={`Edit ${s.name}`}
                   onClick={() => setSkillForm((f) => ({ open: true, skill: s, key: f.key + 1 }))}
-                  className="inline-flex size-8 items-center justify-center rounded-full text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:bg-subtle hover:text-foreground focus:opacity-100"
+                  className="inline-flex size-8 items-center justify-center rounded-none text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:bg-subtle hover:text-foreground focus:opacity-100"
                 >
                   <Pencil className="size-3.5" />
                 </button>
@@ -167,9 +167,9 @@ export function LearningView({
                   <span className="text-3xl font-semibold tracking-tight">{h}</span>
                   <span className="text-sm text-muted">/ {goal.next} h {s.targetHours ? "goal" : "milestone"}</span>
                 </p>
-                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-border">
+                <div className="mt-2 h-1.5 overflow-hidden rounded-none bg-hairline">
                   <motion.div
-                    className="h-full rounded-full bg-foreground"
+                    className="h-full rounded-none bg-foreground"
                     initial={{ width: 0 }}
                     whileInView={{ width: `${Math.min(1, goal.progress) * 100}%` }}
                     viewport={{ once: true }}
@@ -183,7 +183,7 @@ export function LearningView({
         <button
           type="button"
           onClick={() => setSkillForm((f) => ({ open: true, key: f.key + 1 }))}
-          className="flex min-h-36 flex-col items-center justify-center gap-2 rounded-3xl border border-dashed text-sm text-muted transition-colors hover:border-foreground hover:text-foreground"
+          className="flex min-h-36 flex-col items-center justify-center gap-2 rounded-3xl border border-dashed text-sm text-muted transition-colors hover:bg-subtle hover:text-foreground"
         >
           <Plus className="size-5" />
           {skills.length ? "Add skill" : "Add your first skill — e.g. Rust, Guitar, System Design"}
@@ -252,7 +252,7 @@ function SessionRow({ session, skill, today }: { session: Session; skill?: strin
         type="button"
         aria-label="Delete session"
         onClick={() => startTransition(() => deleteSession(session.id))}
-        className="inline-flex size-7 items-center justify-center rounded-full text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground focus:opacity-100"
+        className="inline-flex size-7 items-center justify-center rounded-none text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground focus:opacity-100"
       >
         <X className="size-3.5" />
       </button>
@@ -311,7 +311,7 @@ function TilRow({ til, today, skill }: { til: Til; today: Day; skill?: string })
         type="button"
         aria-label="Delete note"
         onClick={() => startTransition(() => deleteTil(til.id))}
-        className="inline-flex size-7 items-center justify-center rounded-full text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground focus:opacity-100"
+        className="inline-flex size-7 items-center justify-center rounded-none text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground focus:opacity-100"
       >
         <X className="size-3.5" />
       </button>
@@ -372,7 +372,7 @@ function ResourcesCard({ resources, skills, skillName }: { resources: Resource[]
               disabled={pending}
               onClick={() => startTransition(() => setResourceStatus(r.id, NEXT_STATUS[r.status]))}
               className={cn(
-                "h-6 shrink-0 rounded-full border px-2.5 text-[10px] font-medium transition-colors",
+                "h-6 shrink-0 rounded-none border px-2.5 text-[10px] font-medium transition-colors",
                 r.status === "done" ? "border-foreground bg-foreground text-background" : r.status === "doing" ? "border-foreground" : "border-dashed text-muted",
               )}
               title="Change status"
@@ -387,7 +387,7 @@ function ResourcesCard({ resources, skills, skillName }: { resources: Resource[]
               </span>
             </span>
             {r.url && (
-              <a href={r.url} target="_blank" rel="noreferrer" aria-label={`Open ${r.title}`} className="inline-flex size-7 items-center justify-center rounded-full text-muted hover:text-foreground">
+              <a href={r.url} target="_blank" rel="noreferrer" aria-label={`Open ${r.title}`} className="inline-flex size-7 items-center justify-center rounded-none text-muted hover:text-foreground">
                 <ExternalLink className="size-3.5" />
               </a>
             )}
@@ -395,7 +395,7 @@ function ResourcesCard({ resources, skills, skillName }: { resources: Resource[]
               type="button"
               aria-label={`Delete ${r.title}`}
               onClick={() => startTransition(() => deleteResource(r.id))}
-              className="inline-flex size-7 items-center justify-center rounded-full text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground focus:opacity-100"
+              className="inline-flex size-7 items-center justify-center rounded-none text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground focus:opacity-100"
             >
               <Trash2 className="size-3.5" />
             </button>

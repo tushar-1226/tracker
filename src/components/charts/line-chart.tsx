@@ -97,14 +97,15 @@ export function LineChart({
         >
           {ticks.map((t) => (
             <g key={t}>
-              <line x1={PAD.left} x2={width - PAD.right} y1={y(t)} y2={y(t)} stroke="var(--border)" strokeWidth={1} />
+              <line x1={PAD.left} x2={width - PAD.right} y1={y(t)} y2={y(t)} stroke="var(--hairline)" strokeWidth={1} />
               <text x={PAD.left - 8} y={y(t)} dy="0.32em" textAnchor="end" className="fill-muted text-[10px] tabular-nums">
                 {formatAxis(t)}
               </text>
             </g>
           ))}
           {labels.map((l, i) =>
-            i % every === 0 || i === n - 1 ? (
+            // Keep the last label; drop a regular one that would crowd it.
+            (i % every === 0 && n - 1 - i >= Math.ceil(every / 2)) || i === n - 1 ? (
               <text key={i} x={x(i)} y={height - 6} textAnchor="middle" className="fill-muted text-[10px]">
                 {l}
               </text>

@@ -29,3 +29,28 @@ Open http://localhost:3000 — the first visit creates your (single, private) ac
 
 Next.js 16 (App Router) · Tailwind v4 · Drizzle + libSQL/SQLite (Turso in production) ·
 jose sessions · Motion · Lenis · cmdk · next-themes.
+
+## Mobile app & notifications
+
+Track is an installable PWA built for phones and tablets.
+
+- **Install:** open Settings → "Install the app". Android/desktop get an install button;
+  on iPhone/iPad use Safari → Share → *Add to Home Screen* (needed for notifications on iOS 16.4+).
+- **Notifications:** Settings → Notifications → *Turn on* (once per device), then add reminders
+  there or on any habit's page. Reminders fire at your local time and are skipped when the
+  thing is already done. Tapping one opens the right screen; habit reminders have a *Mark done* button on Android.
+
+### Requirements
+
+- `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` in `.env.local`
+  (generate with `npx web-push generate-vapid-keys`). Restart the server after changing them.
+- **HTTPS.** Service workers and push only work on `https://` or `localhost`. To try it on your
+  phone during development, expose the dev server through a tunnel, e.g.
+  `npx cloudflared tunnel --url http://localhost:3000`, and open the https URL on the phone.
+
+### Scheduling
+
+- `next start` / `next dev` run the reminder scheduler in-process every minute (`src/instrumentation.ts`).
+- On serverless hosts (e.g. Vercel), call `GET /api/cron/reminders` every minute with
+  `Authorization: Bearer $CRON_SECRET` from any cron service. Set `DISABLE_REMINDER_SCHEDULER=1`
+  to turn the in-process scheduler off.

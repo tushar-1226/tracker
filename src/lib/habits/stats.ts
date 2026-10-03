@@ -24,7 +24,15 @@ export type HabitStats = {
   /** 0–1 completion over the last 30 days */
   rate30: number;
   totalDone: number;
+  /** Streak freezes banked right now. */
+  freezes: number;
+  /** Missed days that a freeze covered. */
+  frozenDays: Day[];
 };
+
+/** Every 7 days in a row earns a freeze; at most 2 are banked. */
+export const FREEZE_EVERY = 7;
+export const FREEZE_MAX = 2;
 
 /** Logs dated before the start date (backfilled) move the effective start earlier. */
 export function effectiveStart(habit: HabitLike, logs: LogMap): Day {
@@ -59,7 +67,7 @@ export function computeStats(
   weekStartsOn: 0 | 1 = 1,
 ): HabitStats {
   const start = effectiveStart(habit, logs);
-  if (start > today) return { current: 0, best: 0, unit: "days", rate30: 0, totalDone: 0 };
+  if (start > today) return { current: 0, best: 0, unit: "days", rate30: 0, totalDone: 0, freezes: 0, frozenDays: [] };
 
   if (habit.type === "quit") return quitStats(logs, start, today);
   if (habit.frequency.kind === "weekly") {
@@ -69,6 +77,8 @@ export function computeStats(
   let run = 0;
   let best = 0;
   let totalDone = 0;
+  let freezes = 0;
+  const frozenDays: Day[] = [];
   for (const day of eachDay(start, today)) {
     const done = isDone(habit, logs.get(day));
     if (done) totalDone++;
@@ -76,8 +86,19 @@ export function computeStats(
       // Doing it on an off day still counts as a bonus, but never breaks a streak.
       continue;
     }
-    if (done) run++;
-    else if (day !== today) run = 0; // today isn't over yet
+    if (done) {
+      run++;
+      if (run % FREEZE_EVERY === 0) freezes = Math.min(FREEZE_MAX, freezes + 1);
+    } else if (day !== today) {
+      // today isn't over yet; a past miss spends a freeze if one is banked
+      if (freezes > 0 && run > 0) {
+        freezes--;
+        frozenDays.push(day);
+      } else {
+        run = 0;
+        freezes = 0;
+      }
+    }
     best = Math.max(best, run);
   }
 
@@ -92,7 +113,7 @@ export function computeStats(
     if (done) doneDue++;
   }
 
-  return { current: run, best, unit: "days", rate30: due ? doneDue / due : 0, totalDone };
+  return { current: run, best, unit: "days", rate30: due ? doneDue / due : 0, totalDone, freezes, frozenDays };
 }
 
 function weeklyStats(
@@ -126,7 +147,7 @@ function weeklyStats(
   for (const day of eachDay(windowStart, today)) if (isDone(habit, logs.get(day))) done++;
   const expected = (target * (diffDays(windowStart, today) + 1)) / 7;
 
-  return { current: run, best, unit: "weeks", rate30: Math.min(1, done / expected), totalDone };
+  return { current: run, best, unit: "weeks", rate30: Math.min(1, done / expected), totalDone, freezes: 0, frozenDays: [] };
 }
 
 function quitStats(logs: LogMap, start: Day, today: Day): HabitStats {
@@ -153,6 +174,8 @@ function quitStats(logs: LogMap, start: Day, today: Day): HabitStats {
     unit: "days",
     rate30: (windowDays - windowSlips) / windowDays,
     totalDone: totalDays - slips.length,
+    freezes: 0,
+    frozenDays: [],
   };
 }
 

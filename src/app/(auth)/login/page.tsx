@@ -15,18 +15,18 @@ export default async function LoginPage() {
       <ThemeToggle className="absolute top-4 right-4 z-10" />
 
       <section className="relative hidden overflow-hidden bg-foreground p-12 text-background lg:flex lg:flex-col lg:justify-between">
-        <p className="text-lg font-semibold tracking-tight">
+        <p className="text-xl font-bold tracking-[-0.05em] uppercase">
           track<span className="opacity-50">.</span>
         </p>
         <div>
-          <h2 className="max-w-md text-5xl leading-[1.05] font-semibold tracking-tight">
+          <h2 className="text-[5.5rem] leading-[0.85] font-bold tracking-[-0.055em] uppercase">
             Small days,
             <br />
             tracked honestly,
             <br />
             <span className="opacity-50">add up.</span>
           </h2>
-          <p className="mt-6 max-w-sm text-sm opacity-60">
+          <p className="mt-8 max-w-sm border-t border-background/30 pt-4 text-[11px] font-semibold tracking-[0.18em] uppercase opacity-60">
             Habits, money, gym, learning, books and notes — one quiet place to see real progress.
           </p>
         </div>

@@ -35,7 +35,7 @@ export function ChartCard({
           type="button"
           onClick={() => setView(view === "chart" ? "table" : "chart")}
           aria-label={view === "chart" ? "Show as table" : "Show as chart"}
-          className="-mt-1 -mr-2 inline-flex size-8 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-subtle hover:text-foreground"
+          className="-mt-1 -mr-2 inline-flex size-8 shrink-0 items-center justify-center rounded-none text-muted transition-colors hover:bg-subtle hover:text-foreground"
         >
           {view === "chart" ? <Table2 className="size-4" /> : <ChartIcon className="size-4" />}
         </button>
