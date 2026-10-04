@@ -85,12 +85,26 @@ function serialize(client: Client): Client {
   });
 }
 
-const url = process.env.DATABASE_URL!;
-const client = createClient({
-  url,
-  authToken: process.env.DATABASE_AUTH_TOKEN || undefined,
-  // Only matters if another process (e.g. drizzle-kit studio) holds the lock.
-  timeout: 1000,
-});
+function connect() {
+  const url = process.env.DATABASE_URL;
+  if (!url) throw new Error("DATABASE_URL is not set — see .env.example (use a libsql:// URL on serverless hosts).");
+  const client = createClient({
+    url,
+    authToken: process.env.DATABASE_AUTH_TOKEN || undefined,
+    // Only matters if another process (e.g. drizzle-kit studio) holds the lock.
+    timeout: 1000,
+  });
+  return drizzle(url.startsWith("file:") ? serialize(client) : client, { schema });
+}
 
-export const db = drizzle(url.startsWith("file:") ? serialize(client) : client, { schema });
+type Db = ReturnType<typeof connect>;
+let instance: Db | undefined;
+
+/** Connects on first use, so `next build` never needs a database. */
+export const db = new Proxy({} as Db, {
+  get(_, prop) {
+    instance ??= connect();
+    const value = Reflect.get(instance, prop, instance);
+    return typeof value === "function" ? value.bind(instance) : value;
+  },
+});
