@@ -4,7 +4,11 @@ import { db } from "@/db";
 import { habitLogs, habits, journalEntries, readingLogs, reminders, studySessions, users, workouts } from "@/db/schema";
 import { isDone, isDue as habitIsDue } from "@/lib/habits/stats";
 import { isDue, localClock } from "@/lib/reminders";
+import { addDays } from "@/lib/dates";
+import { formatMoney } from "@/lib/money/math";
 import { sendToUser } from "./push";
+import { getPeriodSummary, summaryLine } from "./summary";
+import { getHoroscope, horoscopeLine } from "./horoscope";
 
 /**
  * Sends every reminder that is due right now. Safe to call as often as you like:
@@ -28,9 +32,21 @@ export async function runReminders(now = new Date()) {
     await db.update(reminders).set({ lastSentDate: clock.day }).where(eq(reminders.id, r.id));
     if (skip) continue;
 
+    let body = r.body ?? undefined;
+    if (r.kind === "summary") {
+      // The seven days before today, in the user's calendar.
+      const s = await getPeriodSummary(r.userId, addDays(clock.day, -7), addDays(clock.day, -1));
+      body = summaryLine(s, (m) => formatMoney(m, settings.currency ?? "INR"));
+    }
+    if (r.kind === "horoscope") {
+      const h = getHoroscope(settings, clock.day);
+      if (!h) continue; // birth details not set yet
+      body = horoscopeLine(h);
+    }
+
     sent += await sendToUser(r.userId, {
       title: r.title,
-      body: r.body ?? undefined,
+      body,
       url: r.url,
       tag: `reminder-${r.id}`,
       habitId: r.kind === "habit" && r.refId ? r.refId : undefined,

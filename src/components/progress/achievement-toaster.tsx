@@ -47,9 +47,9 @@ export function AchievementToaster({ unlocks }: { unlocks: Unlock[] }) {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.96, y: -8 }}
                 transition={{ type: "spring", stiffness: 300, damping: 26 }}
-                className="flex w-full max-w-sm flex-col items-center rounded-none border bg-background p-8 text-center shadow-2xl shadow-black/10"
+                className="flex w-full max-w-sm flex-col items-center rounded-[2rem] bg-surface p-8 text-center shadow-lift"
               >
-                <p className="text-xs font-medium tracking-[0.2em] text-muted uppercase">Achievement unlocked</p>
+                <p className="text-xs font-medium text-muted">Achievement unlocked</p>
                 <div className="my-7">
                   <AchievementBadge module={def.module} tier={current.tier} size={120} draw />
                 </div>

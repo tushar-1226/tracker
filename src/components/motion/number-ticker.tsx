@@ -36,9 +36,14 @@ export function NumberTicker({
     return () => controls.stop();
   }, [inView, value, decimals, prefix, suffix, duration, reduce]);
 
+  const final = `${prefix}${new Intl.NumberFormat("en-IN", { minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(value)}${suffix}`;
+  // The animated digits are decorative; assistive tech (and text extraction) gets the real value.
   return (
-    <span ref={ref} className={className}>
-      {prefix}0{suffix}
+    <span className={className}>
+      <span ref={ref} aria-hidden="true">
+        {prefix}0{suffix}
+      </span>
+      <span className="sr-only">{final}</span>
     </span>
   );
 }

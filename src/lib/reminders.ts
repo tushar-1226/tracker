@@ -1,4 +1,4 @@
-export type ReminderKind = "habit" | "journal" | "workout" | "study" | "reading" | "spending" | "custom";
+export type ReminderKind = "habit" | "journal" | "workout" | "study" | "reading" | "spending" | "summary" | "horoscope" | "custom";
 
 /** How late a reminder may still fire (covers a server restart or a missed tick). */
 export const SEND_WINDOW_MIN = 30;
@@ -9,6 +9,9 @@ export const KIND_DEFAULTS: Record<Exclude<ReminderKind, "habit" | "custom">, { 
   study: { title: "Focus time", body: "A 25-minute session keeps the streak alive.", url: "/learning", time: "19:00" },
   reading: { title: "Read a few pages", body: "Even 10 pages counts.", url: "/books", time: "22:00" },
   spending: { title: "Log today’s spending", body: "Keep your budget honest.", url: "/money?add=expense", time: "21:00" },
+  // The body is filled in at send time with last week's numbers.
+  summary: { title: "Your week in review", body: "", url: "/progress", time: "09:00" },
+  horoscope: { title: "Today’s horoscope", body: "", url: "/horoscope", time: "07:00" },
 };
 
 export const KIND_LABEL: Record<ReminderKind, string> = {
@@ -18,6 +21,8 @@ export const KIND_LABEL: Record<ReminderKind, string> = {
   study: "Study",
   reading: "Reading",
   spending: "Log spending",
+  summary: "Weekly summary",
+  horoscope: "Horoscope",
   custom: "Custom",
 };
 

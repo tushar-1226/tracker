@@ -12,8 +12,9 @@ import { Chips } from "@/components/ui/chips";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { type Day, diffDays } from "@/lib/dates";
+import { type Day, diffDays, formatDate } from "@/lib/dates";
 import { type GoalMetric, METRIC_LABEL } from "@/lib/progress/goals";
+import { currencySymbol } from "@/lib/money/math";
 import { cn } from "@/lib/utils";
 import { addMilestone, archiveGoal, createGoal, deleteGoal, toggleMilestone } from "@/server/actions/progress";
 
@@ -60,7 +61,8 @@ function unitFor(metric: GoalMetric, units: string, currency: string) {
 
 const fmt = (n: number | null) => (n === null ? "—" : Number.isInteger(n) ? n.toLocaleString("en-IN") : n.toFixed(1));
 
-export function GoalsView({ goals, lookups, today, units }: { goals: GoalView[]; lookups: Lookups; today: Day; units: string }) {
+export function GoalsView({ goals, lookups, today, units, currency }: { goals: GoalView[]; lookups: Lookups; today: Day; units: string; currency: string }) {
+  const symbol = currencySymbol(currency);
   const [form, setForm] = useState({ open: false, key: 0 });
   const active = goals.filter((g) => !g.completedAt);
   const done = goals.filter((g) => g.completedAt);
@@ -93,7 +95,7 @@ export function GoalsView({ goals, lookups, today, units }: { goals: GoalView[];
         <div className="grid gap-4 md:grid-cols-2">
           <AnimatePresence initial={false}>
             {active.map((g, i) => (
-              <GoalCard key={g.id} goal={g} index={i} today={today} unit={unitFor(g.metric, units, "₹")} refName={refName(g.metric)} />
+              <GoalCard key={g.id} goal={g} index={i} today={today} unit={unitFor(g.metric, units, symbol)} money={g.metric.type === "savings_goal" || g.metric.type === "net_worth"} refName={refName(g.metric)} />
             ))}
           </AnimatePresence>
         </div>
@@ -101,7 +103,7 @@ export function GoalsView({ goals, lookups, today, units }: { goals: GoalView[];
         <button
           type="button"
           onClick={() => setForm((f) => ({ open: true, key: f.key + 1 }))}
-          className="flex w-full flex-col items-center gap-2 rounded-3xl border border-dashed px-6 py-16 text-center transition-colors hover:bg-subtle"
+          className="flex w-full flex-col items-center gap-2 rounded-3xl bg-foreground/[0.035] px-6 py-16 text-center transition-colors hover:bg-subtle"
         >
           <span className="font-medium">No goals yet.</span>
           <span className="max-w-md text-sm text-muted">“Bench 100 kg”, “Read 24 books this year”, “Save ₹1,00,000” — link a goal to your data and it updates on its own.</span>
@@ -111,17 +113,17 @@ export function GoalsView({ goals, lookups, today, units }: { goals: GoalView[];
       {done.length > 0 && (
         <>
           <Reveal className="mt-10 mb-4">
-            <h2 className="border-t-2 border-foreground pt-3 text-2xl font-bold tracking-[-0.03em] uppercase">Reached</h2>
+            <h2 className="text-xl font-semibold tracking-tight">Reached</h2>
           </Reveal>
           <div className="grid gap-3 md:grid-cols-3">
             {done.map((g) => (
-              <div key={g.id} className="flex items-center gap-3 rounded-3xl border bg-surface p-4">
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-none bg-foreground text-background">
+              <div key={g.id} className="flex items-center gap-3 rounded-3xl bg-surface p-4">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-foreground text-background">
                   <Check className="size-4" />
                 </span>
                 <span className="min-w-0">
                   <span className="block truncate text-sm font-medium">{g.title}</span>
-                  <span className="text-xs text-muted">{new Date(g.completedAt!).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
+                  <span className="text-xs text-muted">{formatDate(g.completedAt!, { day: "numeric", month: "short", year: "numeric" })}</span>
                 </span>
               </div>
             ))}
@@ -130,18 +132,17 @@ export function GoalsView({ goals, lookups, today, units }: { goals: GoalView[];
       )}
 
       <Dialog open={form.open} onOpenChange={(open) => setForm((f) => ({ ...f, open }))}>
-        <GoalForm key={form.key} lookups={lookups} units={units} onDone={() => setForm((f) => ({ ...f, open: false }))} />
+        <GoalForm key={form.key} lookups={lookups} units={units} symbol={symbol} onDone={() => setForm((f) => ({ ...f, open: false }))} />
       </Dialog>
     </>
   );
 }
 
-function GoalCard({ goal, index, today, unit, refName }: { goal: GoalView; index: number; today: Day; unit: string; refName?: string }) {
+function GoalCard({ goal, index, today, unit, refName, money }: { goal: GoalView; index: number; today: Day; unit: string; refName?: string; money: boolean }) {
   const [pending, startTransition] = useTransition();
   const [newMilestone, setNewMilestone] = useState("");
   const daysLeft = goal.deadline ? diffDays(today, goal.deadline) : null;
   const manual = goal.metric.type === "manual";
-  const money = unit === "₹";
 
   return (
     <motion.div
@@ -150,7 +151,7 @@ function GoalCard({ goal, index, today, unit, refName }: { goal: GoalView; index
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.97 }}
       transition={{ delay: index * 0.04, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className={cn("group flex flex-col gap-5 rounded-3xl border bg-surface p-6", pending && "opacity-70")}
+      className={cn("group flex flex-col gap-5 rounded-3xl bg-surface p-6", pending && "opacity-70")}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
@@ -162,10 +163,10 @@ function GoalCard({ goal, index, today, unit, refName }: { goal: GoalView; index
           </p>
         </div>
         <div className="flex opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100">
-          <button type="button" aria-label="Archive goal" onClick={() => startTransition(() => archiveGoal(goal.id))} className="inline-flex size-8 items-center justify-center rounded-none text-muted hover:bg-subtle hover:text-foreground">
+          <button type="button" aria-label="Archive goal" onClick={() => startTransition(() => archiveGoal(goal.id))} className="inline-flex size-8 items-center justify-center rounded-full text-muted hover:bg-subtle hover:text-foreground">
             <Archive className="size-3.5" />
           </button>
-          <button type="button" aria-label="Delete goal" onClick={() => startTransition(() => deleteGoal(goal.id))} className="inline-flex size-8 items-center justify-center rounded-none text-muted hover:bg-subtle hover:text-foreground">
+          <button type="button" aria-label="Delete goal" onClick={() => startTransition(() => deleteGoal(goal.id))} className="inline-flex size-8 items-center justify-center rounded-full text-muted hover:bg-subtle hover:text-foreground">
             <Trash2 className="size-3.5" />
           </button>
         </div>
@@ -177,11 +178,11 @@ function GoalCard({ goal, index, today, unit, refName }: { goal: GoalView; index
         </Ring>
         <div>
           <p className="text-3xl font-semibold tracking-tight">
-            {money && "₹"}
+            {money && unit}
             {fmt(goal.current)}
             <span className="text-base font-normal text-muted">
               {" "}
-              / {money && "₹"}
+              / {money && unit}
               {fmt(goal.target)} {money ? "" : unit}
             </span>
           </p>
@@ -200,7 +201,7 @@ function GoalCard({ goal, index, today, unit, refName }: { goal: GoalView; index
               <li key={m.id}>
                 <label className="flex cursor-pointer items-center gap-3 rounded-xl px-1 py-1.5 text-sm transition-colors hover:bg-subtle">
                   <input type="checkbox" checked={m.done} onChange={(e) => startTransition(() => toggleMilestone(m.id, e.target.checked))} className="peer sr-only" />
-                  <span className={cn("flex size-5 shrink-0 items-center justify-center rounded-md border transition-colors peer-focus-visible:outline peer-focus-visible:outline-1", m.done && "border-foreground bg-foreground text-background")}>
+                  <span className={cn("flex size-5 shrink-0 items-center justify-center rounded-full border-[1.5px] border-foreground/30 transition-colors peer-focus-visible:outline peer-focus-visible:outline-1", m.done && "bg-foreground text-background")}>
                     {m.done && <Check className="size-3" />}
                   </span>
                   <span className={cn(m.done && "text-muted line-through")}>{m.title}</span>
@@ -230,7 +231,7 @@ function GoalCard({ goal, index, today, unit, refName }: { goal: GoalView; index
   );
 }
 
-function GoalForm({ lookups, units, onDone }: { lookups: Lookups; units: string; onDone: () => void }) {
+function GoalForm({ lookups, units, symbol, onDone }: { lookups: Lookups; units: string; symbol: string; onDone: () => void }) {
   const [type, setType] = useState<GoalMetric["type"]>("exercise_1rm");
   const [ref, setRef] = useState("");
   const [title, setTitle] = useState("");
@@ -257,7 +258,7 @@ function GoalForm({ lookups, units, onDone }: { lookups: Lookups; units: string;
         return { type } as GoalMetric;
     }
   };
-  const unit = unitFor({ type } as GoalMetric, units, "₹");
+  const unit = unitFor({ type } as GoalMetric, units, symbol);
   const types = (Object.keys(METRIC_LABEL) as GoalMetric["type"][]).filter((t) => {
     if (t === "habit_streak") return lookups.habits.length > 0;
     if (t === "exercise_1rm") return lookups.exercises.length > 0;
@@ -327,7 +328,7 @@ function GoalForm({ lookups, units, onDone }: { lookups: Lookups; units: string;
         <div className="space-y-2">
           <Label>Milestones {type !== "manual" && "(optional)"}</Label>
           {milestones.map((m, i) => (
-            <div key={i} className="flex items-center gap-2 rounded-xl border px-3 py-2 text-sm">
+            <div key={i} className="flex items-center gap-2 rounded-xl bg-subtle px-3 py-2 text-sm">
               <span className="flex-1">{m}</span>
               <button type="button" aria-label={`Remove ${m}`} onClick={() => setMilestones(milestones.filter((_, j) => j !== i))} className="text-muted hover:text-foreground">
                 <X className="size-3.5" />

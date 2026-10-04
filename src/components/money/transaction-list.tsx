@@ -2,7 +2,7 @@
 
 import { ArrowLeftRight, Repeat } from "lucide-react";
 import { motion } from "motion/react";
-import { type Day, addDays, toDate } from "@/lib/dates";
+import { type Day, addDays, toDate, formatDate } from "@/lib/dates";
 import { netEffect } from "@/lib/money/math";
 import { cn } from "@/lib/utils";
 import type { listTransactions } from "@/server/queries/money";
@@ -14,7 +14,7 @@ export type TxnRow = Awaited<ReturnType<typeof listTransactions>>[number];
 function dayHeading(day: Day, today: Day) {
   if (day === today) return "Today";
   if (day === addDays(today, -1)) return "Yesterday";
-  return toDate(day).toLocaleDateString("en-IN", {
+  return formatDate(toDate(day), {
     weekday: "short",
     day: "numeric",
     month: "short",
@@ -60,7 +60,7 @@ export function TransactionList({ txns, empty }: { txns: TxnRow[]; empty?: React
                       onClick={() => openTransaction(t)}
                       className="flex w-full items-center gap-3 rounded-2xl px-2 py-2.5 text-left transition-colors hover:bg-subtle"
                     >
-                      <span className="flex size-9 shrink-0 items-center justify-center rounded-xl border bg-background">
+                      <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-subtle">
                         {t.type === "transfer" ? <ArrowLeftRight className="size-4" /> : <CategoryIcon name={cat?.icon} />}
                       </span>
                       <span className="min-w-0 flex-1">

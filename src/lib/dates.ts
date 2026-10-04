@@ -63,3 +63,47 @@ export function isValidTimeZone(tz: string) {
 }
 
 export const WEEKDAY_SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
+
+const NAMES = {
+  en: {
+    weekday: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    weekdayShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    month: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+    monthShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+  },
+  hi: {
+    weekday: ["रविवार", "सोमवार", "मंगलवार", "बुधवार", "गुरुवार", "शुक्रवार", "शनिवार"],
+    weekdayShort: ["रवि", "सोम", "मंगल", "बुध", "गुरु", "शुक्र", "शनि"],
+    month: ["जनवरी", "फ़रवरी", "मार्च", "अप्रैल", "मई", "जून", "जुलाई", "अगस्त", "सितंबर", "अक्टूबर", "नवंबर", "दिसंबर"],
+    monthShort: ["जन॰", "फ़र॰", "मार्च", "अप्रैल", "मई", "जून", "जुल॰", "अग॰", "सित॰", "अक्तू॰", "नव॰", "दिस॰"],
+  },
+};
+
+export type DateFormat = {
+  weekday?: "short" | "long";
+  day?: "numeric";
+  month?: "short" | "long";
+  year?: "numeric";
+  /** Read the date in UTC (calendar days) instead of the viewer's zone. */
+  timeZone?: "UTC";
+};
+
+/**
+ * Locale-free date formatting ("Fri, 4 Sep 2026"). Intl output differs between Node's
+ * and the browser's ICU (en-IN "Sept" vs "Sep"), which breaks hydration.
+ */
+export function formatDate(date: Date | number, f: DateFormat, lang: "en" | "hi" = "en") {
+  const d = typeof date === "number" ? new Date(date) : date;
+  const utc = f.timeZone === "UTC";
+  const n = NAMES[lang];
+  const wd = utc ? d.getUTCDay() : d.getDay();
+  const m = utc ? d.getUTCMonth() : d.getMonth();
+  const date_ = [
+    f.day ? String(utc ? d.getUTCDate() : d.getDate()) : "",
+    f.month ? (f.month === "long" ? n.month : n.monthShort)[m] : "",
+    f.year ? String(utc ? d.getUTCFullYear() : d.getFullYear()) : "",
+  ].filter(Boolean).join(" ");
+  if (!f.weekday) return date_;
+  const w = (f.weekday === "long" ? n.weekday : n.weekdayShort)[wd];
+  return date_ ? `${w}${f.month ? "," : ""} ${date_}` : w;
+}

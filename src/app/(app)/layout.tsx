@@ -1,7 +1,8 @@
 import { CommandPaletteProvider } from "@/components/layout/command-palette";
-import { MobileHeader, MobileTabBar } from "@/components/layout/mobile-nav";
-import { Sidebar } from "@/components/layout/sidebar";
+import { AppHeader } from "@/components/layout/app-header";
+import { Dock } from "@/components/layout/dock";
 import { TimezoneSync } from "@/components/layout/timezone-sync";
+import { CursorSetting } from "@/components/motion/cursor-setting";
 import { getCurrentUser } from "@/lib/auth/dal";
 import { AchievementToaster } from "@/components/progress/achievement-toaster";
 import { getProgress, listUnlocked } from "@/server/progress";
@@ -19,12 +20,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   return (
     <CommandPaletteProvider>
       <TimezoneSync serverTimeZone={timeZone} storedTimeZone={user.settings.timeZone} />
-      <Sidebar userName={user.name} level={progress.xp.overall.level} levelProgress={progress.xp.overall.progress} />
-      <MobileHeader />
-      <main className="min-h-dvh pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-16 md:pl-20 lg:pl-64">
-        <div className="mx-auto w-full max-w-6xl px-4 pt-8 md:px-8 md:pt-12">{children}</div>
+      <CursorSetting enabled={user.settings.cursor !== false} />
+      <AppHeader userName={user.name} level={progress.xp.overall.level} levelProgress={progress.xp.overall.progress} />
+      <main className="min-h-dvh pb-[calc(8rem+env(safe-area-inset-bottom))]">
+        <div className="mx-auto w-full max-w-6xl px-4 pt-6 md:px-8 md:pt-10">{children}</div>
       </main>
-      <MobileTabBar />
+      <Dock userName={user.name} level={progress.xp.overall.level} levelProgress={progress.xp.overall.progress} />
       <AchievementToaster unlocks={unseen} />
     </CommandPaletteProvider>
   );

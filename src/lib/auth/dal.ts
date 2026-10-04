@@ -19,7 +19,7 @@ export const getCurrentUser = cache(async () => {
   const { userId } = await verifySession();
   const user = await db.query.users.findFirst({
     where: eq(users.id, userId),
-    columns: { id: true, name: true, email: true, settings: true, xp: true },
+    columns: { id: true, name: true, email: true, settings: true, xp: true, createdAt: true },
   });
   // Stale cookie for a deleted user.
   if (!user) redirect("/login");

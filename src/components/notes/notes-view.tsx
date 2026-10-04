@@ -10,6 +10,7 @@ import { PageHeader } from "@/components/module/page-header";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { createNote } from "@/server/actions/notes";
+import { formatDate } from "@/lib/dates";
 
 type NoteCard = { id: string; title: string; text: string; tags: string[]; pinned: boolean; updatedAt: number };
 
@@ -20,7 +21,7 @@ function ago(ms: number, now: number) {
   const h = Math.round(m / 60);
   if (h < 24) return `${h} h ago`;
   const d = Math.round(h / 24);
-  return d < 30 ? `${d} d ago` : new Date(ms).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+  return d < 30 ? `${d} d ago` : formatDate(ms, { day: "numeric", month: "short" });
 }
 
 export function NotesView({ notes, tags, now }: { notes: NoteCard[]; tags: string[]; now: number }) {
@@ -70,7 +71,7 @@ export function NotesView({ notes, tags, now }: { notes: NoteCard[]; tags: strin
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search notes"
             aria-label="Search notes"
-            className="h-10 w-full rounded-none border bg-transparent pr-4 pl-10 text-sm outline-none transition-colors focus:border-foreground"
+            className="h-10 w-full rounded-full bg-subtle pr-4 pl-10 text-sm outline-none transition-colors focus:ring-2 focus:ring-foreground/15"
           />
         </form>
         {tags.map((t) => (
@@ -79,8 +80,8 @@ export function NotesView({ notes, tags, now }: { notes: NoteCard[]; tags: strin
             type="button"
             onClick={() => go({ tag: activeTag === t ? null : t })}
             className={cn(
-              "h-8 rounded-none border px-3 text-xs transition-colors",
-              activeTag === t ? "border-foreground bg-foreground text-background" : "text-muted hover:text-foreground",
+              "h-8 rounded-full bg-subtle px-3 text-xs transition-colors",
+              activeTag === t ? "bg-foreground text-background" : "text-muted hover:text-foreground",
             )}
           >
             #{t}
@@ -98,7 +99,7 @@ export function NotesView({ notes, tags, now }: { notes: NoteCard[]; tags: strin
               transition={{ delay: Math.min(i, 12) * 0.03, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
               className="mb-4 break-inside-avoid"
             >
-              <Link href={`/notes/${n.id}`} data-cursor-label="Open" className="block rounded-3xl border bg-surface p-5 transition-colors hover:bg-subtle">
+              <Link href={`/notes/${n.id}`} data-cursor-label="Open" className="block rounded-3xl bg-surface p-5 transition-colors hover:bg-subtle">
                 <div className="flex items-start justify-between gap-2">
                   <p className={cn("font-medium", !n.title && "text-muted")}>{n.title || "Untitled"}</p>
                   {n.pinned && <Pin className="size-3.5 shrink-0 fill-foreground" aria-label="Pinned" />}
@@ -115,7 +116,7 @@ export function NotesView({ notes, tags, now }: { notes: NoteCard[]; tags: strin
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center rounded-3xl border border-dashed px-6 py-16 text-center">
+        <div className="flex flex-col items-center rounded-3xl bg-foreground/[0.035] px-6 py-16 text-center">
           <p className="font-medium">{params.get("q") || activeTag ? "No notes match." : "No notes yet."}</p>
           <p className="mt-1 text-sm text-muted">Capture an idea before it slips away.</p>
         </div>

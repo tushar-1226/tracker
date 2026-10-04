@@ -43,9 +43,11 @@ engine (streaks, XP, levels, achievements) that shows *real* progress over time.
 
 ## 3. Design System (B&W Minimal)
 
-### Style — bold editorial (updated)
-- Square corners, strong 1px rules (hairlines for chart grids/tracks), flat surfaces.
-- Giant uppercase page titles with a numbered meta line; letter-spaced uppercase labels and buttons that invert on hover.
+### Style — soft & fluid (current)
+- No borders: large rounded surfaces (`rounded-3xl`) on a soft grey canvas, separated by gentle shadows.
+- Pill controls everywhere (buttons, chips, selects, steppers, switches, segmented controls); inputs sit on a subtle fill.
+- Sentence-case titles, quiet 13px labels; dialogs are bottom sheets on phones and floating panels on larger screens.
+- (Superseded: the earlier "bold editorial" style with square corners and uppercase labels.)
 
 ### Colors — only grayscale
 ```css
@@ -67,8 +69,9 @@ engine (streaks, XP, levels, achievements) that shows *real* progress over time.
 - Scale: 12 / 14 / 16 / 20 / 28 / 40 / 64.
 
 ### Layout
-- Left rail sidebar (icons + labels, collapsible) on desktop; bottom tab bar on mobile.
-- Generous whitespace, 1px borders, `rounded-2xl` cards, no shadows (or a single very soft one in light mode).
+- No sidebar: a top bar (wordmark, search, theme, avatar with level ring) plus a **floating dock** at the bottom on every
+  screen size — Home, Habits, Money, Gym, Horoscope and "All sections", which opens a full-screen sheet.
+- Generous whitespace, borderless `rounded-3xl` cards with soft shadows.
 - Bento-grid dashboard.
 
 ### Motion principles
@@ -330,10 +333,11 @@ track/
 - Goals linked to metrics. Trophy case page.
 - Done: per-request progress snapshot (life score across modules, module levels, 17 tiered achievements, goal values) synced in the app layout after every mutation; streak freezes (1 per 7 days, max 2); budget XP; local SQLite access serialised to avoid SQLITE_BUSY.
 
-### Phase 6 — Insights & Polish (Day 23–26)
+### Phase 6 — Insights & Polish (Day 23–26) ✅ done
 - Weekly summary, correlations, Year in Review.
 - Micro-interactions pass, empty states, loading skeletons, reduced-motion audit.
 - Keyboard shortcuts, export/import, PWA (installable on phone).
+- Done: preferences (currency, kg/lb, week start, cursor, workout/learning/reading targets), account (name, password), JSON export/import, this-week vs last-week card, Monday summary notification, Year in Review, loading/error/404 pages. Weight goals stored in kg. Correlation insights live in the journal. Extra keyboard shortcuts beyond ⌘K not added.
 
 ### Phase 7 — Ship (Day 27–28)
 - Playwright flows, Lighthouse pass, deploy to Vercel + Turso.
@@ -345,6 +349,17 @@ track/
 - Web Push via VAPID: per-device subscriptions, service worker with deep links and a "Mark done" action.
 - Reminders (habit, journal, workout, study, reading, spending, custom) at local time, skipped when already done;
   in-process scheduler plus `/api/cron/reminders` for serverless.
+
+## 8c. Vedic horoscope ✅ done (added on request)
+- Positions from the **Swiss Ephemeris** (`sweph`, DE431 files in `/ephe`): sidereal Lahiri, true node, whole-sign houses.
+- Natal chart: Rashi, Nakshatra/pada, Lagna, Navamsa (D9), dignity, combustion, North Indian D1/D9 charts, yogas and doshas.
+- Vimshottari dasha (Maha, Antar, Pratyantar) with a timeline.
+- Daily panchang (Vara, Tithi, Nakshatra, Yoga, Karana with end times, Moon phase, sunrise/sunset, moonrise/moonset),
+  Rahu Kaal, Yamaganda, Gulika, Abhijit and Brahma Muhurta for the current place; Gochara transits from the Moon.
+- English, Hinglish and Hindi.
+- Licence note: the Swiss Ephemeris is AGPL (or a paid licence) — fine for a personal app; check before distributing.
+- Reading from classical rules (Chandrabala, Tarabala, Chandrashtama, Rikta tithi, Sade Sati, Jupiter), week-ahead scores,
+  module suggestions, dashboard card and a 07:00 notification. Validated against Sankrantis, Purnima and known 2026 transits.
 
 ## 9. Quality Checklist
 - [ ] Streak / XP / budget math covered by unit tests (timezones, week boundaries, month rollover).

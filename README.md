@@ -28,7 +28,13 @@ Open http://localhost:3000 — the first visit creates your (single, private) ac
 ## Stack
 
 Next.js 16 (App Router) · Tailwind v4 · Drizzle + libSQL/SQLite (Turso in production) ·
-jose sessions · Motion · Lenis · cmdk · next-themes.
+jose sessions · Motion · Lenis · cmdk · next-themes · Swiss Ephemeris (`sweph`) for the horoscope.
+
+## Horoscope
+
+The Vedic horoscope uses the Swiss Ephemeris through the `sweph` native addon (built during `pnpm install`;
+allowed in `pnpm-workspace.yaml`). The ephemeris files live in `/ephe` and are bundled with the server build.
+The Swiss Ephemeris is licensed under the AGPL (or a commercial licence from Astrodienst).
 
 ## Mobile app & notifications
 
@@ -54,3 +60,11 @@ Track is an installable PWA built for phones and tablets.
 - On serverless hosts (e.g. Vercel), call `GET /api/cron/reminders` every minute with
   `Authorization: Bearer $CRON_SECRET` from any cron service. Set `DISABLE_REMINDER_SCHEDULER=1`
   to turn the in-process scheduler off.
+
+## Deploying to Vercel
+
+1. Create a hosted libSQL database (e.g. [Turso](https://turso.tech)) and run
+   `DATABASE_URL=libsql://… DATABASE_AUTH_TOKEN=… pnpm db:migrate` once. A `file:` database does not work on Vercel.
+2. In the Vercel project settings add `DATABASE_URL`, `DATABASE_AUTH_TOKEN`, `SESSION_SECRET`,
+   `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`, `CRON_SECRET` and `DISABLE_REMINDER_SCHEDULER=1`.
+3. Point an external cron service at `/api/cron/reminders` every minute (see *Scheduling*); Vercel's free cron runs at most once a day.

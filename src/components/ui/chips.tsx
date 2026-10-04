@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 
-/** Wrapping single-choice chips; submits through a hidden input when `name` is set. */
+/** Wrapping single-choice pills; submits through a hidden input when `name` is set. */
 export function Chips<T extends string>({
   name,
   value,
@@ -17,7 +17,7 @@ export function Chips<T extends string>({
   className?: string;
 }) {
   return (
-    <div role="radiogroup" className={cn("flex flex-wrap gap-1.5", className)}>
+    <div role="radiogroup" className={cn("flex flex-wrap gap-2", className)}>
       {name && <input type="hidden" name={name} value={value} />}
       {options.map((o) => {
         const on = o.value === value;
@@ -29,8 +29,8 @@ export function Chips<T extends string>({
             aria-checked={on}
             onClick={() => onChange(o.value)}
             className={cn(
-              "inline-flex h-9 items-center gap-1.5 border px-3 text-xs font-medium transition-colors [&_svg]:size-3.5",
-              on ? "border-foreground bg-foreground text-background" : "border-foreground/25 text-muted hover:border-foreground hover:text-foreground",
+              "inline-flex h-10 items-center gap-1.5 rounded-full px-4 text-[13px] font-medium transition-all duration-200 active:scale-95 [&_svg]:size-4",
+              on ? "bg-foreground text-background shadow-soft" : "bg-subtle text-muted hover:text-foreground",
             )}
           >
             {o.icon}

@@ -87,8 +87,8 @@ export function HabitForm({ draft, onDone }: { draft?: HabitDraft; onDone: () =>
                 aria-pressed={icon === key}
                 onClick={() => setIcon(key)}
                 className={cn(
-                  "flex aspect-square items-center justify-center rounded-xl border transition-colors",
-                  icon === key ? "border-foreground bg-foreground text-background" : "border-transparent hover:bg-subtle",
+                  "flex aspect-square items-center justify-center rounded-2xl transition-colors",
+                  icon === key ? "bg-foreground text-background" : "border-transparent hover:bg-subtle",
                 )}
               >
                 <Icon className="size-4" />
@@ -163,8 +163,8 @@ export function HabitForm({ draft, onDone }: { draft?: HabitDraft; onDone: () =>
                     <label
                       key={d}
                       className={cn(
-                        "flex h-10 items-center justify-center rounded-xl border text-xs font-medium transition-colors",
-                        on ? "border-foreground bg-foreground text-background" : "text-muted hover:bg-subtle",
+                        "flex h-10 items-center justify-center rounded-full bg-subtle text-xs font-medium transition-colors",
+                        on ? "bg-foreground text-background" : "text-muted hover:bg-foreground/10",
                       )}
                     >
                       <input
@@ -182,7 +182,7 @@ export function HabitForm({ draft, onDone }: { draft?: HabitDraft; onDone: () =>
               </div>
             )}
             {freqKind === "weekly" && (
-              <div className="flex items-center justify-between rounded-2xl border px-4 py-2">
+              <div className="flex items-center justify-between rounded-2xl bg-subtle px-4 py-2">
                 <input type="hidden" name="times" value={times} />
                 <span className="text-sm">
                   <span className="tabular text-lg font-medium">{times}</span> times a week

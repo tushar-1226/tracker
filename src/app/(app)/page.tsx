@@ -23,6 +23,10 @@ import { getToday } from "@/server/today";
 import { getProgress, listUnlocked } from "@/server/progress";
 import { LifeBreakdown } from "@/components/progress/life-breakdown";
 import { RecentAchievements } from "@/components/progress/recent-achievements";
+import { WeekCompare } from "@/components/progress/week-compare";
+import { TodaySkyCard } from "@/components/horoscope/today-sky-card";
+import { getHoroscope } from "@/server/horoscope";
+import { getPeriodSummary } from "@/server/summary";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
@@ -51,7 +55,11 @@ export default async function DashboardPage() {
     .map((i) => ({ name: i.habit.name, ...computeStats(i.habit, i.logs, today, weekStartsOn) }))
     .sort((a, b) => b.current - a.current)[0];
 
-  const snapshot = await getProgress();
+  const [snapshot, thisWeek, lastWeek] = await Promise.all([
+    getProgress(),
+    getPeriodSummary(user.id, weekStart, today),
+    getPeriodSummary(user.id, addDays(weekStart, -7), addDays(weekStart, -1)),
+  ]);
   const lifeScore = snapshot.life.today ?? 0;
   const unlocked = (await listUnlocked(user.id)).sort((a, b) => b.unlockedAt.getTime() - a.unlockedAt.getTime()).slice(0, 3);
 
@@ -149,6 +157,14 @@ export default async function DashboardPage() {
           />
         </StaggerItem>
       </Stagger>
+
+      <Reveal className="mt-4">
+        <TodaySkyCard h={getHoroscope(user.settings, today)} />
+      </Reveal>
+
+      <Reveal className="mt-4">
+        <WeekCompare now={thisWeek} last={lastWeek} money={(m) => formatMoney(m, currency)} />
+      </Reveal>
     </>
   );
 }

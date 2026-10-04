@@ -16,10 +16,10 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   return (
     <Stagger className="w-full max-w-sm">
       <StaggerItem>
-        <p className="mb-10 text-xl font-bold tracking-[-0.05em] uppercase lg:hidden">
+        <p className="mb-10 text-xl font-semibold tracking-tight lg:hidden">
           track<span className="text-muted">.</span>
         </p>
-        <h1 className="text-5xl leading-[0.9] font-bold tracking-[-0.05em] uppercase">
+        <h1 className="text-4xl font-semibold tracking-tight">
           {mode === "login" ? "Welcome back." : "Let’s set you up."}
         </h1>
         <p className="mt-2 text-sm text-muted">
@@ -56,7 +56,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
         </StaggerItem>
 
         {state?.message && (
-          <p role="alert" className="rounded-xl border border-dashed px-4 py-3 text-sm">
+          <p role="alert" className="rounded-xl bg-foreground/[0.035] px-4 py-3 text-sm">
             {state.message}
           </p>
         )}

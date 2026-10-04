@@ -1,6 +1,8 @@
 import { sql } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
+export type StoredPlace = { name: string; lat: number; lon: number; tz: string };
+
 export type UserSettings = {
   currency?: string;
   weekStartsOn?: 0 | 1;
@@ -10,6 +12,13 @@ export type UserSettings = {
   readingGoal?: number;
   /** Minutes of learning per day that count as a full day. */
   learningTarget?: number;
+  /** Workouts per week that count as on track. */
+  workoutTarget?: number;
+  /** Vedic horoscope: birth details (time optional) and where you are now (for sunrise/Rahu Kaal). */
+  birth?: { date: string; time: string | null; place: StoredPlace };
+  currentPlace?: StoredPlace;
+  /** Language for the horoscope section. */
+  horoscopeLang?: "en" | "hinglish" | "hi";
   /** IANA zone, saved from the browser so reminders fire at local times. */
   timeZone?: string;
 };

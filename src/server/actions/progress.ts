@@ -5,7 +5,8 @@ import { refresh } from "next/cache";
 import { z } from "zod";
 import { db } from "@/db";
 import { achievementsUnlocked, goalMilestones, goals } from "@/db/schema";
-import { verifySession } from "@/lib/auth/dal";
+import { getCurrentUser, verifySession } from "@/lib/auth/dal";
+import { fromDisplayWeight } from "@/lib/fitness";
 import { isDay } from "@/lib/dates";
 import { revokeXp } from "@/server/xp";
 
@@ -40,8 +41,15 @@ const goalSchema = z.object({
 });
 
 export async function createGoal(input: z.input<typeof goalSchema>) {
-  const { userId } = await verifySession();
+  const user = await getCurrentUser();
+  const userId = user.id;
   const data = goalSchema.parse(input);
+  // Weight goals are stored in kg so changing units later can't move the goalposts.
+  if (data.metric.type === "exercise_1rm" || data.metric.type === "body_weight") {
+    const units = user.settings.units ?? "kg";
+    if (data.target !== null) data.target = fromDisplayWeight(data.target, units);
+    if (data.baseline !== null) data.baseline = fromDisplayWeight(data.baseline, units);
+  }
   if (data.metric.type !== "manual" && data.target === null) throw new Error("Set a target");
   await db.transaction(async (tx) => {
     const [g] = await tx

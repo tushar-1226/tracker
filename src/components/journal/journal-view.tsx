@@ -10,7 +10,7 @@ import { Heatmap } from "@/components/charts/heatmap";
 import { LineChart } from "@/components/charts/line-chart";
 import { Reveal } from "@/components/motion/reveal";
 import { Card, CardLabel } from "@/components/ui/card";
-import { type Day, addDays, eachDay, toDate } from "@/lib/dates";
+import { type Day, addDays, eachDay, toDate, formatDate } from "@/lib/dates";
 import { MOOD_LABEL } from "@/lib/growth";
 import { cn } from "@/lib/utils";
 import { saveEntry } from "@/server/actions/journal";
@@ -25,8 +25,8 @@ export type Entry = {
 };
 
 const MOOD_ICONS = [Angry, Frown, Meh, Smile, Laugh];
-const long = (d: Day) => toDate(d).toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" });
-const short = (d: Day) => toDate(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", timeZone: "UTC" });
+const long = (d: Day) => formatDate(toDate(d), { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" });
+const short = (d: Day) => formatDate(toDate(d), { day: "numeric", month: "short", timeZone: "UTC" });
 
 export function JournalView({
   today,
@@ -60,20 +60,20 @@ export function JournalView({
     <>
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4 md:mb-10">
         <div>
-          <h1 className="text-4xl leading-[0.9] font-bold tracking-[-0.045em] md:text-7xl">Journal</h1>
+          <h1 className="text-4xl leading-[0.9] font-semibold tracking-tight md:text-7xl">Journal</h1>
           <p className="mt-2 text-sm text-muted md:text-base">{date === today ? "Today, " : ""}{long(date)}</p>
         </div>
         <div className="flex items-center gap-2">
-          <Link href={`/journal?date=${addDays(date, -1)}`} scroll={false} aria-label="Previous day" className="inline-flex size-9 items-center justify-center rounded-none border transition-colors hover:bg-subtle">
+          <Link href={`/journal?date=${addDays(date, -1)}`} scroll={false} aria-label="Previous day" className="inline-flex size-9 items-center justify-center rounded-full bg-subtle transition-colors hover:bg-foreground hover:text-background">
             <ChevronLeft className="size-4" />
           </Link>
           {date !== today && (
-            <Link href="/journal" scroll={false} className="h-9 rounded-none border px-4 text-sm leading-9 transition-colors hover:bg-subtle">
+            <Link href="/journal" scroll={false} className="h-9 rounded-full bg-subtle px-4 text-sm leading-9 transition-colors hover:bg-subtle">
               Today
             </Link>
           )}
           {date < today && (
-            <Link href={`/journal?date=${addDays(date, 1)}`} scroll={false} aria-label="Next day" className="inline-flex size-9 items-center justify-center rounded-none border transition-colors hover:bg-subtle">
+            <Link href={`/journal?date=${addDays(date, 1)}`} scroll={false} aria-label="Next day" className="inline-flex size-9 items-center justify-center rounded-full bg-subtle transition-colors hover:bg-foreground hover:text-background">
               <ChevronRight className="size-4" />
             </Link>
           )}
@@ -243,8 +243,8 @@ function EntryEditor({ date, entry }: { date: Day; entry?: Entry }) {
               whileTap={{ scale: 0.9 }}
               onClick={() => update({ mood: on ? null : value }, 200)}
               className={cn(
-                "flex flex-col items-center gap-1.5 rounded-2xl border py-3 transition-colors",
-                on ? "border-foreground bg-foreground text-background" : "text-muted hover:border-foreground/40 hover:text-foreground",
+                "flex flex-col items-center gap-1.5 rounded-2xl bg-subtle py-3 transition-colors",
+                on ? "bg-foreground text-background" : "text-muted hover:bg-foreground/10 hover:text-foreground",
               )}
             >
               <Icon className="size-6" strokeWidth={1.5} />
@@ -275,11 +275,11 @@ function EntryEditor({ date, entry }: { date: Day; entry?: Entry }) {
         <div>
           <p className="mb-2 text-xs text-muted">Sleep</p>
           <div className="flex h-10 items-center gap-2">
-            <button type="button" aria-label="Less sleep" onClick={() => update({ sleepHours: Math.max(0, (state.sleepHours ?? 7.5) - 0.5) }, 400)} className="inline-flex size-9 items-center justify-center rounded-none border hover:bg-subtle">
+            <button type="button" aria-label="Less sleep" onClick={() => update({ sleepHours: Math.max(0, (state.sleepHours ?? 7.5) - 0.5) }, 400)} className="inline-flex size-9 items-center justify-center rounded-full bg-subtle transition-colors hover:bg-foreground hover:text-background">
               <Minus className="size-4" />
             </button>
             <span className="min-w-20 text-center text-xl font-semibold tracking-tight">{state.sleepHours === null ? "—" : `${state.sleepHours} h`}</span>
-            <button type="button" aria-label="More sleep" onClick={() => update({ sleepHours: Math.min(24, (state.sleepHours ?? 7) + 0.5) }, 400)} className="inline-flex size-9 items-center justify-center rounded-none border hover:bg-subtle">
+            <button type="button" aria-label="More sleep" onClick={() => update({ sleepHours: Math.min(24, (state.sleepHours ?? 7) + 0.5) }, 400)} className="inline-flex size-9 items-center justify-center rounded-full bg-subtle transition-colors hover:bg-foreground hover:text-background">
               <Plus className="size-4" />
             </button>
           </div>
@@ -295,7 +295,7 @@ function EntryEditor({ date, entry }: { date: Day; entry?: Entry }) {
           value={state.gratitude}
           onChange={(e) => update({ gratitude: e.target.value })}
           placeholder="Three small good things…"
-          className="h-11 w-full rounded-xl border bg-transparent px-4 text-sm outline-none placeholder:text-muted focus:border-foreground"
+          className="h-11 w-full rounded-2xl bg-subtle px-4 text-sm outline-none placeholder:text-muted focus:ring-2 focus:ring-foreground/15"
         />
       </div>
 
@@ -310,7 +310,7 @@ function EntryEditor({ date, entry }: { date: Day; entry?: Entry }) {
           placeholder="What happened, what you felt, what you’d do differently…"
           rows={8}
           data-lenis-prevent
-          className="w-full flex-1 resize-none rounded-2xl border bg-transparent px-4 py-3 text-sm leading-relaxed outline-none placeholder:text-muted focus:border-foreground"
+          className="w-full flex-1 resize-none rounded-2xl bg-subtle px-4 py-3 text-sm leading-relaxed outline-none placeholder:text-muted focus:ring-2 focus:ring-foreground/15"
         />
       </div>
     </Card>

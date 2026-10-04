@@ -36,7 +36,6 @@ import { listAccounts } from "@/server/queries/money";
 import { getTimeZone } from "@/server/today";
 import { grantXp, revokeXp } from "@/server/xp";
 
-const WEEKLY_WORKOUT_TARGET = 3;
 const PAGES_PER_DAY = 20;
 const GOAL_XP = 200;
 const BUDGET_DAY_XP = 10;
@@ -51,6 +50,7 @@ async function build() {
   const units = user.settings.units ?? "kg";
   const weekStartsOn = user.settings.weekStartsOn ?? 1;
   const learningTarget = user.settings.learningTarget ?? 30;
+  const WEEKLY_WORKOUT_TARGET = user.settings.workoutTarget ?? 3;
   const since = addDays(today, -60);
 
   const [habits, xpRows, workouts, history, library, sessions, skillRows, [{ tilCount }], bookData, entries, budgetRows, accounts, body, goalRows, milestones, savings] =
@@ -210,12 +210,11 @@ async function build() {
       }
       case "habit_streak":
         return habitStats.find((h) => h.habit.id === metric.habitId)?.stats.current ?? null;
-      case "exercise_1rm": {
-        const r = records.get(metric.exerciseId);
-        return r ? toDisplayWeight(r.bestE1rm, units) : 0;
-      }
+      // Weight metrics compare in kg (targets are stored in kg); converted for display below.
+      case "exercise_1rm":
+        return records.get(metric.exerciseId)?.bestE1rm ?? 0;
       case "body_weight":
-        return latestWeight === null ? null : toDisplayWeight(latestWeight, units);
+        return latestWeight;
       case "study_hours":
         return Math.round(((minutesBySkill.get(metric.skillId) ?? 0) / 60) * 10) / 10;
       case "books_year":
@@ -232,15 +231,17 @@ async function build() {
     const current = goalValue(g.metric, g.id);
     const ms = milestones.filter((m) => m.goalId === g.id).sort((a, b) => a.position - b.position);
     const target = g.metric.type === "manual" ? Math.max(1, ms.length) : g.target;
+    const weight = g.metric.type === "exercise_1rm" || g.metric.type === "body_weight";
+    const show = (v: number | null) => (v === null || !weight ? v : Math.round(toDisplayWeight(v, units) * 10) / 10);
     return {
       id: g.id,
       title: g.title,
       metric: g.metric,
-      target,
-      baseline: g.baseline,
+      target: show(target)!,
+      baseline: show(g.baseline),
       deadline: g.deadline,
       completedAt: g.completedAt?.getTime() ?? null,
-      current,
+      current: show(current),
       progress: g.metric.type === "manual" && !ms.length ? 0 : goalProgress(current, target, g.baseline),
       milestones: ms.map((m) => ({ id: m.id, title: m.title, done: m.doneAt !== null })),
     };
@@ -251,6 +252,7 @@ async function build() {
     today,
     tz,
     units,
+    currency: user.settings.currency ?? "INR",
     life: { today: lifeScore(todayParts), parts: todayParts, series: lifeSeries },
     xp: { total: user.xp, overall, byModule: xpByModule, byDay: xpByDay },
     metrics,

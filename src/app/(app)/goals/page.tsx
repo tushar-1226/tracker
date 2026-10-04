@@ -6,5 +6,5 @@ export const metadata: Metadata = { title: "Goals" };
 
 export default async function GoalsPage() {
   const p = await getProgress();
-  return <GoalsView goals={p.goals} lookups={p.lookups} today={p.today} units={p.units} />;
+  return <GoalsView goals={p.goals} lookups={p.lookups} today={p.today} units={p.units} currency={p.currency} />;
 }

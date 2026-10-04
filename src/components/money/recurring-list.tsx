@@ -3,7 +3,7 @@
 import { Pause, Play, Repeat, Trash2 } from "lucide-react";
 import { useTransition } from "react";
 import { Card, CardLabel } from "@/components/ui/card";
-import { toDate } from "@/lib/dates";
+import { toDate, formatDate } from "@/lib/dates";
 import { monthlyEquivalent } from "@/lib/money/math";
 import { cn } from "@/lib/utils";
 import { deleteRecurring, setRecurringActive } from "@/server/actions/money";
@@ -28,7 +28,7 @@ export function RecurringList({ rules }: { rules: Rule[] }) {
         <span className="text-foreground tabular-nums">{money(monthlyOut)}</span> a month in bills & subscriptions
       </p>
       {rules.length === 0 ? (
-        <p className="mt-6 rounded-2xl border border-dashed px-4 py-6 text-center text-sm text-muted">
+        <p className="mt-6 rounded-2xl bg-foreground/[0.035] px-4 py-6 text-center text-sm text-muted">
           Choose “Repeat” when adding rent, salary or a subscription.
         </p>
       ) : (
@@ -43,7 +43,7 @@ export function RecurringList({ rules }: { rules: Rule[] }) {
                   <span className="block text-xs text-muted">
                     {EVERY[r.every]} ·{" "}
                     {r.active
-                      ? `next ${toDate(r.nextDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", timeZone: "UTC" })}`
+                      ? `next ${formatDate(toDate(r.nextDate), { day: "numeric", month: "short", timeZone: "UTC" })}`
                       : "paused"}
                   </span>
                 </span>
@@ -57,7 +57,7 @@ export function RecurringList({ rules }: { rules: Rule[] }) {
                     aria-label={r.active ? "Pause" : "Resume"}
                     disabled={pending}
                     onClick={() => startTransition(() => setRecurringActive(r.id, !r.active))}
-                    className="inline-flex size-8 items-center justify-center rounded-none text-muted hover:bg-subtle hover:text-foreground"
+                    className="inline-flex size-8 items-center justify-center rounded-full text-muted hover:bg-subtle hover:text-foreground"
                   >
                     {r.active ? <Pause className="size-3.5" /> : <Play className="size-3.5" />}
                   </button>
@@ -66,7 +66,7 @@ export function RecurringList({ rules }: { rules: Rule[] }) {
                     aria-label="Stop repeating"
                     disabled={pending}
                     onClick={() => startTransition(() => deleteRecurring(r.id))}
-                    className="inline-flex size-8 items-center justify-center rounded-none text-muted hover:bg-subtle hover:text-foreground"
+                    className="inline-flex size-8 items-center justify-center rounded-full text-muted hover:bg-subtle hover:text-foreground"
                   >
                     <Trash2 className="size-3.5" />
                   </button>

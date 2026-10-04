@@ -1,8 +1,11 @@
-import { type Day, addDays, diffDays, toDate } from "@/lib/dates";
+import { type Day, addDays, diffDays, toDate, formatDate } from "@/lib/dates";
 
 export type AccountType = "cash" | "bank" | "card" | "savings" | "investment" | "loan";
 export type TxnType = "income" | "expense" | "transfer";
 export type RepeatEvery = "weekly" | "monthly" | "yearly";
+
+export const CURRENCIES = ["INR", "USD", "EUR", "GBP", "AED", "SGD", "AUD", "CAD", "JPY"] as const;
+export type Currency = (typeof CURRENCIES)[number];
 
 /** Accounts where the balance is normally money owed. */
 export const LIABILITY_TYPES: AccountType[] = ["card", "loan"];
@@ -94,7 +97,7 @@ export function monthRange(month: MonthKey): { first: Day; last: Day } {
 }
 
 export function monthLabel(month: MonthKey, style: "short" | "long" = "short") {
-  return toDate(`${month}-01`).toLocaleDateString("en-IN", {
+  return formatDate(toDate(`${month}-01`), {
     month: style,
     year: style === "long" ? "numeric" : undefined,
     timeZone: "UTC",

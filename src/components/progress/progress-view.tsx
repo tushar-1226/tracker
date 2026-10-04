@@ -11,7 +11,7 @@ import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { PageHeader } from "@/components/module/page-header";
 import { XpBar } from "@/components/module/xp-bar";
 import { Card, CardLabel } from "@/components/ui/card";
-import { type Day, toDate } from "@/lib/dates";
+import { type Day, toDate, formatDate } from "@/lib/dates";
 import { ACHIEVEMENTS, TIER_NAMES, type AchievementMetrics, tiersReached, titleFor } from "@/lib/progress/achievements";
 import { type ModuleKey, SOURCE_LABEL } from "@/lib/progress/modules";
 import { cn } from "@/lib/utils";
@@ -20,9 +20,10 @@ import { MODULE_ICON } from "./module-icon";
 
 type ModuleLevel = { key: ModuleKey; label: string; href: string; xp: number; level: number; progress: number; current: number; needed: number };
 
-const short = (d: Day) => toDate(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", timeZone: "UTC" });
+const short = (d: Day) => formatDate(toDate(d), { day: "numeric", month: "short", timeZone: "UTC" });
 
 export function ProgressView({
+  year,
   overall,
   totalXp,
   modules,
@@ -32,6 +33,7 @@ export function ProgressView({
   unlocked,
   recent,
 }: {
+  year: number;
   overall: { level: number; current: number; needed: number; progress: number };
   totalXp: number;
   modules: ModuleLevel[];
@@ -46,7 +48,15 @@ export function ProgressView({
 
   return (
     <>
-      <PageHeader title="Progress" description="Levels, XP and achievements across everything you track." />
+      <PageHeader
+        title="Progress"
+        description="Levels, XP and achievements across everything you track."
+        actions={
+          <Link href={`/progress/${year}`} className="inline-flex h-10 items-center rounded-full bg-surface px-4 shadow-soft text-xs font-medium text-muted transition-colors hover:bg-foreground hover:text-background">
+            {year} in review →
+          </Link>
+        }
+      />
 
       <div className="grid gap-4 md:grid-cols-3">
         <Reveal className="md:col-span-2">
@@ -94,16 +104,16 @@ export function ProgressView({
           const Icon = MODULE_ICON[m.key];
           return (
             <StaggerItem key={m.key}>
-              <Link href={m.href} data-cursor-label="Open" className="flex h-full flex-col gap-4 rounded-3xl border bg-surface p-4 transition-colors hover:bg-subtle">
+              <Link href={m.href} data-cursor-label="Open" className="flex h-full flex-col gap-4 rounded-3xl bg-surface p-4 transition-colors hover:bg-subtle">
                 <span className="flex items-center justify-between text-sm">
                   {m.label}
                   <Icon className="size-4 text-muted" />
                 </span>
                 <span>
                   <span className="text-3xl font-semibold tracking-tight">Lv {m.level}</span>
-                  <span className="mt-2 block h-1 overflow-hidden rounded-none bg-hairline">
+                  <span className="mt-2 block h-1 overflow-hidden rounded-full bg-hairline">
                     <motion.span
-                      className="block h-full rounded-none bg-foreground"
+                      className="block h-full rounded-full bg-foreground"
                       initial={{ width: 0 }}
                       animate={{ width: `${Math.max(2, m.progress * 100)}%` }}
                       transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
@@ -156,7 +166,7 @@ export function ProgressView({
       </div>
 
       <Reveal className="mt-10 mb-4">
-        <h2 className="border-t-2 border-foreground pt-3 text-2xl font-bold tracking-[-0.03em] uppercase">Trophy case</h2>
+        <h2 className="text-xl font-semibold tracking-tight">Trophy case</h2>
         <p className="text-sm text-muted">Outline = bronze · hatched = silver · solid = gold</p>
       </Reveal>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -172,7 +182,7 @@ export function ProgressView({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: (i % 6) * 0.04, duration: 0.5 }}
-              className={cn("flex items-center gap-4 rounded-3xl border p-4", reached ? "bg-surface" : "border-dashed")}
+              className={cn("flex items-center gap-4 rounded-3xl p-4", reached ? "bg-surface" : "bg-foreground/[0.035]")}
             >
               <AchievementBadge module={a.module} tier={reached - 1} size={56} />
               <div className="min-w-0 flex-1">
@@ -182,15 +192,15 @@ export function ProgressView({
                 </p>
                 {next !== undefined ? (
                   <div className="mt-2 flex items-center gap-2">
-                    <span className="h-1 flex-1 overflow-hidden rounded-none bg-hairline">
-                      <span className="block h-full rounded-none bg-foreground" style={{ width: `${Math.min(1, (value - prev) / (next - prev)) * 100}%` }} />
+                    <span className="h-1 flex-1 overflow-hidden rounded-full bg-hairline">
+                      <span className="block h-full rounded-full bg-foreground" style={{ width: `${Math.min(1, (value - prev) / (next - prev)) * 100}%` }} />
                     </span>
                     <span className="text-[10px] text-muted tabular-nums">
                       {Math.min(value, next).toLocaleString("en-IN")}/{next.toLocaleString("en-IN")}
                     </span>
                   </div>
                 ) : (
-                  <p className="mt-1 text-[10px] font-medium tracking-wide uppercase">{a.thresholds.length > 1 ? TIER_NAMES[2] : "Unlocked"}</p>
+                  <p className="mt-1 text-[10px] font-medium tracking-wide">{a.thresholds.length > 1 ? TIER_NAMES[2] : "Unlocked"}</p>
                 )}
               </div>
             </motion.div>
@@ -207,7 +217,7 @@ export function ProgressView({
                 <li key={i} className="flex items-center justify-between py-2.5 text-sm">
                   <span>{SOURCE_LABEL[r.source] ?? r.source}</span>
                   <span className="flex items-center gap-4">
-                    <span className="text-xs text-muted">{new Date(r.at).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</span>
+                    <span className="text-xs text-muted">{formatDate(r.at, { day: "numeric", month: "short" })}</span>
                     <span className="w-14 text-right font-medium tabular-nums">+{r.amount}</span>
                   </span>
                 </li>

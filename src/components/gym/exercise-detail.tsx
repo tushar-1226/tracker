@@ -7,10 +7,10 @@ import { LineChart } from "@/components/charts/line-chart";
 import { NumberTicker } from "@/components/motion/number-ticker";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { Card, CardLabel } from "@/components/ui/card";
-import { type Day, toDate } from "@/lib/dates";
+import { type Day, toDate, formatDate } from "@/lib/dates";
 
-const short = (d: Day) => toDate(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", timeZone: "UTC" });
-const long = (d: Day) => toDate(d).toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+const short = (d: Day) => formatDate(toDate(d), { day: "numeric", month: "short", timeZone: "UTC" });
+const long = (d: Day) => formatDate(toDate(d), { weekday: "short", day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 
 export function ExerciseDetail({
   name,
@@ -37,7 +37,7 @@ export function ExerciseDetail({
         </Link>
       </Reveal>
       <Reveal className="mb-10">
-        <h1 className="text-4xl leading-[0.9] font-bold tracking-[-0.045em] md:text-7xl">{name}</h1>
+        <h1 className="text-4xl leading-[0.9] font-semibold tracking-tight md:text-7xl">{name}</h1>
         <p className="mt-2 text-sm text-muted">{muscle}</p>
       </Reveal>
 
@@ -72,7 +72,7 @@ export function ExerciseDetail({
               baseline="fit"
             />
           ) : (
-            <p className="flex h-40 items-center justify-center rounded-2xl border border-dashed text-sm text-muted">
+            <p className="flex h-40 items-center justify-center rounded-2xl bg-foreground/[0.035] text-sm text-muted">
               Log this exercise in two sessions to see your progress line.
             </p>
           )}
@@ -92,7 +92,7 @@ export function ExerciseDetail({
                     <span className="w-28 shrink-0 text-xs text-muted">{long(s.date)}</span>
                     <span className="flex-1 truncate">{s.summary}</span>
                     {s.pr && (
-                      <span className="inline-flex items-center gap-1 rounded-none bg-foreground px-2 py-0.5 text-[10px] text-background">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-foreground px-2 py-0.5 text-[10px] text-background">
                         <Trophy className="size-3" /> PR
                       </span>
                     )}

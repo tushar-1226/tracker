@@ -15,8 +15,8 @@ export function LifeBreakdown({ parts }: { parts: LifeParts }) {
           <li key={m.key} className="flex items-center gap-1.5" title={`${m.label}: ${Math.round(v * 100)}%`}>
             <Icon className="size-3 text-muted" aria-hidden />
             <span className="sr-only">{m.label}</span>
-            <span className="h-1 w-8 overflow-hidden rounded-none bg-hairline">
-              <span className="block h-full rounded-none bg-foreground" style={{ width: `${v * 100}%` }} />
+            <span className="h-1 w-8 overflow-hidden rounded-full bg-hairline">
+              <span className="block h-full rounded-full bg-foreground" style={{ width: `${v * 100}%` }} />
             </span>
           </li>
         );

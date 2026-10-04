@@ -30,6 +30,7 @@ export default async function ProgressPage() {
 
   return (
     <ProgressView
+      year={Number(p.today.slice(0, 4))}
       overall={p.xp.overall}
       totalXp={p.xp.total}
       modules={MODULES.map((m) => {

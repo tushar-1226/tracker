@@ -5,13 +5,15 @@
 
 /* ---------- Tokens: strictly grayscale ---------- */
 :root {
-  --background: #ffffff;
+  /* Soft & fluid: surfaces float on a light grey page; no hard borders. */
+  --background: #f3f3f2;
   --surface: #ffffff;
-  --subtle: #f1f1f1;
-  /* Editorial rules: strong lines; `hairline` for gridlines, tracks, empty cells. */
-  --border: #0a0a0a;
-  --hairline: #e4e4e4;
-  --muted: #737373;
+  --subtle: #eaeae9;
+  --border: #e3e3e2;
+  --hairline: #e3e3e2;
+  --muted: #74746f;
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.04), 0 12px 32px -12px rgb(0 0 0 / 0.12);
+  --shadow-lift: 0 2px 6px rgb(0 0 0 / 0.06), 0 24px 48px -16px rgb(0 0 0 / 0.22);
   --foreground: #0a0a0a;
   --inverse: #ffffff;
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
@@ -19,12 +21,14 @@
 }
 
 .dark {
-  --background: #0a0a0a;
-  --surface: #0a0a0a;
-  --subtle: #1a1a1a;
-  --border: #ededed;
+  --background: #0b0b0b;
+  --surface: #171717;
+  --subtle: #232323;
+  --border: #2a2a2a;
   --hairline: #2a2a2a;
-  --muted: #8f8f8f;
+  --muted: #8f8f8a;
+  --shadow-soft: 0 0 0 1px rgb(255 255 255 / 0.04), 0 16px 40px -16px rgb(0 0 0 / 0.7);
+  --shadow-lift: 0 0 0 1px rgb(255 255 255 / 0.06), 0 28px 56px -16px rgb(0 0 0 / 0.85);
   --foreground: #fafafa;
   --inverse: #0a0a0a;
   color-scheme: dark;
@@ -42,14 +46,14 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --ease-out-expo: var(--ease-out-expo);
-  /* Square corners everywhere. */
-  --radius-xs: 0px;
-  --radius-sm: 0px;
-  --radius-md: 0px;
-  --radius-lg: 0px;
-  --radius-xl: 0px;
-  --radius-2xl: 0px;
-  --radius-3xl: 0px;
+  /* Generous, soft radii. */
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.125rem;
+  --radius-2xl: 1.375rem;
+  --radius-3xl: 1.875rem;
+  --shadow-soft: var(--shadow-soft);
+  --shadow-lift: var(--shadow-lift);
 }
 
 @layer base {
@@ -62,7 +66,8 @@
   body {
     background: var(--background);
     color: var(--foreground);
-    font-family: var(--font-sans), system-ui, sans-serif;
+    /* Geist has no Devanagari: Hindi falls through to each platform's own Devanagari font. */
+    font-family: var(--font-sans), "Noto Sans Devanagari", "Kohinoor Devanagari", "Nirmala UI", "Mangal", system-ui, sans-serif;
     font-feature-settings: "ss01", "cv11";
   }
   ::selection {
@@ -73,6 +78,22 @@
     outline: 1.5px solid var(--foreground);
     outline-offset: 2px;
   }
+}
+
+/* Cards: borderless surfaces that float on the page. */
+.bg-surface {
+  border-color: transparent;
+  box-shadow: var(--shadow-soft);
+}
+
+/* Devanagari letters join; editorial letter-spacing would break them apart. */
+:lang(hi) [class*="tracking-"],
+[class*="tracking-"]:lang(hi) {
+  letter-spacing: normal !important;
+}
+:lang(hi) .text-\[10px\],
+:lang(hi) .text-\[11px\] {
+  font-size: 12px;
 }
 
 /* Tabular numbers for stats */
@@ -207,6 +228,11 @@ html.custom-cursor :is(input, textarea, [contenteditable="true"]) {
   to {
     opacity: 0;
     transform: translateY(8px) scale(0.98);
+  }
+}
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
   }
 }
 @keyframes cell-in {

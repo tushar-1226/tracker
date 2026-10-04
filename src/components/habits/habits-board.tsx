@@ -11,7 +11,7 @@ import { PageHeader } from "@/components/module/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardLabel } from "@/components/ui/card";
 import { Dialog } from "@/components/ui/dialog";
-import { type Day, addDays, eachDay, toDate } from "@/lib/dates";
+import { type Day, addDays, eachDay, toDate, formatDate } from "@/lib/dates";
 import { computeStats, dayCompletion, effectiveStart, isDone, isDue } from "@/lib/habits/stats";
 import { type HabitView, frequencyLabel, logMap, targetLabel, unitLabel } from "@/lib/habits/view";
 import { cn } from "@/lib/utils";
@@ -78,7 +78,7 @@ export function HabitsBoard({
         <div className="space-y-6">
           <Card className="p-4 md:p-5">
             <div className="mb-4 flex items-baseline justify-between px-1">
-              <CardLabel>{selected === today ? "Today" : toDate(selected).toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "short", timeZone: "UTC" })}</CardLabel>
+              <CardLabel>{selected === today ? "Today" : formatDate(toDate(selected), { weekday: "long", day: "numeric", month: "short", timeZone: "UTC" })}</CardLabel>
               <p className="text-sm text-muted">
                 <span className="tabular text-foreground">{selectedTally.done}</span> of{" "}
                 <span className="tabular">{selectedTally.due}</span> done
@@ -160,7 +160,7 @@ function HabitRow({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.98 }}
       whileDrag={{ scale: 1.02, boxShadow: "0 12px 40px -12px rgb(0 0 0 / 0.25)" }}
-      className="group relative flex items-center gap-3 rounded-3xl border bg-surface py-3 pr-3 pl-1.5 md:gap-4 md:pr-4"
+      className="group relative flex items-center gap-3 rounded-3xl bg-surface py-3 pr-3 pl-1.5 md:gap-4 md:pr-4"
     >
       <button
         type="button"
@@ -173,8 +173,8 @@ function HabitRow({
 
       <div
         className={cn(
-          "flex size-10 shrink-0 items-center justify-center rounded-2xl border transition-colors duration-300",
-          done && habit.type !== "quit" ? "border-foreground bg-foreground text-background" : "bg-background",
+          "flex size-10 shrink-0 items-center justify-center rounded-full bg-subtle transition-colors duration-300",
+          done && habit.type !== "quit" ? "bg-foreground text-background" : "bg-subtle",
         )}
       >
         <HabitIcon name={habit.icon} />
@@ -215,8 +215,8 @@ function HabitRow({
               key={d}
               title={d}
               className={cn(
-                "size-2 rounded-none transition-colors",
-                ok ? "bg-foreground" : due ? "border border-foreground/30" : "bg-hairline",
+                "size-2 rounded-full transition-colors",
+                ok ? "bg-foreground" : due ? "bg-subtle/30" : "bg-hairline",
                 d === day && "ring-1 ring-foreground ring-offset-2 ring-offset-surface",
               )}
             />
@@ -277,7 +277,7 @@ function ConsistencyCard({
 
 function EmptyState({ onPick }: { onPick: (draft?: HabitDraft) => void }) {
   return (
-    <div className="flex flex-col items-center rounded-3xl border border-dashed px-6 py-16 text-center">
+    <div className="flex flex-col items-center rounded-3xl bg-foreground/[0.035] px-6 py-16 text-center">
       <p className="text-lg font-medium">No habits yet.</p>
       <p className="mt-1 max-w-sm text-sm text-muted">Start with one. Pick a template or create your own.</p>
       <div className="mt-8 flex max-w-lg flex-wrap justify-center gap-2">
@@ -288,7 +288,7 @@ function EmptyState({ onPick }: { onPick: (draft?: HabitDraft) => void }) {
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.96 }}
             onClick={() => onPick(t)}
-            className="inline-flex h-10 items-center gap-2 rounded-none border bg-background px-4 text-sm transition-colors hover:bg-subtle"
+            className="inline-flex h-10 items-center gap-2 rounded-full bg-subtle px-4 text-sm transition-colors hover:bg-subtle"
           >
             <HabitIcon name={t.icon!} />
             {t.name}
@@ -322,7 +322,7 @@ function ArchivedList({ archived }: { archived: { id: string; name: string; icon
             className="overflow-hidden"
           >
             {archived.map((h) => (
-              <li key={h.id} className="mt-2 flex items-center gap-3 rounded-2xl border border-dashed px-4 py-3">
+              <li key={h.id} className="mt-2 flex items-center gap-3 rounded-2xl bg-foreground/[0.035] px-4 py-3">
                 <HabitIcon name={h.icon} className="text-muted" />
                 <Link href={`/habits/${h.id}`} className="flex-1 truncate text-sm">
                   {h.name}

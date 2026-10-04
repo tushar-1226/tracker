@@ -1,18 +1,18 @@
 import { Slot } from "radix-ui";
 import { cn } from "@/lib/utils";
 
-// Editorial buttons: square, small letter-spaced labels, invert on hover.
+// Soft pills: filled primary, quiet secondary, transparent ghost.
 const variants = {
-  primary: "border border-foreground bg-foreground text-background hover:bg-background hover:text-foreground",
-  outline: "border border-foreground bg-transparent hover:bg-foreground hover:text-background",
+  primary: "bg-foreground text-background shadow-soft hover:opacity-90",
+  outline: "bg-subtle text-foreground hover:bg-foreground hover:text-background",
   ghost: "bg-transparent hover:bg-subtle",
 } as const;
 
 const sizes = {
-  sm: "h-8 px-3 text-[10px]",
-  md: "h-10 px-4 text-[11px]",
-  lg: "h-12 px-6 text-xs",
-  icon: "size-9",
+  sm: "h-9 px-3.5 text-xs",
+  md: "h-11 px-5 text-sm",
+  lg: "h-12 px-6 text-[15px]",
+  icon: "size-10",
 } as const;
 
 export type ButtonProps = React.ComponentProps<"button"> & {
@@ -21,18 +21,12 @@ export type ButtonProps = React.ComponentProps<"button"> & {
   asChild?: boolean;
 };
 
-export function Button({
-  className,
-  variant = "primary",
-  size = "md",
-  asChild,
-  ...props
-}: ButtonProps) {
+export function Button({ className, variant = "primary", size = "md", asChild, ...props }: ButtonProps) {
   const Comp = asChild ? Slot.Root : "button";
   return (
     <Comp
       className={cn(
-        "inline-flex select-none items-center justify-center gap-2 font-semibold tracking-[0.14em] whitespace-nowrap uppercase transition-[color,background-color,transform] duration-200 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40 [&_svg]:size-4 [&_svg]:shrink-0",
+        "inline-flex select-none items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap transition-[color,background-color,opacity,transform] duration-200 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-40 [&_svg]:size-4 [&_svg]:shrink-0",
         variants[variant],
         sizes[size],
         className,

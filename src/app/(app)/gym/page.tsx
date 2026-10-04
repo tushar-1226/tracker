@@ -26,13 +26,13 @@ import { getToday } from "@/server/today";
 
 export const metadata: Metadata = { title: "Gym" };
 
-const WEEKLY_TARGET = 3;
 
 export default async function GymPage() {
   const user = await getCurrentUser();
   await ensureGymSetup(user.id);
   const units = user.settings.units ?? "kg";
   const weekStartsOn = user.settings.weekStartsOn ?? 1;
+  const WEEKLY_TARGET = user.settings.workoutTarget ?? 3;
   const [today, active, workouts, library, history, templates, metrics] = await Promise.all([
     getToday(),
     getActiveWorkout(user.id),
@@ -112,7 +112,7 @@ export default async function GymPage() {
         prs30,
       }}
       heat={heat}
-      workouts={summaries}
+      workouts={summaries.map((w) => ({ ...w, volume: toDisplayWeight(w.volume, units) }))}
       templates={templates.map((t) => ({
         id: t.id,
         name: t.name,

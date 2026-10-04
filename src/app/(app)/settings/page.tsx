@@ -2,6 +2,7 @@ import { and, asc, count, eq, isNull } from "drizzle-orm";
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/module/page-header";
 import { InstallCard, NotificationsCard } from "@/components/settings/notifications-card";
+import { AccountCard, DataCard, PreferencesCard } from "@/components/settings/preferences-card";
 import { RemindersCard } from "@/components/settings/reminders-card";
 import { db } from "@/db";
 import { habits, pushSubscriptions, reminders } from "@/db/schema";
@@ -19,10 +20,13 @@ export default async function SettingsPage() {
 
   return (
     <>
-      <PageHeader title="Settings" description="Notifications, the installed app and reminders." />
+      <PageHeader title="Settings" description="Preferences, notifications, reminders and your data." />
       <div className="grid gap-4 md:grid-cols-2">
         <NotificationsCard deviceCount={devices} />
         <InstallCard />
+      </div>
+      <div className="mt-4">
+        <PreferencesCard settings={user.settings} />
       </div>
       <div className="mt-4">
         <RemindersCard
@@ -30,6 +34,10 @@ export default async function SettingsPage() {
           habits={habitRows}
           reminders={rows.map((r) => ({ id: r.id, kind: r.kind, refId: r.refId, title: r.title, body: r.body, url: r.url, time: r.time, days: r.days, enabled: r.enabled }))}
         />
+      </div>
+      <div className="mt-4 grid gap-4 md:grid-cols-2">
+        <AccountCard name={user.name} email={user.email} />
+        <DataCard />
       </div>
     </>
   );

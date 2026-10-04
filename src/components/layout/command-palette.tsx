@@ -45,9 +45,9 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
         label="Command palette"
         filter={filterCommands}
         overlayClassName="fixed inset-0 z-50 bg-background/60 backdrop-blur-sm data-[state=open]:animate-[fade-in_200ms_ease-out]"
-        contentClassName="fixed top-[18vh] left-1/2 z-50 w-[min(92vw,560px)] -translate-x-1/2 overflow-hidden rounded-3xl border bg-background shadow-2xl shadow-black/10 data-[state=open]:animate-[palette-in_300ms_var(--ease-out-expo)]"
+        contentClassName="fixed top-[18vh] left-1/2 z-50 w-[min(92vw,560px)] -translate-x-1/2 overflow-hidden rounded-[2rem] bg-surface shadow-lift data-[state=open]:animate-[palette-in_300ms_var(--ease-out-expo)]"
       >
-        <div className="flex items-center gap-3 border-b px-5">
+        <div className="flex items-center gap-3 border-b border-hairline px-5">
           <Command.Input
             autoFocus
             placeholder="Search or jump to…"

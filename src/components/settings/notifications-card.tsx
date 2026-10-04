@@ -96,7 +96,7 @@ export function NotificationsCard({ deviceCount }: { deviceCount: number }) {
       </div>
 
       <div>
-        <p className="text-2xl font-bold tracking-[-0.03em] uppercase">
+        <p className="text-xl font-semibold tracking-tight">
           {status === "loading" ? "Checking…" : status === "on" ? "On for this device" : status === "denied" ? "Blocked" : status === "ios-install" ? "Install first" : status === "unsupported" ? "Not supported" : "Off"}
         </p>
         <p className="mt-2 text-sm text-muted">
@@ -166,12 +166,12 @@ export function InstallCard() {
       </div>
       {env === "installed" ? (
         <div>
-          <p className="text-2xl font-bold tracking-[-0.03em] uppercase">Installed</p>
+          <p className="text-xl font-semibold tracking-tight">Installed</p>
           <p className="mt-2 text-sm text-muted">You’re using Track as an app. It opens full-screen from your Home Screen.</p>
         </div>
       ) : env === "ios" ? (
         <div>
-          <p className="text-2xl font-bold tracking-[-0.03em] uppercase">Add to Home Screen</p>
+          <p className="text-xl font-semibold tracking-tight">Add to Home Screen</p>
           <ol className="mt-3 space-y-2 text-sm">
             <li className="flex items-center gap-2">
               <span className="tabular text-xs">01</span> Tap <Share className="inline size-4" /> Share in Safari’s toolbar
@@ -186,7 +186,7 @@ export function InstallCard() {
         </div>
       ) : (
         <div>
-          <p className="text-2xl font-bold tracking-[-0.03em] uppercase">{canPrompt ? "Ready to install" : "Install from the browser"}</p>
+          <p className="text-xl font-semibold tracking-tight">{canPrompt ? "Ready to install" : "Install from the browser"}</p>
           <p className="mt-2 text-sm text-muted">
             {canPrompt ? "Get a full-screen app with its own icon, launcher shortcuts and reliable notifications." : "Use your browser menu → “Install app” or “Add to Home screen”."}
           </p>

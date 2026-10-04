@@ -16,7 +16,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Segmented } from "@/components/ui/segmented";
-import { type Day, addDays, eachDay, toDate } from "@/lib/dates";
+import { type Day, addDays, eachDay, toDate, formatDate } from "@/lib/dates";
 import { nextMilestone } from "@/lib/growth";
 import { cn } from "@/lib/utils";
 import {
@@ -39,7 +39,7 @@ type Resource = { id: string; title: string; url: string | null; kind: string; s
 type FormState = { ok?: boolean; errors?: Record<string, string[]>; message?: string } | undefined;
 
 const dayLabel = (d: Day, today: Day) =>
-  d === today ? "Today" : d === addDays(today, -1) ? "Yesterday" : toDate(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", timeZone: "UTC" });
+  d === today ? "Today" : d === addDays(today, -1) ? "Yesterday" : formatDate(toDate(d), { day: "numeric", month: "short", timeZone: "UTC" });
 const hours = (min: number) => Math.round((min / 60) * 10) / 10;
 
 export function LearningView({
@@ -128,7 +128,7 @@ export function LearningView({
       </div>
 
       <Reveal className="mt-10 mb-4">
-        <h2 className="border-t-2 border-foreground pt-3 text-2xl font-bold tracking-[-0.03em] uppercase">Skills</h2>
+        <h2 className="text-xl font-semibold tracking-tight">Skills</h2>
       </Reveal>
       <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
         {skills.map((s, i) => {
@@ -141,11 +141,11 @@ export function LearningView({
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.04, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="group flex flex-col gap-5 rounded-3xl border bg-surface p-5"
+              className="group flex flex-col gap-5 rounded-3xl bg-surface p-5"
             >
               <div className="flex items-start justify-between gap-2">
                 <span className="flex items-center gap-2.5">
-                  <span className="flex size-9 items-center justify-center rounded-xl border bg-background">
+                  <span className="flex size-9 items-center justify-center rounded-full bg-subtle">
                     <HabitIcon name={s.icon} />
                   </span>
                   <span>
@@ -157,7 +157,7 @@ export function LearningView({
                   type="button"
                   aria-label={`Edit ${s.name}`}
                   onClick={() => setSkillForm((f) => ({ open: true, skill: s, key: f.key + 1 }))}
-                  className="inline-flex size-8 items-center justify-center rounded-none text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:bg-subtle hover:text-foreground focus:opacity-100"
+                  className="inline-flex size-8 items-center justify-center rounded-full text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:bg-subtle hover:text-foreground focus:opacity-100"
                 >
                   <Pencil className="size-3.5" />
                 </button>
@@ -167,9 +167,9 @@ export function LearningView({
                   <span className="text-3xl font-semibold tracking-tight">{h}</span>
                   <span className="text-sm text-muted">/ {goal.next} h {s.targetHours ? "goal" : "milestone"}</span>
                 </p>
-                <div className="mt-2 h-1.5 overflow-hidden rounded-none bg-hairline">
+                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-hairline">
                   <motion.div
-                    className="h-full rounded-none bg-foreground"
+                    className="h-full rounded-full bg-foreground"
                     initial={{ width: 0 }}
                     whileInView={{ width: `${Math.min(1, goal.progress) * 100}%` }}
                     viewport={{ once: true }}
@@ -183,7 +183,7 @@ export function LearningView({
         <button
           type="button"
           onClick={() => setSkillForm((f) => ({ open: true, key: f.key + 1 }))}
-          className="flex min-h-36 flex-col items-center justify-center gap-2 rounded-3xl border border-dashed text-sm text-muted transition-colors hover:bg-subtle hover:text-foreground"
+          className="flex min-h-36 flex-col items-center justify-center gap-2 rounded-3xl bg-foreground/[0.035] text-sm text-muted transition-colors hover:bg-subtle hover:text-foreground"
         >
           <Plus className="size-5" />
           {skills.length ? "Add skill" : "Add your first skill — e.g. Rust, Guitar, System Design"}
@@ -252,7 +252,7 @@ function SessionRow({ session, skill, today }: { session: Session; skill?: strin
         type="button"
         aria-label="Delete session"
         onClick={() => startTransition(() => deleteSession(session.id))}
-        className="inline-flex size-7 items-center justify-center rounded-none text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground focus:opacity-100"
+        className="inline-flex size-7 items-center justify-center rounded-full text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground focus:opacity-100"
       >
         <X className="size-3.5" />
       </button>
@@ -311,7 +311,7 @@ function TilRow({ til, today, skill }: { til: Til; today: Day; skill?: string })
         type="button"
         aria-label="Delete note"
         onClick={() => startTransition(() => deleteTil(til.id))}
-        className="inline-flex size-7 items-center justify-center rounded-none text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground focus:opacity-100"
+        className="inline-flex size-7 items-center justify-center rounded-full text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground focus:opacity-100"
       >
         <X className="size-3.5" />
       </button>
@@ -342,7 +342,7 @@ function ResourcesCard({ resources, skills, skillName }: { resources: Resource[]
         </Button>
       </div>
       {adding && (
-        <form action={action} className="mt-3 space-y-3 rounded-2xl border p-3">
+        <form action={action} className="mt-3 space-y-3 rounded-2xl bg-subtle p-3">
           <input type="hidden" name="kind" value={kind} />
           <input type="hidden" name="skillId" value={skillId} />
           <Input name="title" placeholder="Title" aria-label="Resource title" autoFocus />
@@ -372,8 +372,8 @@ function ResourcesCard({ resources, skills, skillName }: { resources: Resource[]
               disabled={pending}
               onClick={() => startTransition(() => setResourceStatus(r.id, NEXT_STATUS[r.status]))}
               className={cn(
-                "h-6 shrink-0 rounded-none border px-2.5 text-[10px] font-medium transition-colors",
-                r.status === "done" ? "border-foreground bg-foreground text-background" : r.status === "doing" ? "border-foreground" : "border-dashed text-muted",
+                "h-6 shrink-0 rounded-full bg-subtle px-2.5 text-[10px] font-medium transition-colors",
+                r.status === "done" ? "bg-foreground text-background" : r.status === "doing" ? "bg-foreground/15" : "text-muted",
               )}
               title="Change status"
             >
@@ -387,7 +387,7 @@ function ResourcesCard({ resources, skills, skillName }: { resources: Resource[]
               </span>
             </span>
             {r.url && (
-              <a href={r.url} target="_blank" rel="noreferrer" aria-label={`Open ${r.title}`} className="inline-flex size-7 items-center justify-center rounded-none text-muted hover:text-foreground">
+              <a href={r.url} target="_blank" rel="noreferrer" aria-label={`Open ${r.title}`} className="inline-flex size-7 items-center justify-center rounded-full text-muted hover:text-foreground">
                 <ExternalLink className="size-3.5" />
               </a>
             )}
@@ -395,7 +395,7 @@ function ResourcesCard({ resources, skills, skillName }: { resources: Resource[]
               type="button"
               aria-label={`Delete ${r.title}`}
               onClick={() => startTransition(() => deleteResource(r.id))}
-              className="inline-flex size-7 items-center justify-center rounded-none text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground focus:opacity-100"
+              className="inline-flex size-7 items-center justify-center rounded-full text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground focus:opacity-100"
             >
               <Trash2 className="size-3.5" />
             </button>
@@ -440,7 +440,7 @@ function SkillForm({ skill, onDone }: { skill?: Skill; onDone: () => void }) {
                 aria-label={key}
                 aria-pressed={icon === key}
                 onClick={() => setIcon(key)}
-                className={cn("flex aspect-square items-center justify-center rounded-xl border transition-colors", icon === key ? "border-foreground bg-foreground text-background" : "border-transparent hover:bg-subtle")}
+                className={cn("flex aspect-square items-center justify-center rounded-2xl transition-colors", icon === key ? "bg-foreground text-background" : "border-transparent hover:bg-subtle")}
               >
                 <Icon className="size-4" />
               </button>
@@ -497,7 +497,7 @@ function LogForm({ skills, today, onDone }: { skills: Skill[]; today: Day; onDon
                 key={m}
                 type="button"
                 onClick={() => setMinutes(m)}
-                className={cn("h-11 flex-1 rounded-xl border text-xs font-medium transition-colors", minutes === m ? "border-foreground bg-foreground text-background" : "text-muted hover:text-foreground")}
+                className={cn("h-11 flex-1 rounded-full bg-subtle text-xs font-medium transition-colors", minutes === m ? "bg-foreground text-background" : "text-muted hover:text-foreground")}
               >
                 {m}
               </button>

@@ -38,8 +38,8 @@ export function HabitControl({
         onClick={() => onChange(slipped ? 0 : 1)}
         aria-pressed={slipped}
         className={cn(
-          "inline-flex h-9 items-center gap-1.5 rounded-none border px-3.5 text-xs font-medium transition-colors",
-          slipped ? "border-dashed text-muted hover:text-foreground" : "hover:bg-subtle",
+          "inline-flex h-9 items-center gap-1.5 rounded-full bg-subtle px-3.5 text-xs font-medium transition-colors",
+          slipped ? "text-muted hover:text-foreground" : "hover:bg-subtle",
         )}
       >
         {slipped ? (
@@ -74,7 +74,7 @@ export function HabitControl({
         aria-label="Decrease"
         onClick={() => change(current - step)}
         disabled={current === 0}
-        className="inline-flex size-8 items-center justify-center rounded-none text-muted transition-colors hover:bg-subtle hover:text-foreground disabled:opacity-30"
+        className="inline-flex size-8 items-center justify-center rounded-full text-muted transition-colors hover:bg-subtle hover:text-foreground disabled:opacity-30"
       >
         <Minus className="size-3.5" />
       </button>
@@ -83,7 +83,7 @@ export function HabitControl({
         whileTap={{ scale: 0.88 }}
         aria-label={`Add ${step}`}
         onClick={() => change(current + step)}
-        className="relative flex items-center justify-center rounded-none"
+        className="relative flex items-center justify-center rounded-full"
         style={{ width: dim, height: dim }}
       >
         <svg width={dim} height={dim} className="absolute inset-0 -rotate-90">
@@ -107,7 +107,7 @@ export function HabitControl({
         type="button"
         aria-label="Increase"
         onClick={() => change(current + step)}
-        className="inline-flex size-8 items-center justify-center rounded-none text-muted transition-colors hover:bg-subtle hover:text-foreground"
+        className="inline-flex size-8 items-center justify-center rounded-full text-muted transition-colors hover:bg-subtle hover:text-foreground"
       >
         <Plus className="size-3.5" />
       </button>
@@ -133,11 +133,11 @@ export function CheckButton({
       aria-pressed={done}
       aria-label={done ? "Mark as not done" : "Mark as done"}
       whileTap={{ scale: 0.85 }}
-      className="relative flex items-center justify-center rounded-none border-[1.5px] border-foreground/25 transition-colors hover:bg-subtle"
+      className="relative flex items-center justify-center rounded-full border-[1.5px] border-foreground/25 transition-colors hover:bg-subtle"
       style={{ width: dim, height: dim }}
     >
       <motion.span
-        className="absolute -inset-px rounded-none bg-foreground"
+        className="absolute -inset-px rounded-full bg-foreground"
         initial={false}
         animate={{ scale: done ? 1 : 0 }}
         transition={SPRING}

@@ -4,6 +4,7 @@ import {
   Flag,
   GraduationCap,
   LayoutGrid,
+  MoonStar,
   ListChecks,
   NotebookPen,
   PiggyBank,
@@ -29,6 +30,7 @@ export const NAV_SECTIONS: { title: string; items: NavItem[] }[] = [
       { href: "/", label: "Dashboard", icon: LayoutGrid, description: "Your day at a glance", phase: 1 },
       { href: "/habits", label: "Habits", icon: ListChecks, description: "Build streaks, one day at a time", phase: 1 },
       { href: "/journal", label: "Journal", icon: NotebookPen, description: "Mood, sleep and reflections", phase: 4 },
+      { href: "/horoscope", label: "Horoscope", icon: MoonStar, description: "Daily Vedic reading and panchang", phase: 6 },
     ],
   },
   {

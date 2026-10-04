@@ -40,7 +40,7 @@ export function WeekStrip({
                 transition={{ type: "spring", stiffness: 500, damping: 40 }}
               />
             )}
-            <span className={cn("relative text-[10px] uppercase", !active && "text-muted")}>
+            <span className={cn("relative text-[10px]", !active && "text-muted")}>
               {day === today ? "Today" : WEEKDAY_SHORT[dayOfWeek(day)]}
             </span>
             <span className="tabular relative text-base font-medium">{Number(day.slice(8))}</span>

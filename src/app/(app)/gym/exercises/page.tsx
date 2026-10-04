@@ -23,8 +23,8 @@ export default async function ExercisesPage() {
       <div className="grid gap-8 md:grid-cols-2">
         {[...groups.entries()].map(([muscle, list]) => (
           <section key={muscle}>
-            <h2 className="mb-2 text-xs font-medium tracking-wide text-muted uppercase">{MUSCLE_LABEL[muscle]}</h2>
-            <ul className="divide-y rounded-3xl border bg-surface">
+            <h2 className="mb-2 text-xs font-medium tracking-wide text-muted">{MUSCLE_LABEL[muscle]}</h2>
+            <ul className="divide-y rounded-3xl bg-surface">
               {list.map((e) => {
                 const sessions = new Set((history.get(e.id) ?? []).filter((s) => isComplete(e.kind, s)).map((s) => s.workoutId)).size;
                 return (

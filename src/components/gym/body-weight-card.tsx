@@ -8,11 +8,11 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { type Day, toDate } from "@/lib/dates";
+import { type Day, toDate, formatDate } from "@/lib/dates";
 import type { Units } from "@/lib/fitness";
 import { logBodyMetric } from "@/server/actions/gym";
 
-const short = (d: Day) => toDate(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", timeZone: "UTC" });
+const short = (d: Day) => formatDate(toDate(d), { day: "numeric", month: "short", timeZone: "UTC" });
 
 /** Body weight trend (display units) with a quick log dialog. */
 export function BodyWeightCard({
@@ -73,7 +73,7 @@ export function BodyWeightCard({
           baseline="fit"
         />
       ) : (
-        <div className="flex h-24 items-center justify-center rounded-2xl border border-dashed text-sm text-muted">
+        <div className="flex h-24 items-center justify-center rounded-2xl bg-foreground/[0.035] text-sm text-muted">
           {points.length ? "One more entry and the line appears." : "No entries yet."}
         </div>
       )}

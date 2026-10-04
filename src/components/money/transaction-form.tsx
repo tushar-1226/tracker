@@ -126,8 +126,8 @@ export function TransactionForm({ draft, onDone }: { draft?: TxnDraft; onDone: (
                   type="button"
                   onClick={() => setDate(d)}
                   className={cn(
-                    "h-11 rounded-xl border px-3 text-xs font-medium transition-colors",
-                    date === d ? "border-foreground bg-foreground text-background" : "text-muted hover:text-foreground",
+                    "h-11 rounded-full bg-subtle px-3 text-xs font-medium transition-colors",
+                    date === d ? "bg-foreground text-background" : "text-muted hover:text-foreground",
                   )}
                 >
                   {label}
@@ -175,7 +175,7 @@ export function TransactionForm({ draft, onDone }: { draft?: TxnDraft; onDone: (
           )
         )}
 
-        {state?.message && <p className="rounded-xl border border-dashed px-4 py-3 text-sm">{state.message}</p>}
+        {state?.message && <p className="rounded-xl bg-foreground/[0.035] px-4 py-3 text-sm">{state.message}</p>}
 
         <div className="flex gap-2">
           {editing && (

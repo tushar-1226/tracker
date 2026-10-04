@@ -46,7 +46,7 @@ export function RemindersCard({
 }) {
   const [form, setForm] = useState<{ open: boolean; draft?: Partial<ReminderView>; key: number }>({ open: false, key: 0 });
   const open = (draft?: Partial<ReminderView>) => setForm((f) => ({ open: true, draft, key: f.key + 1 }));
-  const presets: ReminderKind[] = ["journal", "workout", "study", "reading", "spending", "habit", "custom"];
+  const presets: ReminderKind[] = ["horoscope", "journal", "workout", "study", "reading", "spending", "summary", "habit", "custom"];
 
   return (
     <Card className="p-0">
@@ -75,7 +75,7 @@ export function RemindersCard({
                 key={k}
                 type="button"
                 onClick={() => open({ kind: k })}
-                className="h-10 border px-4 text-[11px] font-semibold tracking-[0.12em] uppercase transition-colors hover:bg-foreground hover:text-background"
+                className="h-10 rounded-full bg-subtle px-4 text-xs font-medium text-muted transition-colors hover:bg-foreground hover:text-background"
               >
                 {KIND_LABEL[k]}
               </button>
@@ -111,14 +111,14 @@ function ReminderRow({ r, onEdit }: { r: ReminderView; onEdit: () => void }) {
         aria-checked={r.enabled}
         aria-label={`${r.enabled ? "Disable" : "Enable"} ${r.title}`}
         onClick={() => startTransition(() => setReminderEnabled(r.id, !r.enabled))}
-        className={cn("relative h-7 w-12 shrink-0 border transition-colors", r.enabled ? "bg-foreground" : "bg-transparent")}
+        className={cn("relative h-7 w-12 shrink-0 rounded-full transition-colors", r.enabled ? "bg-foreground" : "bg-subtle")}
       >
-        <span className={cn("absolute top-0.5 size-5 transition-all duration-300 ease-out-expo", r.enabled ? "left-[calc(100%-1.375rem)] bg-background" : "left-0.5 bg-foreground")} />
+        <span className={cn("absolute top-1 size-5 rounded-full shadow-sm transition-all duration-300 ease-out-expo", r.enabled ? "left-[calc(100%-1.5rem)] bg-background" : "left-1 bg-surface")} />
       </button>
-      <button type="button" aria-label={`Edit ${r.title}`} onClick={onEdit} className="hidden size-10 items-center justify-center hover:bg-subtle md:inline-flex">
+      <button type="button" aria-label={`Edit ${r.title}`} onClick={onEdit} className="hidden size-10 items-center justify-center rounded-full hover:bg-subtle md:inline-flex">
         <Pencil className="size-4" />
       </button>
-      <button type="button" aria-label={`Delete ${r.title}`} onClick={() => startTransition(() => deleteReminder(r.id))} className="inline-flex size-10 items-center justify-center hover:bg-subtle">
+      <button type="button" aria-label={`Delete ${r.title}`} onClick={() => startTransition(() => deleteReminder(r.id))} className="inline-flex size-10 items-center justify-center rounded-full hover:bg-subtle">
         <Trash2 className="size-4" />
       </button>
     </li>
@@ -156,6 +156,7 @@ export function ReminderForm({
       setTime(d.time);
     }
     if (k === "workout" && !draft?.id) setDays([1, 3, 5]);
+    if (k === "summary" && !draft?.id) setDays([1]);
   };
   const habitName = habits.find((h) => h.id === refId)?.name;
 
@@ -223,7 +224,7 @@ export function ReminderForm({
                   type="button"
                   aria-pressed={on}
                   onClick={() => setDays(on ? days.filter((x) => x !== d) : [...days, d])}
-                  className={cn("h-11 border text-[11px] font-semibold uppercase transition-colors", on ? "bg-foreground text-background" : "border-foreground/25 hover:border-foreground")}
+                  className={cn("h-11 rounded-full text-[11px] font-semibold transition-colors", on ? "bg-foreground text-background" : "bg-subtle hover:bg-foreground/10")}
                 >
                   {DAY[d].slice(0, 2)}
                 </button>

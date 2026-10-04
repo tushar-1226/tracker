@@ -48,7 +48,7 @@ export async function saveTimeZone(tz: string) {
 
 const reminderSchema = z.object({
   id: z.string().optional(),
-  kind: z.enum(["habit", "journal", "workout", "study", "reading", "spending", "custom"]),
+  kind: z.enum(["habit", "journal", "workout", "study", "reading", "spending", "summary", "horoscope", "custom"]),
   refId: z.string().nullable(),
   title: z.string().trim().min(1, { error: "Add a title" }).max(80),
   body: z.string().trim().max(160).nullable(),

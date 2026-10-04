@@ -12,13 +12,13 @@ import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/
 import { Input } from "@/components/ui/input";
 import { Segmented } from "@/components/ui/segmented";
 import type { BookStatus } from "@/db/schema";
-import { type Day, addDays, eachDay, toDate } from "@/lib/dates";
+import { type Day, addDays, eachDay, toDate, formatDate } from "@/lib/dates";
 import { bookEta } from "@/lib/growth";
 import { cn } from "@/lib/utils";
 import { addHighlight, deleteBook, deleteHighlight, logReading, setBookStatus, updateBook } from "@/server/actions/books";
 import { BookCover } from "./book-cover";
 
-const fmt = (d: Day) => toDate(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+const fmt = (d: Day) => formatDate(toDate(d), { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 
 export function BookDetail({
   today,
@@ -64,7 +64,7 @@ export function BookDetail({
       <Reveal className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end">
         <BookCover src={book.coverUrl} title={book.title} className="w-36 shrink-0 shadow-xl shadow-black/10" />
         <div className="min-w-0 flex-1">
-          <h1 className="text-4xl leading-[0.9] font-bold tracking-[-0.045em] md:text-7xl">{book.title}</h1>
+          <h1 className="text-4xl leading-[0.9] font-semibold tracking-tight md:text-7xl">{book.title}</h1>
           <p className="mt-2 text-muted">{book.author}</p>
           <p className="mt-1 text-xs text-muted">
             {[book.startedAt && `Started ${fmt(book.startedAt)}`, book.finishedAt && `Finished ${fmt(book.finishedAt)}`].filter(Boolean).join(" · ")}
@@ -90,8 +90,8 @@ export function BookDetail({
           <Card className="flex h-full flex-col gap-4">
             <CardLabel>Progress</CardLabel>
             <p className="text-4xl font-semibold tracking-tight">{progress === null ? pagesRead : `${Math.round(progress * 100)}%`}</p>
-            <div className="h-2 overflow-hidden rounded-none bg-hairline">
-              <div className="h-full rounded-none bg-foreground transition-[width] duration-700 ease-out-expo" style={{ width: `${(progress ?? 0) * 100}%` }} />
+            <div className="h-2 overflow-hidden rounded-full bg-hairline">
+              <div className="h-full rounded-full bg-foreground transition-[width] duration-700 ease-out-expo" style={{ width: `${(progress ?? 0) * 100}%` }} />
             </div>
             <p className="text-xs text-muted">
               {pagesRead} of {book.totalPages ?? "?"} pages
@@ -120,7 +120,7 @@ export function BookDetail({
                   if (n > 0 && n !== book.totalPages) startTransition(() => updateBook(book.id, { totalPages: Math.round(n) }));
                 }}
                 inputMode="numeric"
-                className="w-16 rounded-md border bg-transparent px-2 py-1 text-foreground outline-none focus:border-foreground"
+                className="w-16 rounded-lg bg-subtle px-2 py-1 text-foreground outline-none focus:ring-2 focus:ring-foreground/15"
               />
             </label>
           </Card>
@@ -165,7 +165,7 @@ export function BookDetail({
               onBlur={() => review !== (book.review ?? "") && startTransition(() => updateBook(book.id, { review: review.trim() || null }))}
               placeholder="What stayed with you?"
               rows={5}
-              className="mt-4 w-full resize-none rounded-2xl border bg-transparent px-4 py-3 text-sm outline-none placeholder:text-muted focus:border-foreground"
+              className="mt-4 w-full resize-none rounded-2xl bg-subtle px-4 py-3 text-sm outline-none placeholder:text-muted focus:ring-2 focus:ring-foreground/15"
             />
           </Card>
         </Reveal>
@@ -196,7 +196,7 @@ function Highlights({ bookId, items }: { bookId: string; items: { id: string; te
           });
         }}
       >
-        <textarea value={text} onChange={(e) => setText(e.target.value)} rows={2} placeholder="A line worth keeping…" aria-label="Highlight" className="w-full resize-none rounded-2xl border bg-transparent px-4 py-3 text-sm outline-none placeholder:text-muted focus:border-foreground" />
+        <textarea value={text} onChange={(e) => setText(e.target.value)} rows={2} placeholder="A line worth keeping…" aria-label="Highlight" className="w-full resize-none rounded-2xl bg-subtle px-4 py-3 text-sm outline-none placeholder:text-muted focus:ring-2 focus:ring-foreground/15" />
         <div className="flex gap-2">
           <Input value={page} onChange={(e) => setPage(e.target.value)} inputMode="numeric" placeholder="Page" aria-label="Page" className="h-9 w-24" />
           <Button type="submit" size="sm" className="ml-auto" disabled={pending || !text.trim()}>
@@ -212,7 +212,7 @@ function Highlights({ bookId, items }: { bookId: string; items: { id: string; te
               <span className="block text-sm leading-relaxed">{h.text}</span>
               {h.page && <span className="text-xs text-muted">p. {h.page}</span>}
             </span>
-            <button type="button" aria-label="Delete highlight" onClick={() => startTransition(() => deleteHighlight(h.id))} className="inline-flex size-7 items-center justify-center rounded-none text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground focus:opacity-100">
+            <button type="button" aria-label="Delete highlight" onClick={() => startTransition(() => deleteHighlight(h.id))} className="inline-flex size-7 items-center justify-center rounded-full text-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-foreground focus:opacity-100">
               <X className="size-3.5" />
             </button>
           </li>

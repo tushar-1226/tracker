@@ -10,7 +10,7 @@ import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { Button } from "@/components/ui/button";
 import { Card, CardLabel } from "@/components/ui/card";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { type Day, addDays, eachDay, toDate } from "@/lib/dates";
+import { type Day, addDays, eachDay, toDate, formatDate } from "@/lib/dates";
 import { computeStats, dayLevel, effectiveStart, isDone, isDue } from "@/lib/habits/stats";
 import { type HabitView, HABIT_TYPE_LABEL, frequencyLabel, logMap, targetLabel, unitLabel } from "@/lib/habits/view";
 import { cn } from "@/lib/utils";
@@ -71,7 +71,7 @@ export function HabitDetail({
             <HabitIcon name={habit.icon} className="size-6" />
           </div>
           <div>
-            <h1 className="text-4xl leading-[0.9] font-bold tracking-[-0.045em] md:text-7xl">{habit.name}</h1>
+            <h1 className="text-4xl leading-[0.9] font-semibold tracking-tight md:text-7xl">{habit.name}</h1>
             <p className="mt-1.5 text-sm text-muted">
               {HABIT_TYPE_LABEL[habit.type]} · {frequencyLabel(habit.frequency)}
               {target && ` · ${target}`}
@@ -134,7 +134,7 @@ export function HabitDetail({
               </p>
               <p className="text-xs text-muted">
                 {stats.frozenDays.length
-                  ? `Saved your streak on ${stats.frozenDays.slice(-2).map((d) => toDate(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", timeZone: "UTC" })).join(", ")}`
+                  ? `Saved your streak on ${stats.frozenDays.slice(-2).map((d) => formatDate(toDate(d), { day: "numeric", month: "short", timeZone: "UTC" })).join(", ")}`
                   : "Earn one every 7 days in a row. A missed day spends it instead of breaking the streak."}
               </p>
             </Card>
@@ -156,7 +156,7 @@ export function HabitDetail({
             <div>
               <CardLabel>Last 12 months</CardLabel>
               <p className="mt-1 text-sm text-muted">
-                Since {toDate(start).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })}
+                Since {formatDate(toDate(start), { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })}
               </p>
             </div>
             <HeatmapLegend />
@@ -215,7 +215,7 @@ function MonthlyBars({ habit, today }: { habit: HabitView; today: Day }) {
       due++;
       if (ok) done++;
     }
-    const label = toDate(first).toLocaleDateString("en-IN", { month: "short", timeZone: "UTC" });
+    const label = formatDate(toDate(first), { month: "short", timeZone: "UTC" });
     return { label, ratio: due ? done / due : null };
   });
 
@@ -228,7 +228,7 @@ function MonthlyBars({ habit, today }: { habit: HabitView; today: Day }) {
             <div
               className={cn(
                 "relative w-full flex-1 overflow-hidden rounded-lg",
-                m.ratio === null ? "border border-dashed" : "bg-hairline",
+                m.ratio === null ? "bg-foreground/[0.035]" : "bg-hairline",
               )}
             >
               <motion.div

@@ -9,8 +9,8 @@ export function ModulePlaceholder({ href }: { href: string }) {
     <>
       <PageHeader title={item.label} description={item.description} />
       <Reveal delay={0.1}>
-        <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 rounded-3xl border border-dashed text-center">
-          <div className="flex size-14 items-center justify-center rounded-2xl border">
+        <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 rounded-3xl bg-foreground/[0.035] text-center">
+          <div className="flex size-14 items-center justify-center rounded-2xl bg-subtle">
             <item.icon className="size-6" />
           </div>
           <div>
