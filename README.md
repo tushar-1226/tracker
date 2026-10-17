@@ -64,7 +64,7 @@ Track is an installable PWA built for phones and tablets.
 ## Deploying to Vercel
 
 Track uses the native `sweph` addon for horoscope calculations. Set the Vercel
-project's Node.js version to **20.x** (Project Settings → Build and Deployment →
+project's Node.js version to **24.x** (Project Settings → Build and Deployment →
 Node.js Version). The `engines.node` entry in `package.json` also pins new
 deployments to that runtime. Keep the function runtime on Node.js, not Edge.
 
