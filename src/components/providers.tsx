@@ -8,7 +8,7 @@ import { PwaRegister } from "@/components/pwa/pwa-register";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+    <ThemeProvider attribute="class" themes={["white", "dark", "brown"]} defaultTheme="white" disableTransitionOnChange>
       <MotionConfig reducedMotion="user">
         <SmoothScroll>{children}</SmoothScroll>
         <Cursor />

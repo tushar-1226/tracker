@@ -12,11 +12,12 @@ export function AppHeader({ userName, level, levelProgress }: { userName: string
   const c = 2 * Math.PI * r;
   return (
     <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 pt-[calc(1rem+env(safe-area-inset-top))] md:px-8 md:pt-6">
-      <Link href="/" className="text-xl font-semibold tracking-tight">
+      <Link href="/" className="group flex items-center gap-2 text-xl font-semibold tracking-tight">
+        <span className="flex size-8 items-center justify-center rounded-xl bg-foreground text-sm text-background transition-transform group-hover:rotate-6">t</span>
         track<span className="text-muted">.</span>
       </Link>
       <div className="flex items-center gap-1.5">
-        <button type="button" onClick={palette.open} aria-label="Search (⌘K)" className="inline-flex h-10 items-center gap-2 rounded-full bg-surface px-3.5 text-sm text-muted shadow-soft transition-colors hover:text-foreground">
+        <button type="button" onClick={palette.open} aria-label="Search (⌘K)" className="inline-flex h-10 items-center gap-2 rounded-2xl bg-surface px-3.5 text-sm text-muted shadow-soft transition-all hover:-translate-y-0.5 hover:text-foreground">
           <Search className="size-4" />
           <span className="hidden md:inline">Search</span>
           <kbd className="hidden rounded-md bg-subtle px-1.5 font-mono text-[10px] md:inline">⌘K</kbd>

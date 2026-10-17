@@ -3,7 +3,7 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ---------- Tokens: strictly grayscale ---------- */
+/* ---------- Tokens ---------- */
 :root {
   /* Soft & fluid: surfaces float on a light grey page; no hard borders. */
   --background: #f3f3f2;
@@ -20,6 +20,20 @@
   color-scheme: light;
 }
 
+.white {
+  --background: #f7f8fa;
+  --surface: #ffffff;
+  --subtle: #eef1f5;
+  --border: #e1e6ed;
+  --hairline: #e1e6ed;
+  --muted: #68717e;
+  --shadow-soft: 0 1px 2px rgb(24 39 75 / 0.04), 0 16px 40px -18px rgb(24 39 75 / 0.18);
+  --shadow-lift: 0 2px 8px rgb(24 39 75 / 0.06), 0 28px 60px -22px rgb(24 39 75 / 0.24);
+  --foreground: #17202b;
+  --inverse: #ffffff;
+  color-scheme: light;
+}
+
 .dark {
   --background: #0b0b0b;
   --surface: #171717;
@@ -31,6 +45,20 @@
   --shadow-lift: 0 0 0 1px rgb(255 255 255 / 0.06), 0 28px 56px -16px rgb(0 0 0 / 0.85);
   --foreground: #fafafa;
   --inverse: #0a0a0a;
+  color-scheme: dark;
+}
+
+.brown {
+  --background: #211a16;
+  --surface: #2c221d;
+  --subtle: #3b2d25;
+  --border: #4b392e;
+  --hairline: #4b392e;
+  --muted: #bda99a;
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.18), 0 18px 42px -18px rgb(0 0 0 / 0.48);
+  --shadow-lift: 0 2px 8px rgb(0 0 0 / 0.2), 0 30px 64px -20px rgb(0 0 0 / 0.7);
+  --foreground: #f6ede5;
+  --inverse: #211a16;
   color-scheme: dark;
 }
 
@@ -64,11 +92,24 @@
     -webkit-tap-highlight-color: transparent;
   }
   body {
-    background: var(--background);
+    background:
+      radial-gradient(circle at 8% -8%, color-mix(in srgb, var(--foreground) 7%, transparent), transparent 30rem),
+      radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--foreground) 4%, transparent), transparent 28rem),
+      var(--background);
     color: var(--foreground);
     /* Geist has no Devanagari: Hindi falls through to each platform's own Devanagari font. */
     font-family: var(--font-sans), "Noto Sans Devanagari", "Kohinoor Devanagari", "Nirmala UI", "Mangal", system-ui, sans-serif;
     font-feature-settings: "ss01", "cv11";
+  }
+  body::before {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.035;
+    content: "";
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
   }
   ::selection {
     background: var(--foreground);
@@ -84,6 +125,11 @@
 .bg-surface {
   border-color: transparent;
   box-shadow: var(--shadow-soft);
+  transition: background-color 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+}
+
+@media (hover: hover) {
+  .bg-surface:hover { box-shadow: var(--shadow-lift); }
 }
 
 /* Devanagari letters join; editorial letter-spacing would break them apart. */

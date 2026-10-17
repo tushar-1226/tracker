@@ -9,6 +9,7 @@ import { Dialog, DialogClose, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Segmented } from "@/components/ui/segmented";
+import { ThemePicker } from "@/components/layout/theme-toggle";
 import type { UserSettings } from "@/db/schema";
 import { CURRENCIES, currencySymbol } from "@/lib/money/math";
 import { logout } from "@/server/actions/auth";
@@ -46,6 +47,9 @@ export function PreferencesCard({ settings }: { settings: UserSettings }) {
         </span>
       </div>
       <div className="divide-y">
+        <Row label="App theme" hint="Choose a mood for your whole workspace.">
+          <ThemePicker />
+        </Row>
         <Row label="Currency" hint="Used across money, budget and goals.">
           <select
             aria-label="Currency"

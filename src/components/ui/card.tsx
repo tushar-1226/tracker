@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 /** Borderless surface floating on the page (shadow comes from `.bg-surface`). */
 export function Card({ className, ...props }: React.ComponentProps<"div">) {
-  return <div className={cn("rounded-3xl bg-surface p-6", className)} {...props} />;
+  return <div className={cn("rounded-[1.75rem] bg-surface p-6 shadow-soft", className)} {...props} />;
 }
 
 export function CardLabel({ className, ...props }: React.ComponentProps<"p">) {
