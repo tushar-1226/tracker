@@ -63,6 +63,11 @@ Track is an installable PWA built for phones and tablets.
 
 ## Deploying to Vercel
 
+Track uses the native `sweph` addon for horoscope calculations. Set the Vercel
+project's Node.js version to **20.x** (Project Settings → Build and Deployment →
+Node.js Version). The `engines.node` entry in `package.json` also pins new
+deployments to that runtime. Keep the function runtime on Node.js, not Edge.
+
 1. Create a hosted libSQL database (e.g. [Turso](https://turso.tech)) and run
    `DATABASE_URL=libsql://… DATABASE_AUTH_TOKEN=… pnpm db:migrate` once. A `file:` database does not work on Vercel.
 2. In the Vercel project settings add `DATABASE_URL`, `DATABASE_AUTH_TOKEN`, `SESSION_SECRET`,
