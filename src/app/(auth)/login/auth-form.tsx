@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRight, LoaderCircle } from "lucide-react";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { Magnetic } from "@/components/motion/magnetic";
 import { Stagger, StaggerItem } from "@/components/motion/reveal";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,11 @@ import { login, signup } from "@/server/actions/auth";
 export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const [state, action, pending] = useActionState(mode === "login" ? login : signup, undefined);
   const errors = state?.errors;
+
+  // Reaching the login screen means signed out: drop offline copies of personal pages.
+  useEffect(() => {
+    navigator.serviceWorker?.controller?.postMessage({ type: "track:clear-cache" });
+  }, []);
 
   return (
     <Stagger className="w-full max-w-sm">
