@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, HeartHandshake, LoaderCircle } from "lucide-react";
+import { ArrowLeft, HeartHandshake, LoaderCircle, RotateCcw } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useState, useTransition } from "react";
@@ -123,6 +123,15 @@ export function CompatibilityView({ me, partner, lang }: { me: { name: string; b
   const [pending, startTransition] = useTransition();
   const [saved, setSaved] = useState(false);
 
+  const reset = () => {
+    setA(draftFrom(me.name, me.birth));
+    setB(draftFrom(partner?.name ?? "", partner?.birth ?? null));
+    setGroom("a");
+    setError(null);
+    setResult(null);
+    setSaved(false);
+  };
+
   const toInput = (d: Draft, who: string) => {
     if (!d.name.trim()) return `Add ${who} name`;
     if (!d.date) return `Add ${who} birth date`;
@@ -182,9 +191,14 @@ export function CompatibilityView({ me, partner, lang }: { me: { name: string; b
         </div>
         <div className="flex flex-col gap-2 sm:items-end">
           {error && <p className="text-xs">— {error}</p>}
-          <Button size="lg" onClick={submit} disabled={pending} className="w-full sm:w-auto">
-            {pending ? <LoaderCircle className="animate-spin" /> : <HeartHandshake />} Check compatibility
-          </Button>
+          <div className="flex w-full gap-2 sm:w-auto">
+            <Button variant="outline" size="lg" onClick={reset} disabled={pending}>
+              <RotateCcw /> Reset
+            </Button>
+            <Button size="lg" onClick={submit} disabled={pending} className="flex-1 sm:flex-none">
+              {pending ? <LoaderCircle className="animate-spin" /> : <HeartHandshake />} Check compatibility
+            </Button>
+          </div>
         </div>
       </Card>
 

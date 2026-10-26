@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, CalendarSearch, LoaderCircle } from "lucide-react";
+import { ArrowLeft, CalendarSearch, LoaderCircle, RotateCcw } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useState, useTransition } from "react";
@@ -59,6 +59,16 @@ export function MuhurtaView({ place: initialPlace, hasBirth, lang }: { place: Pl
       if ("error" in r) return setError(r.error);
       setDays(r.days);
     });
+  };
+
+  const reset = () => {
+    setPurpose("marriage");
+    setRange("30");
+    setPlace(initialPlace);
+    setPersonal(hasBirth);
+    setOnlyGood(true);
+    setDays(null);
+    setError(null);
   };
 
   const shown = days?.filter((d) => !onlyGood || d.verdict === "great" || d.verdict === "good") ?? [];
@@ -121,6 +131,9 @@ export function MuhurtaView({ place: initialPlace, hasBirth, lang }: { place: Pl
         <div className="flex flex-wrap items-center gap-3">
           <Button size="lg" onClick={search} disabled={pending}>
             {pending ? <LoaderCircle className="animate-spin" /> : <CalendarSearch />} Find days
+          </Button>
+          <Button variant="outline" size="lg" onClick={reset} disabled={pending}>
+            <RotateCcw /> Reset
           </Button>
           {error && <p className="text-xs">— {error}</p>}
         </div>
