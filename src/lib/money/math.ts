@@ -160,3 +160,11 @@ export function goalEta(
   if (perMonth <= 0) return null;
   return Math.ceil((target - saved) / perMonth);
 }
+
+/** Which budget alert a new expense triggers, if any: only the first crossing of 80% or 100%. */
+export function budgetCrossing(before: number, after: number, limit: number): "over" | "near" | null {
+  if (limit <= 0) return null;
+  if (before < limit && after >= limit) return "over";
+  if (before < limit * 0.8 && after >= limit * 0.8) return "near";
+  return null;
+}

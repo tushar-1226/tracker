@@ -19,9 +19,10 @@ export default function manifest(): MetadataRoute.Manifest {
       { src: "/icons/maskable", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
     shortcuts: [
-      { name: "Today’s habits", url: "/habits", icons: [{ src: "/icons/192", sizes: "192x192" }] },
-      { name: "Add expense", url: "/money?add=expense", icons: [{ src: "/icons/192", sizes: "192x192" }] },
-      { name: "Journal", url: "/journal", icons: [{ src: "/icons/192", sizes: "192x192" }] },
+      { name: "Add expense", short_name: "Expense", url: "/money?add=expense", icons: [{ src: "/icons/192", sizes: "192x192" }] },
+      { name: "Start workout", short_name: "Workout", url: "/gym?start=1", icons: [{ src: "/icons/192", sizes: "192x192" }] },
+      { name: "Today’s habits", short_name: "Habits", url: "/habits", icons: [{ src: "/icons/192", sizes: "192x192" }] },
+      { name: "Write journal", short_name: "Journal", url: "/journal", icons: [{ src: "/icons/192", sizes: "192x192" }] },
     ],
   };
 }

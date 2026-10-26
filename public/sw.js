@@ -56,7 +56,7 @@ self.addEventListener("fetch", (event) => {
           if (res.ok && !res.redirected && url.pathname !== "/login") cache.put(request, res.clone());
           return res;
         } catch {
-          return (await cache.match(request)) || new Response(OFFLINE_HTML, { status: 503, headers: { "Content-Type": "text/html; charset=utf-8" } });
+          return (await cache.match(request)) || (await cache.match(request, { ignoreSearch: true })) || new Response(OFFLINE_HTML, { status: 503, headers: { "Content-Type": "text/html; charset=utf-8" } });
         }
       })(),
     );

@@ -17,6 +17,7 @@ import type { Place } from "@/lib/astro/constants";
 import { type HoroscopeLang, names } from "@/lib/astro/i18n";
 import type { KootaKey, Verdict } from "@/lib/astro/matching";
 import { formatDate } from "@/lib/dates";
+import { savePartner } from "@/server/actions/horoscope";
 import { type CompatibilityResult, type PersonSummary, checkCompatibility } from "@/server/actions/compatibility";
 import { PlacePicker } from "./birth-form";
 
@@ -113,13 +114,14 @@ function PersonCard({ p, lang }: { p: PersonSummary; lang: HoroscopeLang }) {
   );
 }
 
-export function CompatibilityView({ me, lang }: { me: { name: string; birth: Birth | null }; lang: HoroscopeLang }) {
+export function CompatibilityView({ me, partner, lang }: { me: { name: string; birth: Birth | null }; partner: { name: string; birth: Birth } | null; lang: HoroscopeLang }) {
   const [a, setA] = useState<Draft>(() => draftFrom(me.name, me.birth));
-  const [b, setB] = useState<Draft>(() => draftFrom("", null));
+  const [b, setB] = useState<Draft>(() => draftFrom(partner?.name ?? "", partner?.birth ?? null));
   const [groom, setGroom] = useState<"a" | "b">("a");
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<CompatibilityResult | null>(null);
   const [pending, startTransition] = useTransition();
+  const [saved, setSaved] = useState(false);
 
   const toInput = (d: Draft, who: string) => {
     if (!d.name.trim()) return `Add ${who} name`;
@@ -249,8 +251,26 @@ export function CompatibilityView({ me, lang }: { me: { name: string; birth: Bir
             <PersonCard p={result.b} lang={lang} />
           </div>
 
+          <div className="flex flex-wrap items-center gap-3">
+            <Button
+              variant="outline"
+              disabled={saved}
+              onClick={() => {
+                const B = toInput(b, "your partner’s");
+                if (typeof B === "string") return;
+                startTransition(async () => {
+                  await savePartner(B);
+                  setSaved(true);
+                });
+              }}
+            >
+              <HeartHandshake /> {saved ? `${b.name.trim()} saved as partner` : `Save ${b.name.trim() || "partner"} as my partner`}
+            </Button>
+            <p className="text-xs text-muted">Saved partners show up in “Together today” on the horoscope page.</p>
+          </div>
+
           <p className="text-xs leading-relaxed text-muted">
-            Computed from each person’s Moon sign and nakshatra (Lahiri, Swiss Ephemeris). Classical exceptions that cancel doshas are only partly modelled, so treat this as guidance, not a verdict on a relationship. Nothing here is saved.
+            Computed from each person’s Moon sign and nakshatra (Lahiri, Swiss Ephemeris). Classical exceptions that cancel doshas are only partly modelled, so treat this as guidance, not a verdict on a relationship. Nothing is saved unless you tap “Save as my partner”.
           </p>
         </div>
       )}

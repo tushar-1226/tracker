@@ -17,6 +17,8 @@ export type UserSettings = {
   /** Vedic horoscope: birth details (time optional) and where you are now (for sunrise/Rahu Kaal). */
   birth?: { date: string; time: string | null; place: StoredPlace };
   currentPlace?: StoredPlace;
+  /** Partner for the couple view and compatibility. */
+  partner?: { name: string; birth: { date: string; time: string | null; place: StoredPlace } };
   /** Language for the horoscope section. */
   horoscopeLang?: "en" | "hinglish" | "hi";
   /** IANA zone, saved from the browser so reminders fire at local times. */

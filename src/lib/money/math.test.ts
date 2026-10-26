@@ -99,3 +99,15 @@ describe("budget & goals", () => {
     expect(goalEta(0, 100, [], "2026-10-02")).toBeNull();
   });
 });
+
+describe("budgetCrossing", () => {
+  it("fires once at 80% and once at 100%", async () => {
+    const { budgetCrossing } = await import("./math");
+    expect(budgetCrossing(7000, 8000, 10000)).toBe("near");
+    expect(budgetCrossing(8000, 9000, 10000)).toBeNull();
+    expect(budgetCrossing(9000, 10000, 10000)).toBe("over");
+    expect(budgetCrossing(10000, 12000, 10000)).toBeNull();
+    expect(budgetCrossing(5000, 12000, 10000)).toBe("over");
+    expect(budgetCrossing(0, 100, 0)).toBeNull();
+  });
+});

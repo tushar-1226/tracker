@@ -27,3 +27,16 @@ export async function clearBirthDetails() {
   await db.update(users).set({ settings: { ...user.settings, birth: undefined } }).where(eq(users.id, user.id));
   refresh();
 }
+
+export async function savePartner(input: { name: string; birth: z.input<typeof birthSchema> }) {
+  const user = await getCurrentUser();
+  const partner = z.object({ name: z.string().trim().min(1).max(40), birth: birthSchema }).parse(input);
+  await db.update(users).set({ settings: { ...user.settings, partner } }).where(eq(users.id, user.id));
+  refresh();
+}
+
+export async function clearPartner() {
+  const user = await getCurrentUser();
+  await db.update(users).set({ settings: { ...user.settings, partner: undefined } }).where(eq(users.id, user.id));
+  refresh();
+}

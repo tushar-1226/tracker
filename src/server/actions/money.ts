@@ -13,7 +13,7 @@ import {
   savingsGoals,
   transactions,
 } from "@/db/schema";
-import { verifySession } from "@/lib/auth/dal";
+import { getCurrentUser, verifySession } from "@/lib/auth/dal";
 import { addDays, isDay } from "@/lib/dates";
 import { LIABILITY_TYPES, occurrence, occurrencesUntil, parseAmount } from "@/lib/money/math";
 import {
@@ -23,6 +23,7 @@ import {
   goalSchema,
   transactionSchema,
 } from "@/lib/validators/money";
+import { notifyBudgetCrossing } from "@/server/budget-alerts";
 import { getToday } from "@/server/today";
 
 const fail = (error: z.ZodError): FormState => ({
@@ -75,7 +76,11 @@ export async function saveTransaction(_s: FormState, formData: FormData): Promis
       await tx.insert(transactions).values({ ...t, userId, recurringId: rule.id });
     });
   } else {
-    await db.insert(transactions).values({ ...t, userId });
+    const rawClientId = formData.get("clientId");
+    const clientId = typeof rawClientId === "string" && /^[\w-]{8,64}$/.test(rawClientId) ? rawClientId : null;
+    const inserted = await db.insert(transactions).values({ ...t, userId, clientId }).onConflictDoNothing().returning({ id: transactions.id });
+    // A replayed offline entry that already landed inserts nothing, and must not alert twice.
+    if (inserted.length) await notifyBudgetCrossing(userId, t, (await getCurrentUser()).settings.currency ?? "INR");
   }
 
   refresh();

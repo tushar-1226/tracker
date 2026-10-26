@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Segmented } from "@/components/ui/segmented";
 import { addDays } from "@/lib/dates";
+import { enqueue, isOffline } from "@/lib/offline/outbox";
 import { type TxnType, currencySymbol } from "@/lib/money/math";
 import type { FormState } from "@/lib/validators/money";
 import { cn } from "@/lib/utils";
@@ -30,9 +31,24 @@ export function TransactionForm({ draft, onDone }: { draft?: TxnDraft; onDone: (
   const [deleting, startDelete] = useTransition();
 
   const [state, action, pending] = useActionState(async (prev: FormState, fd: FormData) => {
-    const res = await saveTransaction(prev, fd);
-    if (res?.ok) onDone();
-    return res;
+    // New entries get a client id so a retry after a dropped connection can't double-post.
+    const clientId = editing ? null : crypto.randomUUID();
+    if (clientId) fd.set("clientId", clientId);
+    const queue = () => {
+      const fields = Object.fromEntries([...fd.entries()].filter(([k, v]) => typeof v === "string" && k !== "clientId" && !k.startsWith("$ACTION"))) as Record<string, string>;
+      enqueue({ id: clientId!, kind: "transaction", fields });
+      onDone();
+      return { ok: true } as FormState;
+    };
+    if (clientId && !navigator.onLine) return queue();
+    try {
+      const res = await saveTransaction(prev, fd);
+      if (res?.ok) onDone();
+      return res;
+    } catch (e) {
+      if (clientId && isOffline(e)) return queue();
+      throw e;
+    }
   }, undefined);
   const err = (k: string) => state?.errors?.[k]?.[0];
 

@@ -4,6 +4,7 @@ import { Dock } from "@/components/layout/dock";
 import { TimezoneSync } from "@/components/layout/timezone-sync";
 import { CursorSetting } from "@/components/motion/cursor-setting";
 import { getCurrentUser } from "@/lib/auth/dal";
+import { OutboxSync } from "@/components/pwa/outbox-sync";
 import { AchievementToaster } from "@/components/progress/achievement-toaster";
 import { getProgress, listUnlocked } from "@/server/progress";
 import { getTimeZone } from "@/server/today";
@@ -19,6 +20,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <CommandPaletteProvider>
+      <OutboxSync />
       <TimezoneSync serverTimeZone={timeZone} storedTimeZone={user.settings.timeZone} />
       <CursorSetting enabled={user.settings.cursor !== false} />
       <AppHeader userName={user.name} level={progress.xp.overall.level} levelProgress={progress.xp.overall.progress} />

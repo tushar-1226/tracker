@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, HeartHandshake, MapPin, Pencil } from "lucide-react";
+import { ArrowUpRight, CalendarSearch, HeartHandshake, MapPin, Pencil } from "lucide-react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { useState, useSyncExternalStore, useTransition } from "react";
@@ -48,7 +48,7 @@ export function HoroscopeSetup() {
   );
 }
 
-export function HoroscopeView({ h, today }: { h: View; today: string }) {
+export function HoroscopeView({ h, today, extra }: { h: View; today: string; extra?: React.ReactNode }) {
   const [lang, setLang] = useState<HoroscopeLang>(h.lang);
   const [chart, setChart] = useState<"d1" | "d9">("d1");
   const [, startTransition] = useTransition();
@@ -106,6 +106,11 @@ export function HoroscopeView({ h, today }: { h: View; today: string }) {
         actions={
           <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
             <Segmented value={lang} onChange={switchLang} options={LANGS} className="w-full sm:w-auto" />
+            <Button variant="outline" asChild>
+              <Link href="/horoscope/muhurta">
+                <CalendarSearch /> Muhurta
+              </Link>
+            </Button>
             <Button variant="outline" asChild>
               <Link href="/horoscope/compatibility">
                 <HeartHandshake /> Compatibility
@@ -185,6 +190,8 @@ export function HoroscopeView({ h, today }: { h: View; today: string }) {
           </span>
         ))}
       </Reveal>
+
+      {extra}
 
       {/* Panchang */}
       <SectionTitle>{t.panchang}</SectionTitle>

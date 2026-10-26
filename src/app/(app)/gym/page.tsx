@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AutoStart } from "@/components/gym/auto-start";
 import { GymOverview } from "@/components/gym/gym-overview";
 import { getCurrentUser } from "@/lib/auth/dal";
 import { addDays } from "@/lib/dates";
@@ -27,7 +28,8 @@ import { getToday } from "@/server/today";
 export const metadata: Metadata = { title: "Gym" };
 
 
-export default async function GymPage() {
+export default async function GymPage({ searchParams }: PageProps<"/gym">) {
+  const start = (await searchParams).start === "1";
   const user = await getCurrentUser();
   await ensureGymSetup(user.id);
   const units = user.settings.units ?? "kg";
@@ -94,6 +96,8 @@ export default async function GymPage() {
     .slice(0, 6);
 
   return (
+    <>
+      {start && <AutoStart />}
     <GymOverview
       today={today}
       units={units}
@@ -124,5 +128,6 @@ export default async function GymPage() {
         .filter((m) => m.weight !== null && m.date >= addDays(today, -180))
         .map((m) => ({ date: m.date, weight: toDisplayWeight(m.weight!, units), bodyFat: m.bodyFat }))}
     />
+    </>
   );
 }

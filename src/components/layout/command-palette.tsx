@@ -1,12 +1,13 @@
 "use client";
 
 import { Command } from "cmdk";
-import { ArrowLeftRight, BookPlus, Dumbbell, GraduationCap, LogOut, Minus, NotebookPen, Plus, StickyNote, SunMoon } from "lucide-react";
+import { ArrowLeftRight, BookOpen, BookPlus, Dumbbell, GraduationCap, ListChecks, LogOut, Minus, NotebookPen, Plus, Receipt, StickyNote, SunMoon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState, useTransition } from "react";
 import { logout } from "@/server/actions/auth";
 import { startWorkout } from "@/server/actions/gym";
 import { createNote } from "@/server/actions/notes";
+import { type SearchHit, searchAll } from "@/server/actions/search";
 import { Kbd } from "@/components/ui/kbd";
 import { NAV_SECTIONS } from "./nav";
 import { useThemeSwitch } from "./theme-toggle";
@@ -19,6 +20,25 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
   const router = useRouter();
   const toggleTheme = useThemeSwitch();
   const [, startTransition] = useTransition();
+  const [query, setQuery] = useState("");
+  const [hits, setHits] = useState<{ q: string; items: SearchHit[] }>({ q: "", items: [] });
+
+  // Look inside notes, journal, transactions, books and habits once you've typed a couple of letters.
+  useEffect(() => {
+    const q = query.trim();
+    if (q.length < 2) return;
+    let stale = false;
+    const t = setTimeout(() => {
+      searchAll(q)
+        .then((items) => !stale && setHits({ q, items }))
+        .catch(() => !stale && setHits({ q, items: [] }));
+    }, 200);
+    return () => {
+      stale = true;
+      clearTimeout(t);
+    };
+  }, [query]);
+  const found = query.trim().length >= 2 && hits.q === query.trim() ? hits.items : [];
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -33,6 +53,7 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
 
   const run = (fn: () => void) => {
     setOpen(false);
+    setQuery("");
     fn();
   };
 
@@ -41,7 +62,10 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
       {children}
       <Command.Dialog
         open={open}
-        onOpenChange={setOpen}
+        onOpenChange={(o) => {
+          setOpen(o);
+          if (!o) setQuery("");
+        }}
         label="Command palette"
         filter={filterCommands}
         overlayClassName="fixed inset-0 z-50 bg-background/60 backdrop-blur-sm data-[state=open]:animate-[fade-in_200ms_ease-out]"
@@ -50,6 +74,8 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
         <div className="flex items-center gap-3 border-b border-hairline px-5">
           <Command.Input
             autoFocus
+            value={query}
+            onValueChange={setQuery}
             placeholder="Search or jump to…"
             className="h-14 flex-1 bg-transparent text-sm outline-none placeholder:text-muted"
           />
@@ -57,6 +83,21 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
         </div>
         <Command.List className="max-h-[50vh] overflow-y-auto overscroll-contain p-2 [&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:pt-3 [&_[cmdk-group-heading]]:pb-1.5 [&_[cmdk-group-heading]]:text-[11px] [&_[cmdk-group-heading]]:tracking-wide [&_[cmdk-group-heading]]:text-muted [&_[cmdk-group-heading]]:uppercase">
           <Command.Empty className="py-10 text-center text-sm text-muted">Nothing found.</Command.Empty>
+          {found.length > 0 && (
+            <Command.Group heading="Search results">
+              {found.map((h) => {
+                const Icon = HIT_ICON[h.kind];
+                return (
+                  // forceMount: these already matched on the server; cmdk's own filter must not hide them.
+                  <PaletteItem key={`${h.kind}-${h.id}`} value={`result ${h.kind} ${h.id}`} forceMount onSelect={() => run(() => router.push(h.href))}>
+                    <Icon />
+                    <span className="truncate">{h.title}</span>
+                    <span className="ml-auto max-w-[45%] truncate text-xs text-muted">{h.sub}</span>
+                  </PaletteItem>
+                );
+              })}
+            </Command.Group>
+          )}
           {NAV_SECTIONS.map((section) => (
             <Command.Group key={section.title} heading={section.title}>
               {section.items.map((item) => (
@@ -124,6 +165,8 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
     </PaletteContext.Provider>
   );
 }
+
+const HIT_ICON = { note: StickyNote, journal: NotebookPen, transaction: Receipt, book: BookOpen, habit: ListChecks } as const;
 
 /** Substring match; label hits rank above description hits. */
 function filterCommands(value: string, search: string, keywords?: string[]) {

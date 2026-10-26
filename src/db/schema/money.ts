@@ -78,10 +78,13 @@ export const transactions = sqliteTable(
     date: text("date").notNull(),
     note: text("note"),
     recurringId: text("recurring_id").references(() => recurringRules.id, { onDelete: "set null" }),
+    /** Set for entries made on the device, so an offline retry can't create a duplicate. */
+    clientId: text("client_id"),
     createdAt: createdAt(),
   },
   (t) => [
     index("transactions_user_date_idx").on(t.userId, t.date),
+    uniqueIndex("transactions_client_uq").on(t.userId, t.clientId),
     // One generated transaction per rule occurrence.
     uniqueIndex("transactions_recurring_uq").on(t.recurringId, t.date),
   ],

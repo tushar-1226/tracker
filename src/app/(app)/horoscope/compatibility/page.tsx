@@ -6,5 +6,5 @@ export const metadata: Metadata = { title: "Compatibility" };
 
 export default async function CompatibilityPage() {
   const user = await getCurrentUser();
-  return <CompatibilityView me={{ name: user.name ?? "", birth: user.settings.birth ?? null }} lang={user.settings.horoscopeLang ?? "en"} />;
+  return <CompatibilityView me={{ name: user.name ?? "", birth: user.settings.birth ?? null }} partner={user.settings.partner ?? null} lang={user.settings.horoscopeLang ?? "en"} />;
 }
