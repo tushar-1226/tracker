@@ -8,7 +8,7 @@ types.setTypeParser(types.builtins.INT8, Number);
 types.setTypeParser(types.builtins.NUMERIC, Number);
 
 function connect() {
-  const url = process.env.DATABASE_URL;
+  const url = process.env.DATABASE_URL ?? process.env.POSTGRES_URL;
   if (!url) throw new Error("DATABASE_URL is not set — see .env.example (a postgres:// URL, e.g. from Neon).");
   // Serverless functions each hold their own pool, so keep it small.
   const pool = new Pool({ connectionString: url, max: process.env.VERCEL ? 3 : 10, idleTimeoutMillis: 10_000 });
