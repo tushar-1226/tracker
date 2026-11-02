@@ -216,7 +216,7 @@ function HabitRow({
               title={d}
               className={cn(
                 "size-2 rounded-full transition-colors",
-                ok ? "bg-foreground" : due ? "bg-subtle/30" : "bg-hairline",
+                ok ? "bg-tint" : due ? "bg-subtle/30" : "bg-hairline",
                 d === day && "ring-1 ring-foreground ring-offset-2 ring-offset-surface",
               )}
             />

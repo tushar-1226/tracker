@@ -92,8 +92,8 @@ export function HabitControl({
             cx={dim / 2}
             cy={dim / 2}
             r={r}
-            fill={done ? "var(--foreground)" : "transparent"}
-            stroke="var(--foreground)"
+            fill={done ? "var(--tint)" : "transparent"}
+            stroke="var(--tint)"
             strokeWidth={2.5}
             strokeLinecap="round"
             initial={false}
@@ -101,7 +101,7 @@ export function HabitControl({
             transition={SPRING}
           />
         </svg>
-        <span className={cn("tabular relative text-xs font-medium", done && "text-background")}>{current}</span>
+        <span className={cn("tabular relative text-xs font-medium", done && "text-on-tint")}>{current}</span>
       </motion.button>
       <button
         type="button"
@@ -133,11 +133,11 @@ export function CheckButton({
       aria-pressed={done}
       aria-label={done ? "Mark as not done" : "Mark as done"}
       whileTap={{ scale: 0.85 }}
-      className="relative flex items-center justify-center rounded-full border-[1.5px] border-foreground/25 transition-colors hover:bg-subtle"
+      className="relative flex items-center justify-center rounded-full border-[1.5px] border-tint/40 transition-colors hover:bg-tint-soft"
       style={{ width: dim, height: dim }}
     >
       <motion.span
-        className="absolute -inset-px rounded-full bg-foreground"
+        className="absolute -inset-px rounded-full bg-tint"
         initial={false}
         animate={{ scale: done ? 1 : 0 }}
         transition={SPRING}
@@ -145,7 +145,7 @@ export function CheckButton({
       <svg viewBox="0 0 24 24" className="relative size-1/2" fill="none">
         <motion.path
           d="M5 12.5l4.5 4.5L19 7.5"
-          stroke="var(--background)"
+          stroke="var(--on-tint)"
           strokeWidth={2.5}
           strokeLinecap="round"
           strokeLinejoin="round"

@@ -223,7 +223,7 @@ function ReadingCard({ book, index, logs, today }: { book: BookCard; index: numb
           </div>
           <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-hairline">
             <motion.div
-              className="h-full rounded-full bg-foreground"
+              className="h-full rounded-full bg-tint-gradient"
               initial={{ width: 0 }}
               animate={{ width: `${(progress ?? 0) * 100}%` }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}

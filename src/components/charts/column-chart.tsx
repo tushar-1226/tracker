@@ -74,7 +74,7 @@ export function ColumnChart({
               >
                 <rect x={PAD.left + band * i} y={PAD.top} width={band} height={innerH} fill="transparent" />
                 {active === i && (
-                  <rect x={PAD.left + band * i + 2} y={PAD.top} width={band - 4} height={innerH} rx={8} fill="var(--foreground)" opacity={0.04} />
+                  <rect x={PAD.left + band * i + 2} y={PAD.top} width={band - 4} height={innerH} rx={8} fill="var(--tint)" opacity={0.07} />
                 )}
                 {series.map((s, j) => {
                   const v = s.values[i];

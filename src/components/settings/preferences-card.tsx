@@ -91,7 +91,7 @@ export function PreferencesCard({ settings }: { settings: UserSettings }) {
             aria-checked={prefs.cursor}
             aria-label="Custom cursor"
             onClick={() => set("cursor", !prefs.cursor)}
-            className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${prefs.cursor ? "bg-foreground" : "bg-subtle"}`}
+            className={`relative h-7 w-12 shrink-0 rounded-full transition-colors ${prefs.cursor ? "bg-tint" : "bg-subtle"}`}
           >
             <span className={`absolute top-1 size-5 rounded-full shadow-sm transition-all duration-300 ease-out-expo ${prefs.cursor ? "left-[calc(100%-1.5rem)] bg-background" : "left-1 bg-surface"}`} />
           </button>

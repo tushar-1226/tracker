@@ -34,7 +34,7 @@ export function Dock({ userName, level, levelProgress }: { userName: string; lev
         aria-label="Main"
         onMouseMove={(e) => mouseX.set(e.clientX)}
         onMouseLeave={() => mouseX.set(Infinity)}
-        className="fixed bottom-[calc(0.875rem+env(safe-area-inset-bottom))] left-1/2 z-40 flex -translate-x-1/2 items-end gap-1 rounded-full bg-surface/80 p-1.5 shadow-lift backdrop-blur-2xl backdrop-saturate-150"
+        className="glass fixed bottom-[calc(0.875rem+env(safe-area-inset-bottom))] left-1/2 z-40 flex -translate-x-1/2 items-end gap-1 rounded-full p-1.5"
       >
         {DOCK.map((d) => (
           <DockItem key={d.href} item={d} active={isActive(pathname, d.href)} mouseX={mouseX} />
@@ -92,10 +92,19 @@ function DockPill({ icon: Icon, label, active, scale }: { icon: LucideIcon; labe
       transition={{ layout: { type: "spring", stiffness: 500, damping: 38 } }}
       className={cn(
         "relative flex h-12 min-w-12 items-center justify-center gap-2 rounded-full px-3.5 transition-colors duration-300",
-        active ? "bg-foreground text-background" : "text-muted hover:text-foreground",
+        active ? "text-tint-ink" : "text-muted hover:text-foreground",
       )}
     >
-      <Icon className="size-[22px] shrink-0" strokeWidth={1.75} />
+      {/* One shared indicator that glides to whichever item is active. */}
+      {active && (
+        <motion.span
+          layoutId="dock-active"
+          aria-hidden
+          className="absolute inset-0 rounded-full bg-tint-soft shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--tint)_22%,transparent)]"
+          transition={{ type: "spring", stiffness: 420, damping: 36 }}
+        />
+      )}
+      <Icon className="relative size-[22px] shrink-0" strokeWidth={active ? 2 : 1.75} />
       <AnimatePresence initial={false}>
         {active && (
           <motion.span
@@ -104,7 +113,7 @@ function DockPill({ icon: Icon, label, active, scale }: { icon: LucideIcon; labe
             animate={{ opacity: 1, width: "auto" }}
             exit={{ opacity: 0, width: 0 }}
             transition={{ type: "spring", stiffness: 500, damping: 38 }}
-            className="hidden overflow-hidden text-sm font-medium whitespace-nowrap sm:block"
+            className="relative hidden overflow-hidden text-sm font-medium whitespace-nowrap sm:block"
           >
             {label}
           </motion.span>

@@ -91,7 +91,7 @@ export function BookDetail({
             <CardLabel>Progress</CardLabel>
             <p className="text-4xl font-semibold tracking-tight">{progress === null ? pagesRead : `${Math.round(progress * 100)}%`}</p>
             <div className="h-2 overflow-hidden rounded-full bg-hairline">
-              <div className="h-full rounded-full bg-foreground transition-[width] duration-700 ease-out-expo" style={{ width: `${(progress ?? 0) * 100}%` }} />
+              <div className="h-full rounded-full bg-tint-gradient transition-[width] duration-700 ease-out-expo" style={{ width: `${(progress ?? 0) * 100}%` }} />
             </div>
             <p className="text-xs text-muted">
               {pagesRead} of {book.totalPages ?? "?"} pages

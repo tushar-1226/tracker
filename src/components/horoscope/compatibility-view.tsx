@@ -244,7 +244,7 @@ export function CompatibilityView({ me, partner, lang }: { me: { name: string; b
                   <div className="order-last col-span-2 sm:order-none sm:col-span-1">
                     <div className="h-1.5 overflow-hidden rounded-full bg-subtle">
                       <motion.div
-                        className="h-full rounded-full bg-foreground"
+                        className="h-full rounded-full bg-tint-gradient"
                         initial={{ width: 0 }}
                         animate={{ width: `${(k.score / k.max) * 100}%` }}
                         transition={{ duration: 0.9, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}

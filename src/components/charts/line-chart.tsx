@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { ChartTooltip } from "./tooltip";
 import { TONE, type Tone, niceTicks } from "./scale";
 import { useWidth } from "./use-width";
@@ -33,6 +33,7 @@ export function LineChart({
 }) {
   const [ref, width] = useWidth<HTMLDivElement>();
   const [active, setActive] = useState<number | null>(null);
+  const gid = useId().replace(/[^\w-]/g, "");
   const n = labels.length;
 
   const all = series.flatMap((s) => s.values.filter((v): v is number => v !== null));
@@ -112,8 +113,16 @@ export function LineChart({
             ) : null,
           )}
 
-          {series.map((s) =>
-            s.area ? <path key={`a-${s.name}`} d={areaFor(s.values)} fill={TONE[s.tone]} opacity={0.08} /> : null,
+          <defs>
+            {series.map((s, i) => (
+              <linearGradient key={s.name} id={`${gid}-${i}`} x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" style={{ stopColor: TONE[s.tone] }} stopOpacity={0.28} />
+                <stop offset="100%" style={{ stopColor: TONE[s.tone] }} stopOpacity={0} />
+              </linearGradient>
+            ))}
+          </defs>
+          {series.map((s, i) =>
+            s.area ? <path key={`a-${s.name}`} d={areaFor(s.values)} fill={`url(#${gid}-${i})`} /> : null,
           )}
           {series.map((s) => (
             <motion.path
@@ -121,7 +130,7 @@ export function LineChart({
               d={pathFor(s.values)}
               fill="none"
               stroke={TONE[s.tone]}
-              strokeWidth={2}
+              strokeWidth={2.25}
               strokeLinecap="round"
               strokeLinejoin="round"
               initial={{ pathLength: 0 }}
@@ -132,7 +141,7 @@ export function LineChart({
 
           {active !== null && (
             <g>
-              <line x1={x(active)} x2={x(active)} y1={PAD.top} y2={PAD.top + innerH} stroke="var(--foreground)" strokeOpacity={0.25} />
+              <line x1={x(active)} x2={x(active)} y1={PAD.top} y2={PAD.top + innerH} stroke="var(--tint)" strokeOpacity={0.4} />
               {series.map((s) => {
                 const v = s.values[active];
                 return v === null ? null : (

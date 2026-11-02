@@ -9,6 +9,7 @@ import { logout } from "@/server/actions/auth";
 import { cn } from "@/lib/utils";
 import { useCommandPalette } from "./command-palette";
 import { NAV_SECTIONS, isActive } from "./nav";
+import { sectionOf } from "./section-scope";
 import { ThemeToggle } from "./theme-toggle";
 
 /** Every section as soft tiles, plus search, theme and account — opened from the dock. */
@@ -31,7 +32,7 @@ export function MoreSheet({
     <D.Root open={open} onOpenChange={onOpenChange}>
       <D.Portal>
         <D.Overlay className="fixed inset-0 z-50 bg-black/25 backdrop-blur-[6px] data-[state=closed]:animate-[fade-out_150ms_ease-in] data-[state=open]:animate-[fade-in_200ms_ease-out] dark:bg-black/50" />
-        <D.Content className="fixed inset-x-0 bottom-0 z-50 mx-auto max-h-[88dvh] w-full max-w-3xl overflow-y-auto overscroll-contain rounded-t-[2.25rem] bg-background p-5 pb-[calc(1.5rem+env(safe-area-inset-bottom))] shadow-lift data-[state=closed]:animate-[dialog-out_150ms_ease-in] data-[state=open]:animate-[sheet-in_420ms_var(--ease-out-expo)] md:bottom-6 md:rounded-[2.25rem] md:p-7" data-lenis-prevent>
+        <D.Content className="fixed inset-x-0 bottom-0 z-50 mx-auto max-h-[88dvh] w-full max-w-3xl overflow-y-auto overscroll-contain rounded-t-[2.25rem] bg-background/95 p-5 pb-[calc(1.5rem+env(safe-area-inset-bottom))] shadow-lift backdrop-blur-2xl data-[state=closed]:animate-[dialog-out_150ms_ease-in] data-[state=open]:animate-[sheet-in_420ms_var(--ease-out-expo)] md:bottom-6 md:rounded-[2.25rem] md:p-7" data-lenis-prevent>
           <D.Title className="sr-only">All sections</D.Title>
           <D.Description className="sr-only">Navigate anywhere in Track</D.Description>
           <div aria-hidden className="mx-auto -mt-1 mb-5 h-1.5 w-10 rounded-full bg-subtle" />
@@ -61,15 +62,19 @@ export function MoreSheet({
                       <Link
                         href={item.href}
                         onClick={() => onOpenChange(false)}
+                        data-section={sectionOf(item.href)}
                         className={cn(
-                          "flex h-full flex-col gap-3 rounded-3xl p-4 transition-transform duration-200 active:scale-[0.97]",
-                          active ? "bg-foreground text-background" : "bg-surface shadow-soft hover:-translate-y-0.5",
+                          "group relative flex h-full flex-col gap-3 overflow-hidden rounded-3xl bg-surface p-4 shadow-soft transition-transform duration-200 hover:-translate-y-0.5 active:scale-[0.97]",
+                          active && "shadow-[inset_0_0_0_1.5px_var(--tint)]",
                         )}
                       >
-                        <item.icon className="size-5" strokeWidth={1.75} />
-                        <span>
+                        <span aria-hidden className={cn("tint-glow pointer-events-none absolute inset-0 transition-opacity duration-300 group-hover:opacity-100", active ? "opacity-100" : "opacity-0")} />
+                        <span className="icon-chip relative size-10">
+                          <item.icon className="size-5" strokeWidth={1.85} />
+                        </span>
+                        <span className="relative">
                           <span className="block text-[15px] font-medium">{item.label}</span>
-                          <span className={cn("block truncate text-xs", active ? "text-background/60" : "text-muted")}>{item.description}</span>
+                          <span className="block truncate text-xs text-muted">{item.description}</span>
                         </span>
                       </Link>
                     </motion.div>
@@ -87,7 +92,7 @@ export function MoreSheet({
                 <span className="mt-1 flex items-center gap-2 text-xs text-muted">
                   Level {level}
                   <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-subtle">
-                    <span className="block h-full rounded-full bg-foreground" style={{ width: `${Math.max(4, levelProgress * 100)}%` }} />
+                    <span className="block h-full rounded-full bg-tint-gradient" style={{ width: `${Math.max(4, levelProgress * 100)}%` }} />
                   </span>
                 </span>
               </span>

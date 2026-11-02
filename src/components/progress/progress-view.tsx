@@ -104,16 +104,19 @@ export function ProgressView({
           const Icon = MODULE_ICON[m.key];
           return (
             <StaggerItem key={m.key}>
-              <Link href={m.href} data-cursor-label="Open" className="flex h-full flex-col gap-4 rounded-3xl bg-surface p-4 transition-colors hover:bg-subtle">
-                <span className="flex items-center justify-between text-sm">
+              <Link href={m.href} data-cursor-label="Open" className={`tint-${m.key} group relative flex h-full flex-col gap-4 overflow-hidden rounded-3xl bg-surface p-4 transition-transform hover:-translate-y-0.5`}>
+                <span aria-hidden className="tint-glow pointer-events-none absolute inset-0 opacity-50 transition-opacity duration-500 group-hover:opacity-100" />
+                <span className="relative flex items-center justify-between text-sm">
                   {m.label}
-                  <Icon className="size-4 text-muted" />
+                  <span className="icon-chip size-8 rounded-xl">
+                    <Icon className="size-4" />
+                  </span>
                 </span>
-                <span>
+                <span className="relative">
                   <span className="text-3xl font-semibold tracking-tight">Lv {m.level}</span>
-                  <span className="mt-2 block h-1 overflow-hidden rounded-full bg-hairline">
+                  <span className="mt-2 block h-1.5 overflow-hidden rounded-full bg-tint-soft">
                     <motion.span
-                      className="block h-full rounded-full bg-foreground"
+                      className="block h-full rounded-full bg-tint-gradient"
                       initial={{ width: 0 }}
                       animate={{ width: `${Math.max(2, m.progress * 100)}%` }}
                       transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
@@ -193,7 +196,7 @@ export function ProgressView({
                 {next !== undefined ? (
                   <div className="mt-2 flex items-center gap-2">
                     <span className="h-1 flex-1 overflow-hidden rounded-full bg-hairline">
-                      <span className="block h-full rounded-full bg-foreground" style={{ width: `${Math.min(1, (value - prev) / (next - prev)) * 100}%` }} />
+                      <span className="block h-full rounded-full bg-tint-gradient" style={{ width: `${Math.min(1, (value - prev) / (next - prev)) * 100}%` }} />
                     </span>
                     <span className="text-[10px] text-muted tabular-nums">
                       {Math.min(value, next).toLocaleString("en-IN")}/{next.toLocaleString("en-IN")}

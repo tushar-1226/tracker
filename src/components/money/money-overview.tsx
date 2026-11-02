@@ -119,7 +119,7 @@ export function MoneyOverview({
               </div>
               <div className="h-2 overflow-hidden rounded-full bg-hairline">
                 <div
-                  className="h-full rounded-full bg-foreground transition-[width] duration-1000 ease-out-expo"
+                  className="h-full rounded-full bg-tint-gradient transition-[width] duration-1000 ease-out-expo"
                   style={{ width: `${Math.max(0, Math.min(1, rate ?? 0)) * 100}%` }}
                 />
               </div>

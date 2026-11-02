@@ -266,7 +266,7 @@ function EntryEditor({ date, entry }: { date: Day; entry?: Entry }) {
                 aria-checked={state.energy === n}
                 aria-label={`Energy ${n} of 5`}
                 onClick={() => update({ energy: state.energy === n ? null : n }, 200)}
-                className={cn("flex-1 rounded-md transition-colors", (state.energy ?? 0) >= n ? "bg-foreground" : "bg-hairline hover:bg-muted/40")}
+                className={cn("flex-1 rounded-md transition-colors", (state.energy ?? 0) >= n ? "bg-tint" : "bg-hairline hover:bg-muted/40")}
                 style={{ height: `${30 + n * 14}%` }}
               />
             ))}

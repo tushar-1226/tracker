@@ -1,10 +1,11 @@
 import { Slot } from "radix-ui";
 import { cn } from "@/lib/utils";
 
-// Soft pills: filled primary, quiet secondary, transparent ghost.
+// Soft pills: filled primary, quiet secondary, tinted soft, transparent ghost.
 const variants = {
   primary: "bg-foreground text-background shadow-soft hover:-translate-y-0.5 hover:shadow-lift hover:opacity-95",
   outline: "bg-subtle text-foreground shadow-sm hover:-translate-y-0.5 hover:bg-foreground hover:text-background",
+  soft: "bg-tint-soft text-tint-ink hover:-translate-y-0.5 hover:bg-tint hover:text-on-tint",
   ghost: "bg-transparent hover:bg-subtle",
 } as const;
 

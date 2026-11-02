@@ -49,6 +49,8 @@ export default async function DashboardPage() {
   const weekStart = startOfWeek(today, weekStartsOn);
   const workoutsThisWeek = workouts.filter((w) => w.finishedAt && w.date >= weekStart && w.date <= addDays(weekStart, 6)).length;
   const trainedToday = workouts.some((w) => w.finishedAt && w.date === today);
+  const workoutTarget = user.settings.workoutTarget ?? 3;
+  const learningTarget = user.settings.learningTarget ?? 30;
 
   const items = habits.map((h) => ({ habit: h, logs: logMap(h) }));
   const best = items
@@ -65,100 +67,115 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <Reveal className="mb-10">
-        <Greeting name={user.name} />
-      </Reveal>
+      <Stagger className="grid grid-cols-2 gap-3 md:grid-cols-6 md:gap-4">
+        <StaggerItem className="col-span-2 md:col-span-4">
+          <Card className="relative h-full overflow-hidden p-7 md:p-9">
+            <span aria-hidden className="tint-glow pointer-events-none absolute inset-0" />
+            <span aria-hidden className="pointer-events-none absolute -right-16 -bottom-28 size-72 rounded-full border-[28px] border-tint/[0.07]" />
+            <span aria-hidden className="pointer-events-none absolute -right-2 -bottom-14 size-40 rounded-full border-[16px] border-tint/[0.06]" />
+            <div className="relative flex h-full flex-col justify-between gap-12">
+              <Greeting name={user.name} />
+              <div className="space-y-3">
+                <div className="flex items-end justify-between gap-4">
+                  <div>
+                    <CardLabel>Level</CardLabel>
+                    <p className="tabular mt-1 text-6xl leading-none font-medium md:text-7xl">
+                      <NumberTicker value={level} />
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <CardLabel>Total XP</CardLabel>
+                    <NumberTicker value={user.xp} className="tabular mt-1 block text-2xl" />
+                    <RecentAchievements items={unlocked.map(({ key, tier }) => ({ key, tier }))} />
+                  </div>
+                </div>
+                <XpBar value={progress} />
+                <div className="flex justify-between text-xs text-muted">
+                  <span className="tabular">
+                    {current} / {needed} XP
+                  </span>
+                  <span>Level {level + 1}</span>
+                </div>
+              </div>
+            </div>
+          </Card>
+        </StaggerItem>
 
-      <Stagger className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        <StaggerItem>
-          <Card className="flex h-full flex-col items-center justify-center gap-4 py-8">
-            <Ring value={lifeScore / 100}>
+        <StaggerItem className="col-span-2">
+          <Card className="flex h-full flex-col items-center justify-center gap-5 py-8">
+            <CardLabel>Life score today</CardLabel>
+            <Ring value={lifeScore / 100} size={168}>
               <NumberTicker value={lifeScore} className="tabular text-5xl font-medium" />
               <span className="text-xs text-muted">/ 100</span>
             </Ring>
-            <div className="text-center">
-              <CardLabel>Life score today</CardLabel>
-              <LifeBreakdown parts={snapshot.life.parts} />
-            </div>
+            <LifeBreakdown parts={snapshot.life.parts} />
           </Card>
         </StaggerItem>
 
-        <StaggerItem className="md:col-span-2">
-          <Card className="flex h-full flex-col justify-between gap-10">
-            <div className="flex items-start justify-between">
-              <div>
-                <CardLabel>Level</CardLabel>
-                <p className="tabular mt-2 text-7xl font-medium md:text-8xl">
-                  <NumberTicker value={level} />
-                </p>
-              </div>
-              <div className="text-right">
-                <CardLabel>Total XP</CardLabel>
-                <NumberTicker value={user.xp} className="tabular mt-2 block text-2xl" />
-                <RecentAchievements items={unlocked.map(({ key, tier }) => ({ key, tier }))} />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <XpBar value={progress} />
-              <div className="flex justify-between text-xs text-muted">
-                <span className="tabular">
-                  {current} / {needed} XP
-                </span>
-                <span>Level {level + 1}</span>
-              </div>
-            </div>
-          </Card>
-        </StaggerItem>
-
-        <StaggerItem className="md:col-span-2 md:row-span-2">
+        <StaggerItem className="tint-habits col-span-2 md:col-span-4 md:row-span-2">
           <TodayHabits habits={habits} today={today} />
         </StaggerItem>
-        <StaggerItem>
+        <StaggerItem className="md:col-span-2">
           <StatCard
             href={best ? "/habits" : "/habits?new=1"}
             icon={Flame}
+            tint="habits"
             label="Top streak"
             value={best?.current ?? 0}
             unit={best?.unit ?? "days"}
             hint={best ? best.name : "Start one today"}
           />
         </StaggerItem>
-        <StaggerItem>
+        <StaggerItem className="md:col-span-2">
           <StatCard
             href={spentToday ? "/money/transactions" : "/money?add=expense"}
             icon={Wallet}
+            tint="money"
             label="Spent today"
             value={spentToday / 100}
             prefix={formatMoney(0, currency).replace(/[\d.,\s]/g, "")}
             hint={spentToday ? formatMoney(spentToday, currency) : "Log an expense"}
           />
         </StaggerItem>
-        <StaggerItem>
+        <StaggerItem className="md:col-span-2">
           <StatCard
             href="/gym"
             icon={Dumbbell}
+            tint="fitness"
             label="Workouts"
             value={workoutsThisWeek}
             unit="this week"
             hint={trainedToday ? "Trained today" : workouts.length ? "Not yet today" : "Log your first session"}
+            progress={workoutsThisWeek / workoutTarget}
           />
         </StaggerItem>
-        <StaggerItem>
-          <StatCard href="/learning" icon={GraduationCap} label="Learning" value={studyToday} unit="min" hint={studyToday ? "Studied today" : "Start a focus session"} />
+        <StaggerItem className="md:col-span-2">
+          <StatCard
+            href="/learning"
+            icon={GraduationCap}
+            tint="learning"
+            label="Learning"
+            value={studyToday}
+            unit="min"
+            hint={studyToday ? "Studied today" : "Start a focus session"}
+            progress={studyToday / learningTarget}
+          />
         </StaggerItem>
-        <StaggerItem>
+        <StaggerItem className="col-span-2">
           <StatCard
             href={readingNow ? `/books/${readingNow.id}` : "/books?add=1"}
             icon={BookOpen}
+            tint="reading"
             label="Reading"
             value={pagesToday}
             unit="pages"
             hint={readingNow ? readingNow.title : "Pick a book to read"}
+            progress={readingNow?.totalPages ? readingNow.pagesRead / readingNow.totalPages : undefined}
           />
         </StaggerItem>
       </Stagger>
 
-      <Reveal className="mt-4">
+      <Reveal className="tint-astro mt-4">
         <TodaySkyCard h={getHoroscope(user.settings, today)} />
       </Reveal>
 

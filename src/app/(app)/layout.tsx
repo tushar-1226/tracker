@@ -1,6 +1,7 @@
 import { CommandPaletteProvider } from "@/components/layout/command-palette";
 import { AppHeader } from "@/components/layout/app-header";
 import { Dock } from "@/components/layout/dock";
+import { SectionScope } from "@/components/layout/section-scope";
 import { TimezoneSync } from "@/components/layout/timezone-sync";
 import { CursorSetting } from "@/components/motion/cursor-setting";
 import { getCurrentUser } from "@/lib/auth/dal";
@@ -20,15 +21,17 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <CommandPaletteProvider>
-      <OutboxSync />
-      <TimezoneSync serverTimeZone={timeZone} storedTimeZone={user.settings.timeZone} />
-      <CursorSetting enabled={user.settings.cursor !== false} />
-      <AppHeader userName={user.name} level={progress.xp.overall.level} levelProgress={progress.xp.overall.progress} />
-      <main className="min-h-dvh pb-[calc(8rem+env(safe-area-inset-bottom))]">
-        <div className="mx-auto w-full max-w-6xl px-4 pt-6 md:px-8 md:pt-10">{children}</div>
-      </main>
-      <Dock userName={user.name} level={progress.xp.overall.level} levelProgress={progress.xp.overall.progress} />
-      <AchievementToaster unlocks={unseen} />
+      <SectionScope>
+        <OutboxSync />
+        <TimezoneSync serverTimeZone={timeZone} storedTimeZone={user.settings.timeZone} />
+        <CursorSetting enabled={user.settings.cursor !== false} />
+        <AppHeader userName={user.name} level={progress.xp.overall.level} levelProgress={progress.xp.overall.progress} />
+        <main className="min-h-dvh pb-[calc(8rem+env(safe-area-inset-bottom))]">
+          <div className="mx-auto w-full max-w-6xl px-4 pt-6 md:px-8 md:pt-10">{children}</div>
+        </main>
+        <Dock userName={user.name} level={progress.xp.overall.level} levelProgress={progress.xp.overall.progress} />
+        <AchievementToaster unlocks={unseen} />
+      </SectionScope>
     </CommandPaletteProvider>
   );
 }

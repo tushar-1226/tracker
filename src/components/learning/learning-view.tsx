@@ -169,7 +169,7 @@ export function LearningView({
                 </p>
                 <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-hairline">
                   <motion.div
-                    className="h-full rounded-full bg-foreground"
+                    className="h-full rounded-full bg-tint-gradient"
                     initial={{ width: 0 }}
                     whileInView={{ width: `${Math.min(1, goal.progress) * 100}%` }}
                     viewport={{ once: true }}

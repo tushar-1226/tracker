@@ -23,20 +23,27 @@ export function TodayHabits({ habits: serverHabits, today }: { habits: HabitView
 
   return (
     <Card className="h-full">
-      <div className="mb-4 flex items-center justify-between">
-        <CardLabel>Today’s habits</CardLabel>
-        <Link
-          href="/habits"
-          className="inline-flex items-center gap-1 text-xs text-muted transition-colors hover:text-foreground"
-        >
-          {tally.done}/{tally.due} done <ArrowUpRight className="size-3.5" />
-        </Link>
+      <div className="mb-5">
+        <div className="mb-3 flex items-center justify-between">
+          <CardLabel>Today’s habits</CardLabel>
+          <Link
+            href="/habits"
+            className="inline-flex items-center gap-1 rounded-full bg-tint-soft px-2.5 py-1 text-xs font-medium text-tint-ink transition-colors hover:bg-tint hover:text-on-tint"
+          >
+            {tally.done}/{tally.due} done <ArrowUpRight className="size-3.5" />
+          </Link>
+        </div>
+        {tally.due > 0 && (
+          <span className="block h-1.5 overflow-hidden rounded-full bg-tint-soft">
+            <span className="block h-full rounded-full bg-tint-gradient transition-[width] duration-700 ease-out-expo" style={{ width: `${(tally.done / tally.due) * 100}%` }} />
+          </span>
+        )}
       </div>
 
       {habits.length === 0 ? (
         <Link
           href="/habits?new=1"
-          className="flex h-32 flex-col items-center justify-center gap-2 rounded-2xl bg-foreground/[0.035] text-sm text-muted transition-colors hover:bg-subtle hover:text-foreground"
+          className="flex h-32 flex-col items-center justify-center gap-2 rounded-2xl bg-tint-soft text-sm text-tint-ink transition-colors hover:bg-tint hover:text-on-tint"
         >
           <Plus className="size-5" />
           Add your first habit
@@ -48,7 +55,9 @@ export function TodayHabits({ habits: serverHabits, today }: { habits: HabitView
             const target = targetLabel(habit);
             return (
               <li key={habit.id} className="flex items-center gap-3 rounded-2xl px-2 py-2 transition-colors hover:bg-subtle">
-                <HabitIcon name={habit.icon} className="text-muted" />
+                <span className={cn("icon-chip size-9 rounded-xl transition-opacity", done && "opacity-60")}>
+                  <HabitIcon name={habit.icon} className="size-4" />
+                </span>
                 <Link href={`/habits/${habit.id}`} className="min-w-0 flex-1">
                   <p className={cn("truncate text-sm transition-colors", done && habit.type !== "quit" && "text-muted line-through decoration-foreground/40")}>
                     {habit.name}

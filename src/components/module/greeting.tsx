@@ -15,10 +15,10 @@ export function Greeting({ name }: { name: string }) {
 
   return (
     <div>
-      <p className="text-[15px] text-muted">{date ? format(date, "EEEE, d MMMM") : " "}</p>
-      <h1 className="mt-1 text-[2.5rem] leading-[1.05] font-semibold tracking-tight md:text-6xl">
+      <p className="text-[15px] font-medium text-tint-ink">{date ? format(date, "EEEE, d MMMM") : " "}</p>
+      <h1 className="mt-1 text-[2.5rem] leading-[1.05] font-semibold tracking-tight md:text-[3.5rem]">
         {part},<br className="sm:hidden" /> {name.split(" ")[0]}
-        <span className="text-muted">.</span>
+        <span className="text-tint">.</span>
       </h1>
     </div>
   );

@@ -1,4 +1,5 @@
 import { Reveal } from "@/components/motion/reveal";
+import { SectionIcon } from "./section-icon";
 
 export function PageHeader({
   title,
@@ -12,13 +13,19 @@ export function PageHeader({
   navLabel?: string;
 }) {
   return (
-    <Reveal className="relative mb-8 flex flex-wrap items-end justify-between gap-4 overflow-hidden rounded-[2rem] bg-surface px-6 py-7 shadow-soft md:mb-10 md:px-8 md:py-9">
-      <span aria-hidden className="pointer-events-none absolute -right-12 -bottom-24 size-56 rounded-full border-[24px] border-foreground/[0.035]" />
-      <div className="min-w-0">
-        <h1 className="text-[2.25rem] leading-[1.05] font-semibold tracking-tight md:text-[3.25rem]">{title}</h1>
+    <Reveal className="relative mb-8 flex flex-wrap items-end justify-between gap-4 overflow-hidden rounded-[2rem] bg-surface px-6 py-7 shadow-soft md:mb-10 md:px-9 md:py-10">
+      <span aria-hidden className="tint-glow pointer-events-none absolute inset-0" />
+      <span aria-hidden className="pointer-events-none absolute -right-14 -bottom-28 size-64 rounded-full border-[26px] border-tint/[0.08]" />
+      <span aria-hidden className="pointer-events-none absolute right-10 -bottom-16 size-32 rounded-full border-[14px] border-tint/[0.06]" />
+      <div className="relative min-w-0">
+        <SectionIcon />
+        <h1 className="text-[2.25rem] leading-[1.05] font-semibold tracking-tight md:text-[3.25rem]">
+          {title}
+          <span className="text-tint">.</span>
+        </h1>
         {description && <p className="mt-2 text-[15px] text-muted">{description}</p>}
       </div>
-      {actions}
+      {actions && <div className="relative">{actions}</div>}
     </Reveal>
   );
 }

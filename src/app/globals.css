@@ -4,65 +4,133 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ---------- Tokens ---------- */
-:root {
-  /* Soft & fluid: surfaces float on a light grey page; no hard borders. */
-  --background: #f3f3f2;
-  --surface: #ffffff;
-  --subtle: #eaeae9;
-  --border: #e3e3e2;
-  --hairline: #e3e3e2;
-  --muted: #74746f;
-  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.04), 0 12px 32px -12px rgb(0 0 0 / 0.12);
-  --shadow-lift: 0 2px 6px rgb(0 0 0 / 0.06), 0 24px 48px -16px rgb(0 0 0 / 0.22);
-  --foreground: #0a0a0a;
-  --inverse: #ffffff;
+/*
+ * Warm neutrals plus one muted, earthy tint per section. `--tint` is the colour of the
+ * section you're in (set by <SectionScope> via data-section); it's a registered property
+ * so the whole UI cross-fades when you navigate.
+ */
+@property --tint {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #56609a;
+}
+
+:root,
+.white {
+  /* Light — warm paper. */
+  --background: #f4f2ee;
+  --surface: #fffefc;
+  --subtle: #edeae4;
+  --border: #e5e1d9;
+  --hairline: #e5e1d9;
+  --muted: #757068;
+  --foreground: #1d1b18;
+  --inverse: #fffefc;
+  --highlight: rgb(255 255 255 / 0.7);
+  --shadow-soft: inset 0 1px 0 var(--highlight), 0 1px 2px rgb(60 45 25 / 0.05), 0 14px 36px -16px rgb(60 45 25 / 0.16);
+  --shadow-lift: inset 0 1px 0 var(--highlight), 0 2px 8px rgb(60 45 25 / 0.06), 0 28px 60px -22px rgb(60 45 25 / 0.26);
+
+  --c-accent: #56609a; /* ink indigo */
+  --c-habits: #66896f; /* sage */
+  --c-money: #7a8550; /* moss */
+  --c-fitness: #b56a4f; /* terracotta */
+  --c-learning: #5b7ea0; /* dusty blue */
+  --c-reading: #ad8644; /* ochre */
+  --c-mind: #8a6a8d; /* plum */
+  --c-astro: #6c67a6; /* twilight */
+  --on-tint: #ffffff;
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
   color-scheme: light;
 }
 
-.white {
-  --background: #f7f8fa;
-  --surface: #ffffff;
-  --subtle: #eef1f5;
-  --border: #e1e6ed;
-  --hairline: #e1e6ed;
-  --muted: #68717e;
-  --shadow-soft: 0 1px 2px rgb(24 39 75 / 0.04), 0 16px 40px -18px rgb(24 39 75 / 0.18);
-  --shadow-lift: 0 2px 8px rgb(24 39 75 / 0.06), 0 28px 60px -22px rgb(24 39 75 / 0.24);
-  --foreground: #17202b;
-  --inverse: #ffffff;
-  color-scheme: light;
-}
-
 .dark {
-  --background: #0b0b0b;
-  --surface: #171717;
-  --subtle: #232323;
-  --border: #2a2a2a;
-  --hairline: #2a2a2a;
-  --muted: #8f8f8a;
-  --shadow-soft: 0 0 0 1px rgb(255 255 255 / 0.04), 0 16px 40px -16px rgb(0 0 0 / 0.7);
-  --shadow-lift: 0 0 0 1px rgb(255 255 255 / 0.06), 0 28px 56px -16px rgb(0 0 0 / 0.85);
-  --foreground: #fafafa;
-  --inverse: #0a0a0a;
+  /* Dark — warm charcoal; tints lift and soften to stay calm on black. */
+  --background: #100f0e;
+  --surface: #1a1917;
+  --subtle: #252320;
+  --border: #2f2c28;
+  --hairline: #2f2c28;
+  --muted: #918b82;
+  --foreground: #f3f0ea;
+  --inverse: #100f0e;
+  --highlight: rgb(255 255 255 / 0.05);
+  --shadow-soft: inset 0 1px 0 var(--highlight), 0 0 0 1px rgb(255 255 255 / 0.03), 0 16px 40px -16px rgb(0 0 0 / 0.7);
+  --shadow-lift: inset 0 1px 0 var(--highlight), 0 0 0 1px rgb(255 255 255 / 0.05), 0 28px 56px -16px rgb(0 0 0 / 0.85);
+
+  --c-accent: #949fd6;
+  --c-habits: #8fb59a;
+  --c-money: #a8b27a;
+  --c-fitness: #d9957c;
+  --c-learning: #8eacca;
+  --c-reading: #d4b175;
+  --c-mind: #b99bbb;
+  --c-astro: #a39fd8;
+  --on-tint: #100f0e;
   color-scheme: dark;
 }
 
 .brown {
-  --background: #211a16;
-  --surface: #2c221d;
-  --subtle: #3b2d25;
-  --border: #4b392e;
-  --hairline: #4b392e;
-  --muted: #bda99a;
-  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.18), 0 18px 42px -18px rgb(0 0 0 / 0.48);
-  --shadow-lift: 0 2px 8px rgb(0 0 0 / 0.2), 0 30px 64px -20px rgb(0 0 0 / 0.7);
+  /* Cocoa — the dark palette steeped in warm brown. */
+  --background: #1f1915;
+  --surface: #2a211c;
+  --subtle: #372b24;
+  --border: #46372d;
+  --hairline: #46372d;
+  --muted: #bba795;
   --foreground: #f6ede5;
-  --inverse: #211a16;
+  --inverse: #1f1915;
+  --highlight: rgb(255 240 225 / 0.06);
+  --shadow-soft: inset 0 1px 0 var(--highlight), 0 1px 2px rgb(0 0 0 / 0.18), 0 18px 42px -18px rgb(0 0 0 / 0.5);
+  --shadow-lift: inset 0 1px 0 var(--highlight), 0 2px 8px rgb(0 0 0 / 0.2), 0 30px 64px -20px rgb(0 0 0 / 0.7);
+
+  --c-accent: #d0a77c;
+  --c-habits: #9fb88f;
+  --c-money: #b5b07a;
+  --c-fitness: #df9b7f;
+  --c-learning: #9fb1c4;
+  --c-reading: #dcb574;
+  --c-mind: #c6a0b4;
+  --c-astro: #b0a3d3;
+  --on-tint: #1f1915;
   color-scheme: dark;
 }
 
+/* Which tint each section uses. Unknown sections fall back to the accent. */
+:root,
+[data-section] { --tint: var(--c-accent); }
+[data-section="habits"], .tint-habits { --tint: var(--c-habits); }
+[data-section="money"], .tint-money { --tint: var(--c-money); }
+[data-section="fitness"], .tint-fitness { --tint: var(--c-fitness); }
+[data-section="learning"], .tint-learning { --tint: var(--c-learning); }
+[data-section="reading"], .tint-reading { --tint: var(--c-reading); }
+[data-section="mind"], .tint-mind { --tint: var(--c-mind); }
+[data-section="astro"], .tint-astro { --tint: var(--c-astro); }
+.tint-accent, .tint-meta { --tint: var(--c-accent); }
+
+:root,
+[data-section] {
+  transition: --tint 700ms var(--ease-out-expo);
+}
+
+/* Derived tint shades, recomputed wherever --tint changes. */
+* {
+  --tint-soft: color-mix(in oklab, var(--tint) 17%, transparent);
+  --tint-ink: color-mix(in oklab, var(--tint) 72%, var(--foreground));
+}
+
 @theme inline {
+  --color-tint: var(--tint);
+  --color-tint-soft: var(--tint-soft);
+  --color-tint-ink: var(--tint-ink);
+  --color-on-tint: var(--on-tint);
+  --color-accent: var(--c-accent);
+  --color-habits: var(--c-habits);
+  --color-money: var(--c-money);
+  --color-fitness: var(--c-fitness);
+  --color-learning: var(--c-learning);
+  --color-reading: var(--c-reading);
+  --color-mind: var(--c-mind);
+  --color-astro: var(--c-astro);
   --color-background: var(--background);
   --color-surface: var(--surface);
   --color-subtle: var(--subtle);
@@ -92,10 +160,7 @@
     -webkit-tap-highlight-color: transparent;
   }
   body {
-    background:
-      radial-gradient(circle at 8% -8%, color-mix(in srgb, var(--foreground) 7%, transparent), transparent 30rem),
-      radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--foreground) 4%, transparent), transparent 28rem),
-      var(--background);
+    background: var(--background);
     color: var(--foreground);
     /* Geist has no Devanagari: Hindi falls through to each platform's own Devanagari font. */
     font-family: var(--font-sans), "Noto Sans Devanagari", "Kohinoor Devanagari", "Nirmala UI", "Mangal", system-ui, sans-serif;
@@ -112,13 +177,56 @@
     mix-blend-mode: overlay;
   }
   ::selection {
-    background: var(--foreground);
-    color: var(--background);
+    background: color-mix(in oklab, var(--tint) 30%, transparent);
+    color: var(--foreground);
   }
   :focus-visible {
-    outline: 1.5px solid var(--foreground);
+    outline: 2px solid color-mix(in oklab, var(--tint) 70%, transparent);
     outline-offset: 2px;
   }
+}
+
+/* Ambient light: two slow, blurred washes in the section tint behind everything. */
+.aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+}
+.aurora::before,
+.aurora::after {
+  position: absolute;
+  content: "";
+  border-radius: 9999px;
+  filter: blur(80px);
+  will-change: transform;
+}
+.aurora::before {
+  top: -18rem;
+  left: -12rem;
+  width: 44rem;
+  height: 44rem;
+  background: radial-gradient(circle, color-mix(in oklab, var(--tint) 30%, transparent), transparent 65%);
+  animation: drift-a 26s ease-in-out infinite alternate;
+}
+.aurora::after {
+  top: -10rem;
+  right: -16rem;
+  width: 40rem;
+  height: 40rem;
+  background: radial-gradient(circle, color-mix(in oklab, var(--c-accent) 18%, transparent), transparent 65%);
+  animation: drift-b 32s ease-in-out infinite alternate;
+}
+.dark .aurora::before,
+.brown .aurora::before { opacity: 0.55; }
+.dark .aurora::after,
+.brown .aurora::after { opacity: 0.45; }
+@keyframes drift-a {
+  to { transform: translate3d(8rem, 4rem, 0) scale(1.1); }
+}
+@keyframes drift-b {
+  to { transform: translate3d(-6rem, 6rem, 0) scale(0.92); }
 }
 
 /* Cards: borderless surfaces that float on the page. */
@@ -130,6 +238,55 @@
 
 @media (hover: hover) {
   .bg-surface:hover { box-shadow: var(--shadow-lift); }
+}
+
+/* Frosted glass for floating chrome (dock, header, sheets). */
+@utility glass {
+  background: color-mix(in oklab, var(--surface) 72%, transparent);
+  backdrop-filter: blur(24px) saturate(1.6);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+  box-shadow: var(--shadow-lift);
+}
+
+/* A soft wash of the current tint in a card's corner. */
+@utility tint-glow {
+  background-image:
+    radial-gradient(120% 90% at 100% 0%, color-mix(in oklab, var(--tint) 20%, transparent), transparent 60%),
+    radial-gradient(90% 70% at 0% 100%, color-mix(in oklab, var(--tint) 9%, transparent), transparent 60%);
+}
+
+/* Icon in a soft tinted squircle. */
+@utility icon-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 0.875rem;
+  background: var(--tint-soft);
+  color: var(--tint-ink);
+}
+
+/* Gradient fill in the tint, for progress bars and meters. */
+@utility bg-tint-gradient {
+  background-image: linear-gradient(90deg, color-mix(in oklab, var(--tint) 70%, var(--surface)), var(--tint));
+}
+
+/* Light sweep across a bar (used on the XP bar). */
+@utility sheen {
+  position: relative;
+  overflow: hidden;
+  &::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    background: linear-gradient(100deg, transparent 30%, rgb(255 255 255 / 0.45) 50%, transparent 70%);
+    transform: translateX(-100%);
+    animation: sheen 3.2s ease-in-out 1.6s infinite;
+  }
+}
+@keyframes sheen {
+  60%,
+  100% { transform: translateX(100%); }
 }
 
 /* Devanagari letters join; editorial letter-spacing would break them apart. */
@@ -149,9 +306,9 @@
   letter-spacing: -0.02em;
 }
 
-/* Over-budget state: 45° hatch in the foreground ink (paired with an "over" label). */
+/* Over-budget state: 45° hatch in warm terracotta (paired with an "over" label). */
 .hatch {
-  background: repeating-linear-gradient(45deg, var(--foreground) 0 2px, transparent 2px 5px);
+  background: repeating-linear-gradient(45deg, var(--c-fitness) 0 2px, transparent 2px 5px);
 }
 
 /* ---------- Note editor typography ---------- */
@@ -191,7 +348,7 @@
   margin-top: 0.25em;
 }
 .prose-note blockquote {
-  border-left: 2px solid var(--foreground);
+  border-left: 2px solid var(--tint);
   padding-left: 1em;
   color: var(--muted);
 }

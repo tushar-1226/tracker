@@ -1,6 +1,6 @@
 # Track — Personal Life Tracker
 
-A minimal, black & white, animation-rich personal dashboard for tracking daily life:
+A minimal, softly coloured, animation-rich personal dashboard for tracking daily life:
 habits, budget & money, gym, learning, books, notes, journal — with a progress
 engine (streaks, XP, levels, achievements) that shows *real* progress over time.
 
@@ -49,19 +49,14 @@ engine (streaks, XP, levels, achievements) that shows *real* progress over time.
 - Sentence-case titles, quiet 13px labels; dialogs are bottom sheets on phones and floating panels on larger screens.
 - (Superseded: the earlier "bold editorial" style with square corners and uppercase labels.)
 
-### Colors — only grayscale
-```css
-:root {            /* light */
-  --bg: #ffffff;  --surface: #f6f6f6;  --border: #e5e5e5;
-  --muted: #8a8a8a;  --fg: #0a0a0a;  --accent: #000000;
-}
-.dark {
-  --bg: #0a0a0a;  --surface: #131313;  --border: #262626;
-  --muted: #7a7a7a;  --fg: #fafafa;  --accent: #ffffff;
-}
-```
-- Data emphasis uses **opacity & pattern**, never color (e.g. heatmap = 5 gray steps; budget overspend = solid fill vs outline; negative money = strikethrough/parentheses).
-- Theme toggle animates with a circular **View Transitions API** reveal from the click point.
+### Colors — warm neutrals + muted section tints (current)
+- Themes: **Paper** (warm off-white, id `white`), **Charcoal** (`dark`), **Cocoa** (`brown`); tokens in `globals.css`.
+- One earthy tint per section: accent ink-indigo (home), sage (habits), moss (money), terracotta (gym),
+  dusty blue (learning), ochre (books), plum (notes/journal), twilight (horoscope).
+- `<SectionScope>` sets `data-section` from the route; `--tint` is a registered `@property`, so the UI cross-fades on navigation.
+  Use `text-tint`, `bg-tint`, `bg-tint-soft`, `text-tint-ink`, `bg-tint-gradient`, `icon-chip`, `tint-glow`, or `tint-<module>` to override locally.
+- Charts, rings, heatmaps, badges, checks and progress bars read `--tint`; primary buttons stay ink.
+- (Superseded: strictly grayscale, data emphasis by opacity only.)
 
 ### Typography
 - **Geist Sans** for UI, **Geist Mono** for numbers/stats (tabular figures).

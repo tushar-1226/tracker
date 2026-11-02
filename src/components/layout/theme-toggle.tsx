@@ -69,9 +69,9 @@ export function ThemePicker() {
   const mounted = useHydrated();
   const activeTheme = mounted ? theme : "white";
   const options = [
-    { id: "white", label: "White", color: "#ffffff", ink: "#17202b" },
-    { id: "dark", label: "Dark", color: "#171717", ink: "#fafafa" },
-    { id: "brown", label: "Brown", color: "#2c221d", ink: "#f6ede5" },
+    { id: "white", label: "Paper", color: "#f4f2ee", ink: "#1d1b18", dots: ["#66896f", "#b56a4f", "#5b7ea0"] },
+    { id: "dark", label: "Charcoal", color: "#1a1917", ink: "#f3f0ea", dots: ["#8fb59a", "#d9957c", "#8eacca"] },
+    { id: "brown", label: "Cocoa", color: "#2a211c", ink: "#f6ede5", dots: ["#9fb88f", "#df9b7f", "#d0a77c"] },
   ] as const;
   return (
     <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Theme">
@@ -82,10 +82,15 @@ export function ThemePicker() {
           role="radio"
           aria-checked={activeTheme === option.id}
           onClick={() => setTheme(option.id)}
-          className={`group rounded-2xl p-2 text-left transition-all ${activeTheme === option.id ? "bg-foreground text-background shadow-soft" : "bg-subtle hover:-translate-y-0.5"}`}
+          className={`group rounded-2xl p-2 text-left transition-all ${activeTheme === option.id ? "bg-tint-soft text-tint-ink shadow-[inset_0_0_0_1.5px_var(--tint)]" : "bg-subtle hover:-translate-y-0.5"}`}
         >
-          <span className="mb-2 flex h-12 items-end justify-end rounded-xl p-2" style={{ background: option.color, color: option.ink }}>
-            <span className="h-2 w-8 rounded-full opacity-50" style={{ background: option.ink }} />
+          <span className="mb-2 flex h-12 items-end justify-between rounded-xl p-2" style={{ background: option.color, color: option.ink }}>
+            <span className="flex gap-1">
+              {option.dots.map((d) => (
+                <span key={d} className="size-2.5 rounded-full" style={{ background: d }} />
+              ))}
+            </span>
+            <span className="h-2 w-6 rounded-full opacity-50" style={{ background: option.ink }} />
           </span>
           <span className="px-1 text-xs font-medium">{option.label}</span>
         </button>

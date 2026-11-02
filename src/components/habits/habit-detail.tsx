@@ -232,7 +232,7 @@ function MonthlyBars({ habit, today }: { habit: HabitView; today: Day }) {
               )}
             >
               <motion.div
-                className="absolute inset-x-0 bottom-0 rounded-lg bg-foreground"
+                className="absolute inset-x-0 bottom-0 rounded-lg bg-tint"
                 initial={{ height: 0 }}
                 whileInView={{ height: `${(m.ratio ?? 0) * 100}%` }}
                 viewport={{ once: true }}

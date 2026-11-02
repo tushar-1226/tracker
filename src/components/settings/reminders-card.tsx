@@ -111,7 +111,7 @@ function ReminderRow({ r, onEdit }: { r: ReminderView; onEdit: () => void }) {
         aria-checked={r.enabled}
         aria-label={`${r.enabled ? "Disable" : "Enable"} ${r.title}`}
         onClick={() => startTransition(() => setReminderEnabled(r.id, !r.enabled))}
-        className={cn("relative h-7 w-12 shrink-0 rounded-full transition-colors", r.enabled ? "bg-foreground" : "bg-subtle")}
+        className={cn("relative h-7 w-12 shrink-0 rounded-full transition-colors", r.enabled ? "bg-tint" : "bg-subtle")}
       >
         <span className={cn("absolute top-1 size-5 rounded-full shadow-sm transition-all duration-300 ease-out-expo", r.enabled ? "left-[calc(100%-1.5rem)] bg-background" : "left-1 bg-surface")} />
       </button>

@@ -30,13 +30,13 @@ export function WeekStrip({
             aria-pressed={active}
             className={cn(
               "relative flex flex-col items-center gap-1.5 rounded-2xl py-2.5 transition-colors",
-              active ? "text-background" : "hover:bg-subtle",
+              active ? "text-on-tint" : "hover:bg-subtle",
             )}
           >
             {active && (
               <motion.span
                 layoutId="week-strip-active"
-                className="absolute inset-0 rounded-2xl bg-foreground"
+                className="absolute inset-0 rounded-2xl bg-tint"
                 transition={{ type: "spring", stiffness: 500, damping: 40 }}
               />
             )}
@@ -53,7 +53,7 @@ export function WeekStrip({
 }
 
 function MiniRing({ ratio, active }: { ratio: number | null; active: boolean }) {
-  const color = active ? "var(--background)" : "var(--foreground)";
+  const color = active ? "var(--on-tint)" : "var(--tint)";
   return (
     <svg width="16" height="16" className="relative -rotate-90">
       <circle cx="8" cy="8" r="6" fill="none" stroke={color} strokeOpacity={0.2} strokeWidth="2" strokeDasharray={ratio === null ? "2 2" : undefined} />

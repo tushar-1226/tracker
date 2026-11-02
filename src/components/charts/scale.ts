@@ -12,8 +12,9 @@ export function niceTicks(min: number, max: number, count = 4): number[] {
   return ticks;
 }
 
+/** Series colours: the current section's tint, and a quieter companion for comparisons. */
 export const TONE = {
-  fg: "var(--foreground)",
-  muted: "var(--muted)",
+  fg: "var(--tint)",
+  muted: "color-mix(in oklab, var(--tint) 35%, var(--muted))",
 } as const;
 export type Tone = keyof typeof TONE;

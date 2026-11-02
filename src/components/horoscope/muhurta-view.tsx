@@ -167,7 +167,7 @@ export function MuhurtaView({ place: initialPlace, hasBirth, lang }: { place: Pl
                     </div>
                   </div>
                   <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-subtle">
-                    <div className="h-full rounded-full bg-foreground" style={{ width: `${d.score}%` }} />
+                    <div className="h-full rounded-full bg-tint-gradient" style={{ width: `${d.score}%` }} />
                   </div>
                   <div className="mt-3 flex flex-wrap gap-1.5">
                     {d.factors.map((f) => (

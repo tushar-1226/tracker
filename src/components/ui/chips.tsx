@@ -30,7 +30,7 @@ export function Chips<T extends string>({
             onClick={() => onChange(o.value)}
             className={cn(
               "inline-flex h-10 items-center gap-1.5 rounded-full px-4 text-[13px] font-medium transition-all duration-200 active:scale-95 [&_svg]:size-4",
-              on ? "bg-foreground text-background shadow-soft" : "bg-subtle text-muted hover:text-foreground",
+              on ? "bg-tint-soft text-tint-ink shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--tint)_35%,transparent)]" : "bg-subtle text-muted hover:text-foreground",
             )}
           >
             {o.icon}

@@ -253,7 +253,7 @@ export function WorkoutLogger({
               />
             ) : (
               <span className="inline-flex items-center gap-1.5">
-                <span className="size-1.5 animate-pulse rounded-full bg-foreground" /> <Elapsed since={workout.startedAt} />
+                <span className="size-1.5 animate-pulse rounded-full bg-tint" /> <Elapsed since={workout.startedAt} />
               </span>
             )}
             {finished && workout.durationMin && <span>{workout.durationMin} min</span>}

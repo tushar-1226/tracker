@@ -296,7 +296,7 @@ function BudgetRow({
         <div className="mt-2.5 ml-12 flex items-center gap-3">
           <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-subtle">
             <motion.div
-              className={cn("absolute inset-y-0 left-0 rounded-full", over ? "hatch" : "bg-foreground")}
+              className={cn("absolute inset-y-0 left-0 rounded-full", over ? "hatch" : "bg-tint")}
               initial={{ width: 0 }}
               whileInView={{ width: `${Math.min(1, ratio) * 100}%` }}
               viewport={{ once: true }}

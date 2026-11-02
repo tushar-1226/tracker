@@ -40,7 +40,7 @@ export function WeekCompare({ now, last, money }: { now: PeriodSummary; last: Pe
                 <td className="px-2 py-2.5 text-right font-semibold tabular-nums">
                   <span className="inline-flex items-center gap-1">
                     {r.a === null ? "—" : r.fmt(r.a)}
-                    {up && <ArrowUpRight className="size-3.5" aria-label="more than last week" />}
+                    {up && <ArrowUpRight className="size-3.5 text-habits" aria-label="more than last week" />}
                     {down && <ArrowDownRight className="size-3.5 text-muted" aria-label="less than last week" />}
                   </span>
                 </td>

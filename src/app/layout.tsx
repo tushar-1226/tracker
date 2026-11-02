@@ -25,8 +25,8 @@ export const viewport: Viewport = {
   // Draw under the notch/home indicator in the installed app; layouts pad with safe-area insets.
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+    { media: "(prefers-color-scheme: light)", color: "#f4f2ee" },
+    { media: "(prefers-color-scheme: dark)", color: "#100f0e" },
   ],
 };
 

@@ -23,7 +23,7 @@ export function BarList({ items, format }: { items: BarItem[]; format: (v: numbe
           </div>
           <div className="h-2 w-full">
             <motion.div
-              className="h-full rounded-r-[4px] rounded-l-[1px] bg-foreground transition-opacity group-hover:opacity-80"
+              className="h-full rounded-r-[4px] rounded-l-[1px] bg-tint-gradient transition-opacity group-hover:opacity-80"
               initial={{ width: 0 }}
               whileInView={{ width: `${(item.value / max) * 100}%` }}
               viewport={{ once: true }}
