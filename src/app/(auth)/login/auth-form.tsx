@@ -38,13 +38,26 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
         {mode === "signup" && (
           <StaggerItem>
             <Field id="name" label="Name" error={errors?.name?.[0]}>
-              <Input id="name" name="name" autoComplete="name" placeholder="Your name" aria-invalid={!!errors?.name} />
+              <Input id="name" name="name" autoComplete="name" autoCapitalize="words" enterKeyHint="next" defaultValue={state?.values?.name} placeholder="Your name" aria-invalid={!!errors?.name} />
             </Field>
           </StaggerItem>
         )}
         <StaggerItem>
           <Field id="email" label="Email" error={errors?.email?.[0]}>
-            <Input id="email" name="email" type="email" autoComplete="email" placeholder="you@example.com" aria-invalid={!!errors?.email} />
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
+              enterKeyHint="next"
+              defaultValue={state?.values?.email}
+              placeholder="you@example.com"
+              aria-invalid={!!errors?.email}
+            />
           </Field>
         </StaggerItem>
         <StaggerItem>
@@ -54,6 +67,10 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
               name="password"
               type="password"
               autoComplete={mode === "login" ? "current-password" : "new-password"}
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
+              enterKeyHint="go"
               placeholder="••••••••"
               aria-invalid={!!errors?.password}
             />
