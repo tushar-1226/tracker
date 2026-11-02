@@ -1,5 +1,4 @@
-import { sql } from "drizzle-orm";
-import { index, integer, real, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
+import { boolean, doublePrecision, index, integer, jsonb, pgTable, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 import type { ExerciseKind, Muscle } from "@/lib/fitness";
 import { users } from "./users";
 
@@ -12,25 +11,25 @@ const owner = () =>
     .notNull()
     .references(() => users.id, { onDelete: "cascade" });
 
-export const exercises = sqliteTable("exercises", {
+export const exercises = pgTable("exercises", {
   id: id(),
   userId: owner(),
   name: text("name").notNull(),
   muscle: text("muscle").$type<Muscle>().notNull(),
   kind: text("kind").$type<ExerciseKind>().notNull().default("strength"),
-  archivedAt: integer("archived_at", { mode: "timestamp" }),
+  archivedAt: timestamp("archived_at", { withTimezone: true }),
 });
 
-export const workouts = sqliteTable(
+export const workouts = pgTable(
   "workouts",
   {
     id: id(),
     userId: owner(),
     name: text("name").notNull().default("Workout"),
     date: text("date").notNull(),
-    startedAt: integer("started_at", { mode: "timestamp" }).notNull(),
+    startedAt: timestamp("started_at", { withTimezone: true }).notNull(),
     /** null while the workout is in progress */
-    finishedAt: integer("finished_at", { mode: "timestamp" }),
+    finishedAt: timestamp("finished_at", { withTimezone: true }),
     durationMin: integer("duration_min"),
     note: text("note"),
   },
@@ -38,7 +37,7 @@ export const workouts = sqliteTable(
 );
 
 /** Weights in kg, distance in km, durations in seconds. */
-export const workoutSets = sqliteTable(
+export const workoutSets = pgTable(
   "workout_sets",
   {
     id: id(),
@@ -53,36 +52,36 @@ export const workoutSets = sqliteTable(
     position: integer("position").notNull(),
     setIndex: integer("set_index").notNull(),
     reps: integer("reps"),
-    weight: real("weight"),
-    distance: real("distance"),
+    weight: doublePrecision("weight"),
+    distance: doublePrecision("distance"),
     durationSec: integer("duration_sec"),
-    done: integer("done", { mode: "boolean" }).notNull().default(false),
+    done: boolean("done").notNull().default(false),
   },
   (t) => [index("workout_sets_workout_idx").on(t.workoutId), index("workout_sets_exercise_idx").on(t.userId, t.exerciseId)],
 );
 
 export type TemplateItem = { exerciseId: string; sets: number };
 
-export const workoutTemplates = sqliteTable("workout_templates", {
+export const workoutTemplates = pgTable("workout_templates", {
   id: id(),
   userId: owner(),
   name: text("name").notNull(),
-  items: text("items", { mode: "json" }).$type<TemplateItem[]>().notNull(),
+  items: jsonb("items").$type<TemplateItem[]>().notNull(),
   position: integer("position").notNull().default(0),
-  createdAt: integer("created_at", { mode: "timestamp" })
+  createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
-    .default(sql`(unixepoch())`),
+    .defaultNow(),
 });
 
-export const bodyMetrics = sqliteTable(
+export const bodyMetrics = pgTable(
   "body_metrics",
   {
     id: id(),
     userId: owner(),
     date: text("date").notNull(),
-    weight: real("weight"),
-    bodyFat: real("body_fat"),
-    waist: real("waist"),
+    weight: doublePrecision("weight"),
+    bodyFat: doublePrecision("body_fat"),
+    waist: doublePrecision("waist"),
   },
   (t) => [uniqueIndex("body_metrics_user_date_uq").on(t.userId, t.date)],
 );

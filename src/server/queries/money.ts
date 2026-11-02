@@ -1,5 +1,5 @@
 import "server-only";
-import { and, asc, count, desc, eq, gte, isNull, like, lte, or, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, ilike, isNull, lte, or, sql } from "drizzle-orm";
 import { db } from "@/db";
 import {
   accounts,
@@ -228,7 +228,7 @@ export async function listTransactions(userId: string, f: TxnFilter = {}) {
   if (f.type) conds.push(eq(transactions.type, f.type));
   if (f.accountId) conds.push(or(eq(transactions.accountId, f.accountId), eq(transactions.toAccountId, f.accountId))!);
   if (f.categoryId) conds.push(eq(transactions.categoryId, f.categoryId));
-  if (f.q) conds.push(like(transactions.note, `%${f.q.replace(/[%_]/g, "")}%`));
+  if (f.q) conds.push(ilike(transactions.note, `%${f.q.replace(/[%_]/g, "")}%`));
 
   return db
     .select({

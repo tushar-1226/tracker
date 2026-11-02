@@ -8,9 +8,12 @@ See [PLAN.md](PLAN.md) for the full roadmap.
 ```bash
 pnpm install
 cp .env.example .env.local      # then set SESSION_SECRET (openssl rand -base64 32)
-pnpm db:migrate                 # creates local.db
+pnpm db:migrate                 # creates the tables in the Postgres database from DATABASE_URL
 pnpm dev
 ```
+
+You need a Postgres database. Locally, `createdb track` and use `DATABASE_URL=postgres://localhost:5432/track`,
+or point `DATABASE_URL` at a free [Neon](https://neon.tech) database (use a separate Neon branch from production).
 
 Open http://localhost:3000 — the first visit creates your (single, private) account.
 
@@ -27,7 +30,7 @@ Open http://localhost:3000 — the first visit creates your (single, private) ac
 
 ## Stack
 
-Next.js 16 (App Router) · Tailwind v4 · Drizzle + libSQL/SQLite (Turso in production) ·
+Next.js 16 (App Router) · Tailwind v4 · Drizzle + Postgres (Neon on Vercel) ·
 jose sessions · Motion · Lenis · cmdk · next-themes · Swiss Ephemeris (`sweph`) for the horoscope.
 
 ## Horoscope
@@ -68,8 +71,9 @@ project's Node.js version to **24.x** (Project Settings → Build and Deployment
 Node.js Version). The `engines.node` entry in `package.json` also pins new
 deployments to that runtime. Keep the function runtime on Node.js, not Edge.
 
-1. Create a hosted libSQL database (e.g. [Turso](https://turso.tech)) and run
-   `DATABASE_URL=libsql://… DATABASE_AUTH_TOKEN=… pnpm db:migrate` once. A `file:` database does not work on Vercel.
-2. In the Vercel project settings add `DATABASE_URL`, `DATABASE_AUTH_TOKEN`, `SESSION_SECRET`,
+1. In the Vercel project: **Storage → Create Database → Neon (Postgres)** and connect it to the project.
+   That adds `DATABASE_URL` for you. The build runs `drizzle-kit migrate` (the `vercel-build` script), so tables are
+   created and updated automatically on every deploy.
+2. In the project settings add `SESSION_SECRET`,
    `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`, `CRON_SECRET` and `DISABLE_REMINDER_SCHEDULER=1`.
 3. Point an external cron service at `/api/cron/reminders` every minute (see *Scheduling*); Vercel's free cron runs at most once a day.

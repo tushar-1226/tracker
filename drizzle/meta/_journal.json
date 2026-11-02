@@ -1,61 +1,12 @@
 {
   "version": "7",
-  "dialect": "sqlite",
+  "dialect": "postgresql",
   "entries": [
     {
       "idx": 0,
-      "version": "6",
-      "when": 1790929544070,
-      "tag": "0000_nasty_dragon_lord",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1790930071780,
-      "tag": "0001_jittery_molecule_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "6",
-      "when": 1790931025275,
-      "tag": "0002_nappy_madame_masque",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "6",
-      "when": 1790932833622,
-      "tag": "0003_mushy_magneto",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "6",
-      "when": 1790934702854,
-      "tag": "0004_colossal_marvel_apes",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "6",
-      "when": 1790937457578,
-      "tag": "0005_aromatic_golden_guardian",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "6",
-      "when": 1790941327457,
-      "tag": "0006_famous_krista_starr",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "6",
-      "when": 1793034747961,
-      "tag": "0007_windy_doctor_strange",
+      "version": "7",
+      "when": 1793634942270,
+      "tag": "0000_tense_argent",
       "breakpoints": true
     }
   ]

@@ -1,5 +1,5 @@
 import "server-only";
-import { and, desc, eq, like, or } from "drizzle-orm";
+import { and, desc, eq, ilike, or } from "drizzle-orm";
 import { db } from "@/db";
 import { notes } from "@/db/schema";
 
@@ -7,7 +7,7 @@ export async function listNotes(userId: string, f: { q?: string; tag?: string } 
   const conds = [eq(notes.userId, userId)];
   if (f.q) {
     const pattern = `%${f.q.replace(/[%_]/g, "")}%`;
-    conds.push(or(like(notes.title, pattern), like(notes.text, pattern))!);
+    conds.push(or(ilike(notes.title, pattern), ilike(notes.text, pattern))!);
   }
   const rows = await db
     .select({ id: notes.id, title: notes.title, text: notes.text, tags: notes.tags, pinned: notes.pinned, updatedAt: notes.updatedAt })

@@ -1,5 +1,4 @@
-import { sql } from "drizzle-orm";
-import { integer, real, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
+import { doublePrecision, integer, jsonb, pgTable, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 import type { GoalMetric } from "@/lib/progress/goals";
 import { users } from "./users";
 
@@ -12,39 +11,39 @@ const owner = () =>
     .notNull()
     .references(() => users.id, { onDelete: "cascade" });
 
-export const achievementsUnlocked = sqliteTable(
+export const achievementsUnlocked = pgTable(
   "achievements_unlocked",
   {
     id: id(),
     userId: owner(),
     key: text("key").notNull(),
     tier: integer("tier").notNull(),
-    unlockedAt: integer("unlocked_at", { mode: "timestamp" })
+    unlockedAt: timestamp("unlocked_at", { withTimezone: true })
       .notNull()
-      .default(sql`(unixepoch())`),
+      .defaultNow(),
     /** Set once the unlock celebration has been shown. */
-    seenAt: integer("seen_at", { mode: "timestamp" }),
+    seenAt: timestamp("seen_at", { withTimezone: true }),
   },
   (t) => [uniqueIndex("achievements_user_key_tier_uq").on(t.userId, t.key, t.tier)],
 );
 
-export const goals = sqliteTable("goals", {
+export const goals = pgTable("goals", {
   id: id(),
   userId: owner(),
   title: text("title").notNull(),
-  metric: text("metric", { mode: "json" }).$type<GoalMetric>().notNull(),
-  target: real("target").notNull(),
+  metric: jsonb("metric").$type<GoalMetric>().notNull(),
+  target: doublePrecision("target").notNull(),
   /** Value when the goal was created (for "lose weight" style goals). */
-  baseline: real("baseline"),
+  baseline: doublePrecision("baseline"),
   deadline: text("deadline"),
-  completedAt: integer("completed_at", { mode: "timestamp" }),
-  archivedAt: integer("archived_at", { mode: "timestamp" }),
-  createdAt: integer("created_at", { mode: "timestamp" })
+  completedAt: timestamp("completed_at", { withTimezone: true }),
+  archivedAt: timestamp("archived_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
-    .default(sql`(unixepoch())`),
+    .defaultNow(),
 });
 
-export const goalMilestones = sqliteTable("goal_milestones", {
+export const goalMilestones = pgTable("goal_milestones", {
   id: id(),
   userId: owner(),
   goalId: text("goal_id")
@@ -52,7 +51,7 @@ export const goalMilestones = sqliteTable("goal_milestones", {
     .references(() => goals.id, { onDelete: "cascade" }),
   title: text("title").notNull(),
   position: integer("position").notNull().default(0),
-  doneAt: integer("done_at", { mode: "timestamp" }),
+  doneAt: timestamp("done_at", { withTimezone: true }),
 });
 
 export type Goal = typeof goals.$inferSelect;

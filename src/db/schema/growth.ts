@@ -1,5 +1,4 @@
-import { sql } from "drizzle-orm";
-import { index, integer, real, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
+import { boolean, doublePrecision, index, integer, jsonb, pgTable, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 import { users } from "./users";
 
 const id = () =>
@@ -11,24 +10,24 @@ const owner = () =>
     .notNull()
     .references(() => users.id, { onDelete: "cascade" });
 const createdAt = () =>
-  integer("created_at", { mode: "timestamp" })
+  timestamp("created_at", { withTimezone: true })
     .notNull()
-    .default(sql`(unixepoch())`);
+    .defaultNow();
 
 // ---------- Learning ----------
 
-export const skills = sqliteTable("skills", {
+export const skills = pgTable("skills", {
   id: id(),
   userId: owner(),
   name: text("name").notNull(),
   icon: text("icon").notNull().default("sparkles"),
-  targetHours: real("target_hours"),
+  targetHours: doublePrecision("target_hours"),
   position: integer("position").notNull().default(0),
-  archivedAt: integer("archived_at", { mode: "timestamp" }),
+  archivedAt: timestamp("archived_at", { withTimezone: true }),
   createdAt: createdAt(),
 });
 
-export const studySessions = sqliteTable(
+export const studySessions = pgTable(
   "study_sessions",
   {
     id: id(),
@@ -47,7 +46,7 @@ export const studySessions = sqliteTable(
 export type ResourceKind = "course" | "book" | "video" | "article" | "other";
 export type ResourceStatus = "todo" | "doing" | "done";
 
-export const resources = sqliteTable("resources", {
+export const resources = pgTable("resources", {
   id: id(),
   userId: owner(),
   skillId: text("skill_id").references(() => skills.id, { onDelete: "set null" }),
@@ -58,7 +57,7 @@ export const resources = sqliteTable("resources", {
   createdAt: createdAt(),
 });
 
-export const tils = sqliteTable(
+export const tils = pgTable(
   "tils",
   {
     id: id(),
@@ -75,7 +74,7 @@ export const tils = sqliteTable(
 
 export type BookStatus = "want" | "reading" | "finished" | "abandoned";
 
-export const books = sqliteTable("books", {
+export const books = pgTable("books", {
   id: id(),
   userId: owner(),
   title: text("title").notNull(),
@@ -91,7 +90,7 @@ export const books = sqliteTable("books", {
   createdAt: createdAt(),
 });
 
-export const readingLogs = sqliteTable(
+export const readingLogs = pgTable(
   "reading_logs",
   {
     id: id(),
@@ -105,7 +104,7 @@ export const readingLogs = sqliteTable(
   (t) => [uniqueIndex("reading_logs_book_date_uq").on(t.bookId, t.date), index("reading_logs_user_date_idx").on(t.userId, t.date)],
 );
 
-export const highlights = sqliteTable("highlights", {
+export const highlights = pgTable("highlights", {
   id: id(),
   userId: owner(),
   bookId: text("book_id")
@@ -118,25 +117,25 @@ export const highlights = sqliteTable("highlights", {
 
 // ---------- Notes ----------
 
-export const notes = sqliteTable("notes", {
+export const notes = pgTable("notes", {
   id: id(),
   userId: owner(),
   title: text("title").notNull().default(""),
   /** Tiptap JSON document. */
-  content: text("content", { mode: "json" }).$type<Record<string, unknown>>(),
+  content: jsonb("content").$type<Record<string, unknown>>(),
   /** Plain-text copy for search and previews. */
   text: text("text").notNull().default(""),
-  tags: text("tags", { mode: "json" }).$type<string[]>().notNull().default([]),
-  pinned: integer("pinned", { mode: "boolean" }).notNull().default(false),
+  tags: jsonb("tags").$type<string[]>().notNull().default([]),
+  pinned: boolean("pinned").notNull().default(false),
   createdAt: createdAt(),
-  updatedAt: integer("updated_at", { mode: "timestamp" })
+  updatedAt: timestamp("updated_at", { withTimezone: true })
     .notNull()
-    .default(sql`(unixepoch())`),
+    .defaultNow(),
 });
 
 // ---------- Journal ----------
 
-export const journalEntries = sqliteTable(
+export const journalEntries = pgTable(
   "journal_entries",
   {
     id: id(),
@@ -146,12 +145,12 @@ export const journalEntries = sqliteTable(
     mood: integer("mood"),
     /** 1–5 */
     energy: integer("energy"),
-    sleepHours: real("sleep_hours"),
+    sleepHours: doublePrecision("sleep_hours"),
     gratitude: text("gratitude"),
     content: text("content"),
-    updatedAt: integer("updated_at", { mode: "timestamp" })
+    updatedAt: timestamp("updated_at", { withTimezone: true })
       .notNull()
-      .default(sql`(unixepoch())`),
+      .defaultNow(),
   },
   (t) => [uniqueIndex("journal_user_date_uq").on(t.userId, t.date)],
 );

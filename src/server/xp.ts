@@ -45,6 +45,6 @@ export async function revokeXpByPrefix(tx: Tx, userId: string, source: string, p
 async function subtract(tx: Tx, userId: string, removed: { amount: number }[]) {
   const total = removed.reduce((sum, r) => sum + r.amount, 0);
   if (total) {
-    await tx.update(users).set({ xp: sql`max(0, ${users.xp} - ${total})` }).where(eq(users.id, userId));
+    await tx.update(users).set({ xp: sql`greatest(0, ${users.xp} - ${total})` }).where(eq(users.id, userId));
   }
 }

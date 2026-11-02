@@ -1,9 +1,8 @@
-import { sql } from "drizzle-orm";
-import { index, integer, real, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
+import { doublePrecision, index, integer, jsonb, pgTable, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 import type { Frequency, HabitType } from "@/lib/habits/stats";
 import { users } from "./users";
 
-export const habits = sqliteTable(
+export const habits = pgTable(
   "habits",
   {
     id: text("id")
@@ -16,24 +15,24 @@ export const habits = sqliteTable(
     icon: text("icon").notNull().default("circle"),
     type: text("type").$type<HabitType>().notNull().default("check"),
     /** Goal per day (count/duration); 1 for check & quit. */
-    target: real("target").notNull().default(1),
+    target: doublePrecision("target").notNull().default(1),
     unit: text("unit"),
-    frequency: text("frequency", { mode: "json" })
+    frequency: jsonb("frequency")
       .$type<Frequency>()
       .notNull()
       .default({ kind: "daily" }),
     /** Local calendar day the habit started (YYYY-MM-DD). */
     startDate: text("start_date").notNull(),
     position: integer("position").notNull().default(0),
-    archivedAt: integer("archived_at", { mode: "timestamp" }),
-    createdAt: integer("created_at", { mode: "timestamp" })
+    archivedAt: timestamp("archived_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
-      .default(sql`(unixepoch())`),
+      .defaultNow(),
   },
   (t) => [index("habits_user_idx").on(t.userId, t.position)],
 );
 
-export const habitLogs = sqliteTable(
+export const habitLogs = pgTable(
   "habit_logs",
   {
     id: text("id")
@@ -47,7 +46,7 @@ export const habitLogs = sqliteTable(
       .references(() => users.id, { onDelete: "cascade" }),
     date: text("date").notNull(),
     /** check: 1 · count/duration: amount · quit: 1 = slipped */
-    value: real("value").notNull(),
+    value: doublePrecision("value").notNull(),
     note: text("note"),
   },
   (t) => [

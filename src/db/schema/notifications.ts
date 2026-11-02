@@ -1,10 +1,9 @@
-import { sql } from "drizzle-orm";
-import { integer, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
+import { boolean, jsonb, pgTable, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 import type { ReminderKind } from "@/lib/reminders";
 import { users } from "./users";
 
 /** One row per device/browser that allowed notifications. */
-export const pushSubscriptions = sqliteTable(
+export const pushSubscriptions = pgTable(
   "push_subscriptions",
   {
     id: text("id")
@@ -17,14 +16,14 @@ export const pushSubscriptions = sqliteTable(
     p256dh: text("p256dh").notNull(),
     auth: text("auth").notNull(),
     device: text("device"),
-    createdAt: integer("created_at", { mode: "timestamp" })
+    createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
-      .default(sql`(unixepoch())`),
+      .defaultNow(),
   },
   (t) => [uniqueIndex("push_endpoint_uq").on(t.endpoint)],
 );
 
-export const reminders = sqliteTable("reminders", {
+export const reminders = pgTable("reminders", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
@@ -40,12 +39,12 @@ export const reminders = sqliteTable("reminders", {
   /** Local time "HH:MM" in the user's time zone. */
   time: text("time").notNull(),
   /** Weekdays (0 = Sunday); empty = every day. */
-  days: text("days", { mode: "json" }).$type<number[]>().notNull().default([]),
-  enabled: integer("enabled", { mode: "boolean" }).notNull().default(true),
+  days: jsonb("days").$type<number[]>().notNull().default([]),
+  enabled: boolean("enabled").notNull().default(true),
   lastSentDate: text("last_sent_date"),
-  createdAt: integer("created_at", { mode: "timestamp" })
+  createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
-    .default(sql`(unixepoch())`),
+    .defaultNow(),
 });
 
 export type Reminder = typeof reminders.$inferSelect;

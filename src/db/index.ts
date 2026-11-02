@@ -1,109 +1,29 @@
 import "server-only";
-import { type Client, type Transaction, createClient } from "@libsql/client";
-import { drizzle } from "drizzle-orm/libsql";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool, types } from "pg";
 import * as schema from "./schema";
 
-/**
- * The local `file:` driver is synchronous: a connection waiting on SQLite's write
- * lock blocks the whole event loop, so the lock holder can never commit. Instead,
- * queue every statement and transaction through one async lock. Code inside a
- * transaction must use `tx`, never `db`, or it would wait on itself.
- */
-function serialize(client: Client): Client {
-  let tail: Promise<void> = Promise.resolve();
-  const acquire = () => {
-    let release!: () => void;
-    const held = new Promise<void>((r) => (release = r));
-    const ready = tail.then(() => release);
-    tail = tail.then(() => held);
-    return ready;
-  };
-  const exclusive =
-    <A extends unknown[], R>(fn: (...args: A) => Promise<R>) =>
-    async (...args: A) => {
-      const release = await acquire();
-      try {
-        return await fn(...args);
-      } finally {
-        release();
-      }
-    };
-
-  const wrapTx = (tx: Transaction, release: () => void): Transaction => {
-    let done = false;
-    const finish = () => {
-      if (!done) {
-        done = true;
-        release();
-      }
-    };
-    return new Proxy(tx, {
-      get(target, prop) {
-        const value = Reflect.get(target, prop, target);
-        if (prop === "commit" || prop === "rollback") {
-          return async () => {
-            try {
-              return await value.call(target);
-            } finally {
-              finish();
-            }
-          };
-        }
-        if (prop === "close") {
-          return () => {
-            try {
-              return value.call(target);
-            } finally {
-              finish();
-            }
-          };
-        }
-        return typeof value === "function" ? value.bind(target) : value;
-      },
-    });
-  };
-
-  return new Proxy(client, {
-    get(target, prop) {
-      const value = Reflect.get(target, prop, target);
-      if (prop === "execute" || prop === "batch" || prop === "executeMultiple" || prop === "migrate") {
-        return exclusive((...args: unknown[]) => value.apply(target, args));
-      }
-      if (prop === "transaction") {
-        return async (...args: unknown[]) => {
-          const release = await acquire();
-          try {
-            return wrapTx(await value.apply(target, args), release);
-          } catch (e) {
-            release();
-            throw e;
-          }
-        };
-      }
-      return typeof value === "function" ? value.bind(target) : value;
-    },
-  });
-}
+// Postgres returns bigint (sum/count) and numeric as strings; every one of ours fits a JS number.
+types.setTypeParser(types.builtins.INT8, Number);
+types.setTypeParser(types.builtins.NUMERIC, Number);
 
 function connect() {
   const url = process.env.DATABASE_URL;
-  if (!url) throw new Error("DATABASE_URL is not set — see .env.example (use a libsql:// URL on serverless hosts).");
-  const client = createClient({
-    url,
-    authToken: process.env.DATABASE_AUTH_TOKEN || undefined,
-    // Only matters if another process (e.g. drizzle-kit studio) holds the lock.
-    timeout: 1000,
-  });
-  return drizzle(url.startsWith("file:") ? serialize(client) : client, { schema });
+  if (!url) throw new Error("DATABASE_URL is not set — see .env.example (a postgres:// URL, e.g. from Neon).");
+  // Serverless functions each hold their own pool, so keep it small.
+  const pool = new Pool({ connectionString: url, max: process.env.VERCEL ? 3 : 10, idleTimeoutMillis: 10_000 });
+  return drizzle(pool, { schema });
 }
 
 type Db = ReturnType<typeof connect>;
-let instance: Db | undefined;
+// Survives dev-server hot reloads so each reload doesn't leak a pool.
+const globalForDb = globalThis as unknown as { __trackDb?: Db };
 
 /** Connects on first use, so `next build` never needs a database. */
 export const db = new Proxy({} as Db, {
   get(_, prop) {
-    instance ??= connect();
+    globalForDb.__trackDb ??= connect();
+    const instance = globalForDb.__trackDb;
     const value = Reflect.get(instance, prop, instance);
     return typeof value === "function" ? value.bind(instance) : value;
   },

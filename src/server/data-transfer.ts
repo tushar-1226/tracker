@@ -1,6 +1,6 @@
 import "server-only";
 import { eq, getTableColumns, getTableName } from "drizzle-orm";
-import type { SQLiteTable } from "drizzle-orm/sqlite-core";
+import type { PgTable } from "drizzle-orm/pg-core";
 import { db } from "@/db";
 import * as t from "@/db/schema";
 
@@ -34,7 +34,7 @@ const TABLES = [
   t.achievementsUnlocked,
   t.reminders,
   t.xpEvents,
-] as const satisfies (SQLiteTable & { userId: unknown })[];
+] as const satisfies (PgTable & { userId: unknown })[];
 
 export const EXPORT_VERSION = 1;
 
@@ -64,12 +64,12 @@ export async function exportUserData(userId: string): Promise<ExportFile> {
 }
 
 /** Converts JSON values back into what each column expects (timestamps were serialised as ISO strings). */
-function revive(table: SQLiteTable, row: Record<string, unknown>, userId: string) {
+function revive(table: PgTable, row: Record<string, unknown>, userId: string) {
   const out: Record<string, unknown> = {};
   for (const [key, col] of Object.entries(getTableColumns(table))) {
     if (!(key in row)) continue;
     const v = row[key];
-    out[key] = col.columnType === "SQLiteTimestamp" && typeof v === "string" ? new Date(v) : v;
+    out[key] = col.columnType === "PgTimestamp" && typeof v === "string" ? new Date(v) : v;
   }
   out.userId = userId; // always import into the signed-in account
   return out;

@@ -42,7 +42,7 @@ export async function getPeriodSummary(userId: string, from: Day, to: Day) {
       .from(transactions)
       .leftJoin(categories, eq(categories.id, transactions.categoryId))
       .where(and(eq(transactions.userId, userId), eq(transactions.type, "expense"), gte(transactions.date, from), lte(transactions.date, to)))
-      .groupBy(transactions.categoryId)
+      .groupBy(transactions.categoryId, categories.name)
       .orderBy(sql`2 desc`)
       .limit(3),
     db.select({ amount: xpEvents.amount, createdAt: xpEvents.createdAt }).from(xpEvents).where(eq(xpEvents.userId, userId)),

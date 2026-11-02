@@ -1,6 +1,6 @@
 "use server";
 
-import { and, desc, eq, like, or } from "drizzle-orm";
+import { and, desc, eq, ilike, or } from "drizzle-orm";
 import { db } from "@/db";
 import { books, categories, habits, journalEntries, notes, transactions } from "@/db/schema";
 import { getCurrentUser } from "@/lib/auth/dal";
@@ -32,31 +32,31 @@ export async function searchAll(query: string): Promise<SearchHit[]> {
     db
       .select({ id: notes.id, title: notes.title, text: notes.text })
       .from(notes)
-      .where(and(eq(notes.userId, userId), or(like(notes.title, pattern), like(notes.text, pattern))))
+      .where(and(eq(notes.userId, userId), or(ilike(notes.title, pattern), ilike(notes.text, pattern))))
       .orderBy(desc(notes.updatedAt))
       .limit(LIMIT),
     db
       .select({ id: journalEntries.id, date: journalEntries.date, content: journalEntries.content, gratitude: journalEntries.gratitude })
       .from(journalEntries)
-      .where(and(eq(journalEntries.userId, userId), or(like(journalEntries.content, pattern), like(journalEntries.gratitude, pattern))))
+      .where(and(eq(journalEntries.userId, userId), or(ilike(journalEntries.content, pattern), ilike(journalEntries.gratitude, pattern))))
       .orderBy(desc(journalEntries.date))
       .limit(LIMIT),
     db
       .select({ id: transactions.id, type: transactions.type, amount: transactions.amount, date: transactions.date, note: transactions.note, category: categories.name })
       .from(transactions)
       .leftJoin(categories, eq(categories.id, transactions.categoryId))
-      .where(and(eq(transactions.userId, userId), or(like(transactions.note, pattern), like(categories.name, pattern))))
+      .where(and(eq(transactions.userId, userId), or(ilike(transactions.note, pattern), ilike(categories.name, pattern))))
       .orderBy(desc(transactions.date))
       .limit(LIMIT),
     db
       .select({ id: books.id, title: books.title, author: books.author })
       .from(books)
-      .where(and(eq(books.userId, userId), or(like(books.title, pattern), like(books.author, pattern))))
+      .where(and(eq(books.userId, userId), or(ilike(books.title, pattern), ilike(books.author, pattern))))
       .limit(LIMIT),
     db
       .select({ id: habits.id, name: habits.name })
       .from(habits)
-      .where(and(eq(habits.userId, userId), like(habits.name, pattern)))
+      .where(and(eq(habits.userId, userId), ilike(habits.name, pattern)))
       .limit(LIMIT),
   ]);
 

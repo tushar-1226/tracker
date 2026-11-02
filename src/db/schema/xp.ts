@@ -1,9 +1,8 @@
-import { sql } from "drizzle-orm";
-import { integer, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
+import { integer, pgTable, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 import { users } from "./users";
 
 /** Ledger of every XP award; users.xp is the running total. */
-export const xpEvents = sqliteTable(
+export const xpEvents = pgTable(
   "xp_events",
   {
     id: text("id")
@@ -17,9 +16,9 @@ export const xpEvents = sqliteTable(
     /** Stable key so the same action can't be awarded twice, e.g. `${habitId}:${date}`. */
     sourceKey: text("source_key").notNull(),
     amount: integer("amount").notNull(),
-    createdAt: integer("created_at", { mode: "timestamp" })
+    createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
-      .default(sql`(unixepoch())`),
+      .defaultNow(),
   },
   (t) => [uniqueIndex("xp_events_source_uq").on(t.userId, t.source, t.sourceKey)],
 );

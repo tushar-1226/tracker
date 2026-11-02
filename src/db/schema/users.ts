@@ -1,5 +1,4 @@
-import { sql } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { integer, jsonb, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export type StoredPlace = { name: string; lat: number; lon: number; tz: string };
 
@@ -25,21 +24,21 @@ export type UserSettings = {
   timeZone?: string;
 };
 
-export const users = sqliteTable("users", {
+export const users = pgTable("users", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
-  settings: text("settings", { mode: "json" })
+  settings: jsonb("settings")
     .$type<UserSettings>()
     .notNull()
     .default({}),
   xp: integer("xp").notNull().default(0),
-  createdAt: integer("created_at", { mode: "timestamp" })
+  createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
-    .default(sql`(unixepoch())`),
+    .defaultNow(),
 });
 
 export type User = typeof users.$inferSelect;

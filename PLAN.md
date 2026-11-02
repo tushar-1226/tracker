@@ -27,7 +27,7 @@ engine (streaks, XP, levels, achievements) that shows *real* progress over time.
 | Smooth scroll | **Lenis** (`lenis/react`) | Buttery scroll |
 | Animation | **Motion** (`motion/react`, formerly Framer Motion) | Page transitions, layout animations, number tickers |
 | Cursor | Custom cursor component (Motion springs) | Dot + ring, magnetic buttons, hover states |
-| Database | **SQLite via libSQL** locally → **Turso** in production | Zero-setup locally, free hosted tier |
+| Database | **Postgres** (local, or **Neon** on Vercel) via `pg` | Works on Vercel's read-only serverless functions; free hosted tier |
 | ORM | **Drizzle ORM** + drizzle-kit migrations | Type-safe, lightweight |
 | Auth | **jose** session cookie + bcrypt, following the Next.js 16 auth guide (single owner account) | Keeps your data private, no extra dependency |
 | Validation | **Zod** + **react-hook-form** | Shared schemas client/server |
@@ -37,7 +37,7 @@ engine (streaks, XP, levels, achievements) that shows *real* progress over time.
 | Command palette | **cmdk** | `⌘K` quick-log anything |
 | State (client) | **Zustand** (only for UI state: cursor, palette, quick-add) | Server is source of truth |
 | Testing | **Vitest** (logic) + **Playwright** (flows) | Streak/XP math must be correct |
-| Deploy | **Vercel** + Turso | Free, simple |
+| Deploy | **Vercel** + Neon Postgres | Free, simple |
 
 ---
 
@@ -268,7 +268,7 @@ track/
 │  │  └─ <module>/                # habit-card, workout-logger, txn-form, ...
 │  ├─ db/
 │  │  ├─ schema/                  # one file per module
-│  │  ├─ index.ts                 # libsql client
+│  │  ├─ index.ts                 # pg pool + drizzle client
 │  │  └─ seed.ts                  # demo data
 │  ├─ server/
 │  │  ├─ actions/                 # server actions per module
@@ -297,7 +297,7 @@ track/
 - shadcn init, restyle to monochrome.
 - `SmoothScroll` (Lenis), `Cursor`, `Magnetic`, `PageTransition`, `Reveal`, `NumberTicker`.
 - App shell: sidebar, mobile nav, command palette skeleton.
-- Drizzle + libSQL setup, session auth, `proxy.ts` + DAL protected `(app)` routes.
+- Drizzle + Postgres setup, session auth, `proxy.ts` + DAL protected `(app)` routes.
 
 ### Phase 1 — Habits + Dashboard (Day 3–5) ✅ done
 - Habit CRUD, daily check-in, heatmap, streak logic (+ unit tests).
@@ -326,7 +326,7 @@ track/
 - XP events, levels, per-module levels, Life Score.
 - Achievement definitions + unlock evaluation + unlock animation.
 - Goals linked to metrics. Trophy case page.
-- Done: per-request progress snapshot (life score across modules, module levels, 17 tiered achievements, goal values) synced in the app layout after every mutation; streak freezes (1 per 7 days, max 2); budget XP; local SQLite access serialised to avoid SQLITE_BUSY.
+- Done: per-request progress snapshot (life score across modules, module levels, 17 tiered achievements, goal values) synced in the app layout after every mutation; streak freezes (1 per 7 days, max 2); budget XP.
 
 ### Phase 6 — Insights & Polish (Day 23–26) ✅ done
 - Weekly summary, correlations, Year in Review.
@@ -335,7 +335,7 @@ track/
 - Done: preferences (currency, kg/lb, week start, cursor, workout/learning/reading targets), account (name, password), JSON export/import, this-week vs last-week card, Monday summary notification, Year in Review, loading/error/404 pages. Weight goals stored in kg. Correlation insights live in the journal. Extra keyboard shortcuts beyond ⌘K not added.
 
 ### Phase 7 — Ship (Day 27–28)
-- Playwright flows, Lighthouse pass, deploy to Vercel + Turso.
+- Playwright flows, Lighthouse pass, deploy to Vercel + Neon Postgres (moved off SQLite/Turso; migrations run in `vercel-build`).
 
 ---
 

@@ -1,5 +1,4 @@
-import { sql } from "drizzle-orm";
-import { index, integer, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
+import { boolean, index, integer, pgTable, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 import type { AccountType, RepeatEvery, TxnType } from "@/lib/money/math";
 import { users } from "./users";
 
@@ -16,11 +15,11 @@ const owner = () =>
     .notNull()
     .references(() => users.id, { onDelete: "cascade" });
 const createdAt = () =>
-  integer("created_at", { mode: "timestamp" })
+  timestamp("created_at", { withTimezone: true })
     .notNull()
-    .default(sql`(unixepoch())`);
+    .defaultNow();
 
-export const accounts = sqliteTable("accounts", {
+export const accounts = pgTable("accounts", {
   id: id(),
   userId: owner(),
   name: text("name").notNull(),
@@ -28,21 +27,21 @@ export const accounts = sqliteTable("accounts", {
   /** Signed: negative for money owed (cards, loans). */
   openingBalance: integer("opening_balance").notNull().default(0),
   position: integer("position").notNull().default(0),
-  archivedAt: integer("archived_at", { mode: "timestamp" }),
+  archivedAt: timestamp("archived_at", { withTimezone: true }),
   createdAt: createdAt(),
 });
 
-export const categories = sqliteTable("categories", {
+export const categories = pgTable("categories", {
   id: id(),
   userId: owner(),
   name: text("name").notNull(),
   kind: text("kind").$type<CategoryKind>().notNull(),
   icon: text("icon").notNull().default("circle"),
   position: integer("position").notNull().default(0),
-  archivedAt: integer("archived_at", { mode: "timestamp" }),
+  archivedAt: timestamp("archived_at", { withTimezone: true }),
 });
 
-export const recurringRules = sqliteTable("recurring_rules", {
+export const recurringRules = pgTable("recurring_rules", {
   id: id(),
   userId: owner(),
   type: text("type").$type<TxnType>().notNull(),
@@ -58,11 +57,11 @@ export const recurringRules = sqliteTable("recurring_rules", {
   startDate: text("start_date").notNull(),
   /** Next occurrence not yet turned into a transaction. */
   nextDate: text("next_date").notNull(),
-  active: integer("active", { mode: "boolean" }).notNull().default(true),
+  active: boolean("active").notNull().default(true),
   createdAt: createdAt(),
 });
 
-export const transactions = sqliteTable(
+export const transactions = pgTable(
   "transactions",
   {
     id: id(),
@@ -91,7 +90,7 @@ export const transactions = sqliteTable(
 );
 
 /** A standing monthly limit for an expense category. */
-export const budgets = sqliteTable(
+export const budgets = pgTable(
   "budgets",
   {
     id: id(),
@@ -104,18 +103,18 @@ export const budgets = sqliteTable(
   (t) => [uniqueIndex("budgets_category_uq").on(t.categoryId)],
 );
 
-export const savingsGoals = sqliteTable("savings_goals", {
+export const savingsGoals = pgTable("savings_goals", {
   id: id(),
   userId: owner(),
   name: text("name").notNull(),
   icon: text("icon").notNull().default("piggy-bank"),
   target: integer("target").notNull(),
   deadline: text("deadline"),
-  completedAt: integer("completed_at", { mode: "timestamp" }),
+  completedAt: timestamp("completed_at", { withTimezone: true }),
   createdAt: createdAt(),
 });
 
-export const goalContributions = sqliteTable(
+export const goalContributions = pgTable(
   "goal_contributions",
   {
     id: id(),
