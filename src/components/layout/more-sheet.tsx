@@ -31,8 +31,8 @@ export function MoreSheet({
   return (
     <D.Root open={open} onOpenChange={onOpenChange}>
       <D.Portal>
-        <D.Overlay className="fixed inset-0 z-50 bg-black/25 backdrop-blur-[6px] data-[state=closed]:animate-[fade-out_150ms_ease-in] data-[state=open]:animate-[fade-in_200ms_ease-out] dark:bg-black/50" />
-        <D.Content className="fixed inset-x-0 bottom-0 z-50 mx-auto max-h-[88dvh] w-full max-w-3xl overflow-y-auto overscroll-contain rounded-t-[2.25rem] bg-background/95 p-5 pb-[calc(1.5rem+env(safe-area-inset-bottom))] shadow-lift backdrop-blur-2xl data-[state=closed]:animate-[dialog-out_150ms_ease-in] data-[state=open]:animate-[sheet-in_420ms_var(--ease-out-expo)] md:bottom-6 md:rounded-[2.25rem] md:p-7" data-lenis-prevent>
+        <D.Overlay className="fixed inset-0 z-50 bg-black/25 md:backdrop-blur-[6px] data-[state=closed]:animate-[fade-out_150ms_ease-in] data-[state=open]:animate-[fade-in_200ms_ease-out] dark:bg-black/50" />
+        <D.Content className="fixed inset-x-0 bottom-0 z-50 mx-auto max-h-[88dvh] w-full max-w-3xl overflow-y-auto overscroll-contain rounded-t-[2.25rem] bg-background/95 p-5 pb-[calc(1.5rem+env(safe-area-inset-bottom))] shadow-lift md:backdrop-blur-2xl data-[state=closed]:animate-[dialog-out_150ms_ease-in] data-[state=open]:animate-[sheet-in_420ms_var(--ease-out-expo)] md:bottom-6 md:rounded-[2.25rem] md:p-7" data-lenis-prevent>
           <D.Title className="sr-only">All sections</D.Title>
           <D.Description className="sr-only">Navigate anywhere in Track</D.Description>
           <div aria-hidden className="mx-auto -mt-1 mb-5 h-1.5 w-10 rounded-full bg-subtle" />

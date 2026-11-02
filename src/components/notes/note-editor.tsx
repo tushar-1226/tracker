@@ -192,7 +192,7 @@ function Toolbar({ editor }: { editor: NonNullable<ReturnType<typeof useEditor>>
     { key: "code", label: "Code block", icon: Code, run: () => editor.chain().focus().toggleCodeBlock().run() },
   ] as const;
   return (
-    <div className="sticky top-[calc(0.5rem+env(safe-area-inset-top))] z-10 mt-6 flex w-fit gap-0.5 rounded-full bg-surface/90 p-1 shadow-soft backdrop-blur-xl" role="toolbar" aria-label="Formatting">
+    <div className="sticky top-[calc(0.5rem+env(safe-area-inset-top))] z-10 mt-6 flex w-fit gap-0.5 rounded-full bg-surface/90 p-1 shadow-soft md:backdrop-blur-xl" role="toolbar" aria-label="Formatting">
       {items.map(({ key, label, icon: Icon, run }) => (
         <button
           key={key}

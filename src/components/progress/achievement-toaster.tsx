@@ -33,7 +33,7 @@ export function AchievementToaster({ unlocks }: { unlocks: Unlock[] }) {
   return (
     <D.Root open={!!(current && def)} onOpenChange={(open) => !open && next()}>
       <D.Portal>
-        <D.Overlay className="fixed inset-0 z-[60] bg-background/70 backdrop-blur-md data-[state=open]:animate-[fade-in_200ms_ease-out]" />
+        <D.Overlay className="fixed inset-0 z-[60] bg-background/70 md:backdrop-blur-md data-[state=open]:animate-[fade-in_200ms_ease-out]" />
         <D.Content
           aria-describedby={undefined}
           className="fixed inset-0 z-[61] flex items-center justify-center p-6 outline-none"

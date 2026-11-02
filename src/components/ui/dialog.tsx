@@ -22,7 +22,7 @@ export function DialogContent({
 }) {
   return (
     <D.Portal>
-      <D.Overlay className="fixed inset-0 z-50 bg-black/25 backdrop-blur-[6px] data-[state=closed]:animate-[fade-out_150ms_ease-in] data-[state=open]:animate-[fade-in_200ms_ease-out] dark:bg-black/50" />
+      <D.Overlay className="fixed inset-0 z-50 bg-black/25 md:backdrop-blur-[6px] data-[state=closed]:animate-[fade-out_150ms_ease-in] data-[state=open]:animate-[fade-in_200ms_ease-out] dark:bg-black/50" />
       <D.Content
         className={cn(
           "fixed bottom-0 left-1/2 z-50 max-h-[92dvh] w-full -translate-x-1/2 overflow-y-auto overscroll-contain rounded-t-[2rem] bg-surface p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] shadow-lift sm:top-1/2 sm:bottom-auto sm:w-[min(92vw,540px)] sm:-translate-y-1/2 sm:rounded-[2rem] sm:p-8",

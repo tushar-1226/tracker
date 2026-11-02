@@ -107,9 +107,12 @@
 [data-section="astro"], .tint-astro { --tint: var(--c-astro); }
 .tint-accent, .tint-meta { --tint: var(--c-accent); }
 
-:root,
-[data-section] {
-  transition: --tint 700ms var(--ease-out-expo);
+/* Cross-fading --tint restyles the whole tree every frame, so only do it where there's headroom. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  :root,
+  [data-section] {
+    transition: --tint 700ms var(--ease-out-expo);
+  }
 }
 
 /* Derived tint shades, recomputed wherever --tint changes. */
@@ -158,6 +161,8 @@
   }
   html {
     -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    text-size-adjust: 100%;
   }
   body {
     background: var(--background);
@@ -166,7 +171,9 @@
     font-family: var(--font-sans), "Noto Sans Devanagari", "Kohinoor Devanagari", "Nirmala UI", "Mangal", system-ui, sans-serif;
     font-feature-settings: "ss01", "cv11";
   }
+  /* Paper grain. Skipped on touch devices: a blended full-screen layer repaints on every scroll frame there. */
   body::before {
+    display: none;
     position: fixed;
     inset: 0;
     z-index: -1;
@@ -175,6 +182,9 @@
     content: "";
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
     mix-blend-mode: overlay;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    body::before { display: block; }
   }
   ::selection {
     background: color-mix(in oklab, var(--tint) 30%, transparent);
@@ -199,7 +209,6 @@
   position: absolute;
   content: "";
   border-radius: 9999px;
-  filter: blur(80px);
   will-change: transform;
 }
 .aurora::before {
@@ -222,6 +231,16 @@
 .brown .aurora::before { opacity: 0.55; }
 .dark .aurora::after,
 .brown .aurora::after { opacity: 0.45; }
+/* Static on phones and tablets: no endless animation under the content while scrolling. */
+@media (hover: none), (max-width: 767px) {
+  .aurora::before,
+  .aurora::after {
+    width: 28rem;
+    height: 28rem;
+    animation: none;
+    will-change: auto;
+  }
+}
 @keyframes drift-a {
   to { transform: translate3d(8rem, 4rem, 0) scale(1.1); }
 }
@@ -239,13 +258,27 @@
 @media (hover: hover) {
   .bg-surface:hover { box-shadow: var(--shadow-lift); }
 }
+/* Big blurred shadows on dozens of cards are what makes long pages stutter on phones. */
+@media (max-width: 767px) {
+  .bg-surface {
+    box-shadow: inset 0 1px 0 var(--highlight), 0 1px 3px rgb(0 0 0 / 0.08);
+    transition: none;
+  }
+}
 
-/* Frosted glass for floating chrome (dock, header, sheets). */
+/*
+ * Frosted glass for floating chrome (dock, header, sheets). Live backdrop blur over a scrolling page is the
+ * costliest effect on phones, so they get a near-solid fill; blur is added from the md breakpoint up.
+ */
 @utility glass {
-  background: color-mix(in oklab, var(--surface) 72%, transparent);
-  backdrop-filter: blur(24px) saturate(1.6);
-  -webkit-backdrop-filter: blur(24px) saturate(1.6);
-  box-shadow: var(--shadow-lift);
+  background: color-mix(in oklab, var(--surface) 94%, transparent);
+  box-shadow: inset 0 1px 0 var(--highlight), 0 4px 16px -6px rgb(0 0 0 / 0.25);
+  @media (min-width: 768px) {
+    background: color-mix(in oklab, var(--surface) 72%, transparent);
+    backdrop-filter: blur(24px) saturate(1.6);
+    -webkit-backdrop-filter: blur(24px) saturate(1.6);
+    box-shadow: var(--shadow-lift);
+  }
 }
 
 /* A soft wash of the current tint in a card's corner. */
@@ -282,6 +315,9 @@
     background: linear-gradient(100deg, transparent 30%, rgb(255 255 255 / 0.45) 50%, transparent 70%);
     transform: translateX(-100%);
     animation: sheen 3.2s ease-in-out 1.6s infinite;
+    @media (hover: none) {
+      animation: none;
+    }
   }
 }
 @keyframes sheen {

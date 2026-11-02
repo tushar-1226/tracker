@@ -25,7 +25,9 @@ export function useThemeSwitch() {
       };
 
       const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (!document.startViewTransition || reduce) return apply();
+      // The full-page snapshot and clip-path reveal stutter on phones, so only desktops get it.
+      const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+      if (!document.startViewTransition || reduce || !fine) return apply();
 
       const x = origin?.x ?? window.innerWidth / 2;
       const y = origin?.y ?? window.innerHeight / 2;

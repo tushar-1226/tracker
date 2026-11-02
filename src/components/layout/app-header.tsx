@@ -24,7 +24,7 @@ export function AppHeader({ userName, level, levelProgress }: { userName: string
     <div className="sticky top-0 z-30 px-2 pt-[calc(0.5rem+env(safe-area-inset-top))] md:px-4 md:pt-3">
       <header
         className={cn(
-          "mx-auto flex w-full max-w-6xl items-center justify-between rounded-[1.375rem] px-2 py-2 transition-[background-color,box-shadow,backdrop-filter] duration-500 md:px-4",
+          "mx-auto flex w-full max-w-6xl items-center justify-between rounded-[1.375rem] px-2 py-2 transition-[background-color,box-shadow] duration-300 md:px-4",
           scrolled ? "glass" : "bg-transparent",
         )}
       >
